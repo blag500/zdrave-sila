@@ -1,1 +1,0 @@
-# zdrave-sila
