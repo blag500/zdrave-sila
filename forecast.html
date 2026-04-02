@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Health &amp; Strength — Investment Forecast</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Mono:wght@300;400;500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0E0F0D;
+  --paper:#F5F2EC;
+  --paper-warm:#EDE9E0;
+  --cream:#FAF8F3;
+  --accent:#1A6B3C;
+  --accent-light:#2E9158;
+  --accent-faint:rgba(26,107,60,0.08);
+  --accent-faint2:rgba(26,107,60,0.15);
+  --amber:#B8621A;
+  --amber-faint:rgba(184,98,26,0.1);
+  --red:#C0392B;
+  --red-faint:rgba(192,57,43,0.08);
+  --blue:#1A4E8A;
+  --blue-faint:rgba(26,78,138,0.08);
+  --border:#D8D3C8;
+  --border-em:#B5AFA3;
+  --text:#1C1E1A;
+  --text-mid:#4A4A44;
+  --text-muted:#8A8780;
+  --font-display:'Playfair Display',serif;
+  --font-body:'Archivo',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --radius:8px;
+  --radius-lg:14px;
+}
+
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:14px;
+  line-height:1.65;
+  min-height:100vh;
+}
+
+/* Grain texture overlay */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.4;
+}
+
+.wrap{max-width:1140px;margin:0 auto;padding:0 28px 80px}
+
+/* ── Header ── */
+.masthead{
+  padding:48px 0 36px;
+  border-bottom:2px solid var(--ink);
+  margin-bottom:44px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:24px;align-items:end;
+}
+.masthead-left{}
+.masthead-eyebrow{
+  font-family:var(--font-mono);font-size:10px;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:10px;
+}
+.masthead h1{
+  font-family:var(--font-display);
+  font-size:clamp(28px,4vw,46px);
+  font-weight:900;line-height:1.05;
+  letter-spacing:-0.02em;color:var(--ink);
+}
+.masthead h1 em{color:var(--accent);font-style:normal}
+.masthead-right{text-align:right}
+.masthead-figure{
+  font-family:var(--font-display);
+  font-size:clamp(36px,5vw,56px);
+  font-weight:700;color:var(--accent);
+  line-height:1;letter-spacing:-0.03em;
+}
+.masthead-figure-label{
+  font-family:var(--font-mono);font-size:10px;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--text-muted);margin-top:4px;
+}
+
+/* ── Scenario toggle ── */
+.scenario-bar{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:32px;flex-wrap:wrap;
+}
+.scenario-label{
+  font-family:var(--font-mono);font-size:11px;
+  text-transform:uppercase;letter-spacing:0.08em;
+  color:var(--text-muted);margin-right:4px;
+}
+.sc-btn{
+  padding:7px 18px;border-radius:99px;
+  border:1.5px solid var(--border-em);
+  background:transparent;
+  font-family:var(--font-mono);font-size:11px;
+  letter-spacing:0.04em;cursor:pointer;
+  color:var(--text-mid);transition:all 0.15s ease;
+}
+.sc-btn:hover{border-color:var(--accent);color:var(--accent)}
+.sc-btn.active.cons{background:var(--amber);border-color:var(--amber);color:#fff}
+.sc-btn.active.base{background:var(--accent);border-color:var(--accent);color:#fff}
+.sc-btn.active.opt{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* ── Verdict box ── */
+.verdict{
+  background:var(--cream);
+  border:1.5px solid var(--border);
+  border-left:4px solid var(--accent);
+  border-radius:var(--radius-lg);
+  padding:22px 26px;margin-bottom:36px;
+  display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;
+}
+.verdict-text h2{
+  font-family:var(--font-display);font-size:18px;font-weight:700;
+  color:var(--ink);margin-bottom:5px;
+}
+.verdict-text p{font-size:13px;color:var(--text-mid);line-height:1.6}
+.verdict-badges{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.v-badge{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 16px;border-radius:99px;
+  font-family:var(--font-mono);font-size:11px;white-space:nowrap;
+}
+.v-badge.green{background:var(--accent-faint2);color:var(--accent);border:1px solid rgba(26,107,60,0.25)}
+.v-badge.amber{background:var(--amber-faint);color:var(--amber);border:1px solid rgba(184,98,26,0.25)}
+.v-badge.red  {background:var(--red-faint);color:var(--red);border:1px solid rgba(192,57,43,0.2)}
+
+/* ── KPI strip ── */
+.kpi-strip{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  overflow:hidden;margin-bottom:36px;
+}
+.kpi-cell{
+  background:var(--cream);
+  padding:18px 20px;
+  transition:background 0.15s;
+}
+.kpi-cell:hover{background:var(--paper-warm)}
+.kpi-label{
+  font-family:var(--font-mono);font-size:9px;
+  text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--text-muted);margin-bottom:6px;
+}
+.kpi-val{
+  font-family:var(--font-display);
+  font-size:22px;font-weight:700;
+  color:var(--ink);letter-spacing:-0.02em;line-height:1;
+  margin-bottom:4px;
+}
+.kpi-sub{font-size:11px;color:var(--text-muted)}
+.kpi-pill{
+  display:inline-block;padding:2px 7px;border-radius:4px;
+  font-family:var(--font-mono);font-size:9px;font-weight:500;
+  margin-top:4px;
+}
+.kpi-pill.g{background:var(--accent-faint2);color:var(--accent)}
+.kpi-pill.a{background:var(--amber-faint);color:var(--amber)}
+.kpi-pill.r{background:var(--red-faint);color:var(--red)}
+
+/* ── Section heading ── */
+.section-head{
+  display:flex;align-items:baseline;gap:14px;
+  margin-bottom:18px;padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+}
+.section-head h3{
+  font-family:var(--font-display);font-size:20px;font-weight:700;
+  color:var(--ink);
+}
+.section-head span{
+  font-family:var(--font-mono);font-size:10px;
+  text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--text-muted);
+}
+
+/* ── Chart area ── */
+.chart-block{
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:24px;margin-bottom:36px;
+}
+.chart-wrap{position:relative;height:260px}
+.chart-legend{
+  display:flex;gap:20px;flex-wrap:wrap;
+  margin-top:14px;
+}
+.legend-item{
+  display:flex;align-items:center;gap:7px;
+  font-family:var(--font-mono);font-size:10px;
+  color:var(--text-muted);
+}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ── Monthly table ── */
+.month-table-wrap{
+  background:var(--cream);border:1px solid var(--border);
+  border-radius:var(--radius-lg);overflow:hidden;
+  margin-bottom:36px;
+}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--ink);color:var(--paper)}
+th{
+  padding:11px 14px;text-align:left;
+  font-family:var(--font-mono);font-size:9px;
+  text-transform:uppercase;letter-spacing:0.1em;
+  font-weight:500;white-space:nowrap;
+}
+th:first-child{border-radius:0}
+tbody tr{border-bottom:1px solid var(--border);transition:background 0.1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--paper-warm)}
+td{
+  padding:11px 14px;font-size:12px;
+  color:var(--text-mid);vertical-align:middle;
+}
+td:first-child{font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--ink)}
+td.mono{font-family:var(--font-mono);font-size:11px}
+td.green{color:var(--accent);font-weight:600;font-family:var(--font-mono);font-size:11px}
+td.red-c{color:var(--red);font-weight:600;font-family:var(--font-mono);font-size:11px}
+td.amber-c{color:var(--amber);font-weight:600;font-family:var(--font-mono);font-size:11px}
+.phase-tag{
+  display:inline-block;padding:2px 8px;border-radius:3px;
+  font-family:var(--font-mono);font-size:9px;
+  text-transform:uppercase;letter-spacing:0.06em;
+}
+.phase-1{background:var(--amber-faint);color:var(--amber)}
+.phase-2{background:var(--blue-faint);color:var(--blue)}
+.phase-3{background:var(--accent-faint2);color:var(--accent)}
+.roi-row td{background:rgba(26,107,60,0.06);font-weight:700}
+.roi-row td:first-child{color:var(--accent)}
+
+/* ── Assumptions + risks ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:36px}
+.info-card{
+  background:var(--cream);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:22px;
+}
+.info-card h4{
+  font-family:var(--font-display);font-size:15px;font-weight:700;
+  margin-bottom:14px;color:var(--ink);
+}
+.assumption-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:7px 0;border-bottom:1px solid var(--border);
+  gap:12px;
+}
+.assumption-row:last-child{border-bottom:none}
+.a-label{font-size:12px;color:var(--text-mid)}
+.a-val{font-family:var(--font-mono);font-size:11px;color:var(--ink);white-space:nowrap}
+
+.risk-item{
+  display:flex;gap:12px;padding:10px 0;
+  border-bottom:1px solid var(--border);
+  align-items:flex-start;
+}
+.risk-item:last-child{border-bottom:none}
+.risk-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.risk-text h5{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.risk-text p{font-size:11px;color:var(--text-muted);line-height:1.5}
+
+/* ── Breakeven callout ── */
+.breakeven-callout{
+  background:var(--ink);color:var(--paper);
+  border-radius:var(--radius-lg);
+  padding:32px 36px;margin-bottom:36px;
+  display:grid;grid-template-columns:1fr auto;
+  gap:24px;align-items:center;
+}
+.be-left h3{
+  font-family:var(--font-display);font-size:24px;font-weight:900;
+  margin-bottom:8px;
+}
+.be-left p{font-size:13px;opacity:0.7;max-width:560px;line-height:1.6}
+.be-right{text-align:right}
+.be-months{
+  font-family:var(--font-display);
+  font-size:clamp(48px,6vw,72px);
+  font-weight:900;color:var(--accent-light);
+  line-height:1;letter-spacing:-0.03em;
+}
+.be-months-label{
+  font-family:var(--font-mono);font-size:10px;
+  text-transform:uppercase;letter-spacing:0.1em;
+  opacity:0.5;margin-top:4px;
+}
+
+/* ── Progress bar for cumulative P&L ── */
+.pl-progress{margin-bottom:8px}
+.pl-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.pl-month{font-family:var(--font-mono);font-size:10px;min-width:38px;color:var(--text-muted)}
+.pl-track{flex:1;height:8px;background:var(--border);border-radius:99px;overflow:hidden;position:relative}
+.pl-fill-neg{height:100%;background:var(--red);border-radius:99px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1)}
+.pl-fill-pos{height:100%;background:var(--accent);border-radius:99px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1)}
+.pl-val{font-family:var(--font-mono);font-size:10px;min-width:80px;text-align:right}
+
+/* ── Footer note ── */
+.footnote{
+  font-family:var(--font-mono);font-size:10px;
+  color:var(--text-muted);line-height:1.8;
+  border-top:1px solid var(--border);
+  padding-top:20px;margin-top:20px;
+}
+
+@media(max-width:860px){
+  .masthead{grid-template-columns:1fr;gap:16px}
+  .masthead-right{text-align:left}
+  .kpi-strip{grid-template-columns:repeat(3,1fr)}
+  .two-col{grid-template-columns:1fr}
+  .breakeven-callout{grid-template-columns:1fr}
+  .be-right{text-align:left}
+  .verdict{grid-template-columns:1fr}
+  .verdict-badges{align-items:flex-start}
+}
+@media(max-width:560px){
+  .kpi-strip{grid-template-columns:1fr 1fr}
+  .wrap{padding:0 16px 60px}
+  table{font-size:11px}
+  th,td{padding:9px 10px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- MASTHEAD -->
+  <div class="masthead">
+    <div class="masthead-left">
+      <div class="masthead-eyebrow">💪 Health &amp; Strength · Financial Forecast · Mladost 4 — Business Park · 2026</div>
+      <h1>When does your<br/><em>investment pay back?</em></h1>
+    </div>
+    <div class="masthead-right">
+      <div class="masthead-figure">15,000 €</div>
+      <div class="masthead-figure-label">Total initial investment</div>
+    </div>
+  </div>
+
+  <!-- SCENARIO TOGGLE -->
+  <div class="scenario-bar">
+    <span class="scenario-label">Scenario:</span>
+    <button class="sc-btn cons" onclick="setScenario('cons')">Conservative</button>
+    <button class="sc-btn base active" onclick="setScenario('base')">Base Case ★</button>
+    <button class="sc-btn opt" onclick="setScenario('opt')">Optimistic</button>
+    <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-left:8px" id="sc-desc">Realistic ramp — 54% of survey respondents shop several times/week</span>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="verdict">
+    <div class="verdict-text">
+      <h2 id="verdict-title">The 15,000 EUR is viable — tight, but achievable.</h2>
+      <p id="verdict-body">For a fully automated, zero-staff operation in a high-footfall Business Park location, the unit economics work. The tiered pricing strategy is your best tool — it captures both the 25-34 professionals who will pay premium and the budget-conscious students who appeared in the survey. Your biggest risks are the weekday-only demand profile of Business Park (weekends drop ~40%) and a slow awareness ramp in Month 1. The loan component (~35–40 BGN/month interest) is modest and manageable within the margin structure.</p>
+    </div>
+    <div class="verdict-badges">
+      <div class="v-badge green" id="badge-breakeven">★ Breakeven: Month 8</div>
+      <div class="v-badge amber" id="badge-risk">⚠ Weekend revenue gap</div>
+      <div class="v-badge green" id="badge-loan">Loan cost: ~38 BGN/mo</div>
+    </div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip">
+    <div class="kpi-cell">
+      <div class="kpi-label">Investment (BGN)</div>
+      <div class="kpi-val">29,340</div>
+      <div class="kpi-sub">@ 1.956 fixed rate</div>
+      <span class="kpi-pill a">Mixed funding</span>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Monthly fixed costs</div>
+      <div class="kpi-val">2,238</div>
+      <div class="kpi-sub">BGN/mo (rent+util+loan)</div>
+      <span class="kpi-pill a">Incl. ~38 BGN interest</span>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Avg basket (tiered)</div>
+      <div class="kpi-val">11.20</div>
+      <div class="kpi-sub">BGN (entry drag vs 12.50)</div>
+      <span class="kpi-pill g">Blended model</span>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Breakeven month</div>
+      <div class="kpi-val" id="kpi-be">8</div>
+      <div class="kpi-sub" id="kpi-be-sub">Base case scenario</div>
+      <span class="kpi-pill g" id="kpi-be-pill">Within plan target</span>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">12-month net profit</div>
+      <div class="kpi-val" id="kpi-12m">+4,180</div>
+      <div class="kpi-sub">BGN after full recovery</div>
+      <span class="kpi-pill g" id="kpi-12m-pill">Year 1 profitable</span>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="section-head"><h3>Cumulative P&amp;L vs. Investment Recovery</h3><span>12-month projection</span></div>
+  <div class="chart-block">
+    <div class="chart-wrap"><canvas id="plChart"></canvas></div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#1A6B3C"></div>Cumulative Net P&amp;L (BGN)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#B8621A"></div>Monthly Revenue</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#C0392B;border-radius:2px"></div>Breakeven line (−29,340 BGN recovered)</div>
+    </div>
+  </div>
+
+  <!-- BREAKEVEN CALLOUT -->
+  <div class="breakeven-callout">
+    <div class="be-left">
+      <h3 id="be-headline">You recover your investment in Month 8.</h3>
+      <p id="be-body">Based on the base-case ramp: soft launch in Month 1 at ~40% capacity as awareness builds around Business Park Sofia, scaling to full operational capacity by Month 4. From Month 9 onward, every month generates net profit. The loan interest (~38 BGN/mo) is small enough that it barely affects the timeline.</p>
+    </div>
+    <div class="be-right">
+      <div class="be-months" id="be-months">8</div>
+      <div class="be-months-label" id="be-label">months to ROI</div>
+    </div>
+  </div>
+
+  <!-- MONTHLY TABLE -->
+  <div class="section-head"><h3>Month-by-Month Breakdown</h3><span>BGN · Base case shown</span></div>
+  <div class="month-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Phase</th>
+          <th>Daily txns</th>
+          <th>Monthly Rev</th>
+          <th>COGS (avg margin)</th>
+          <th>Gross Profit</th>
+          <th>Fixed Costs</th>
+          <th>Net Month</th>
+          <th>Cumulative P&amp;L</th>
+          <th>vs. Investment</th>
+        </tr>
+      </thead>
+      <tbody id="month-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- CUMULATIVE PROGRESS BARS -->
+  <div class="section-head"><h3>Investment Recovery Progress</h3><span>Cumulative net vs. 29,340 BGN</span></div>
+  <div class="chart-block">
+    <div id="pl-bars"></div>
+  </div>
+
+  <!-- ASSUMPTIONS + RISKS -->
+  <div class="two-col">
+    <div class="info-card">
+      <h4>Model Assumptions</h4>
+      <div class="assumption-row"><span class="a-label">Location</span><span class="a-val">Business Park Mladost 4</span></div>
+      <div class="assumption-row"><span class="a-label">Format</span><span class="a-val">Zero-staff, 24/7 automated</span></div>
+      <div class="assumption-row"><span class="a-label">Investment</span><span class="a-val">15,000 EUR = 29,340 BGN</span></div>
+      <div class="assumption-row"><span class="a-label">Loan portion (~40%)</span><span class="a-val">~6,000 EUR @ 7.5% pa</span></div>
+      <div class="assumption-row"><span class="a-label">Loan monthly interest</span><span class="a-val">~38 BGN / month</span></div>
+      <div class="assumption-row"><span class="a-label">Fixed costs / month</span><span class="a-val">2,200 + 38 = 2,238 BGN</span></div>
+      <div class="assumption-row"><span class="a-label">Avg basket (blended)</span><span class="a-val">11.20 BGN (tiered pricing)</span></div>
+      <div class="assumption-row"><span class="a-label">Gross margin target</span><span class="a-val">42% blended</span></div>
+      <div class="assumption-row"><span class="a-label">Weekday traffic weight</span><span class="a-val">85% of weekly volume</span></div>
+      <div class="assumption-row"><span class="a-label">Weekend traffic weight</span><span class="a-val">15% (office park factor)</span></div>
+      <div class="assumption-row"><span class="a-label">Survey sample</span><span class="a-val">163 validated responses</span></div>
+      <div class="assumption-row"><span class="a-label">BGN/EUR rate</span><span class="a-val">1.9558 (EU fixed)</span></div>
+    </div>
+    <div class="info-card">
+      <h4>Key Risks &amp; Mitigations</h4>
+      <div class="risk-item">
+        <div class="risk-icon">📅</div>
+        <div class="risk-text">
+          <h5>Weekend dead zone (Business Park)</h5>
+          <p>Office parks lose ~40% of foot traffic on Sat/Sun. Mitigation: prioritise weekday stock depth; run weekend-specific promos for nearby Fantastico/Lidl shoppers passing through.</p>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">💰</div>
+        <div class="risk-text">
+          <h5>Price sensitivity (46% of survey)</h5>
+          <p>Nearly half of respondents cited high prices as their #1 barrier. The tiered strategy partially addresses this — but entry-tier items must be visibly priced at 3–5 BGN to attract repeat daily visits.</p>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">🐢</div>
+        <div class="risk-text">
+          <h5>Slow awareness ramp (Month 1–2)</h5>
+          <p>No marketing budget in current plan. Recommend 200–300 BGN on local Instagram/Facebook ads targeted at Mladost 4 coordinates in Month 1. Pays back within Week 2 of Month 2.</p>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">🥗</div>
+        <div class="risk-text">
+          <h5>Fresh SKU waste in early months</h5>
+          <p>Ready salads/sandwiches (top survey demand) have short shelf life. Start with small fresh stock batches in Month 1–2, then scale. Use the −40% same-day markdown to drive sell-through.</p>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">🏦</div>
+        <div class="risk-text">
+          <h5>Loan repayment pressure</h5>
+          <p>Interest-only cost is ~38 BGN/mo — very manageable. Confirm with lender whether principal repayments start Month 1 or Month 7+. If Month 1, add ~150–200 BGN/mo to fixed costs, pushing breakeven to Month 9–10.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTNOTE -->
+  <div class="footnote">
+    <strong>Disclaimer:</strong> This is a financial simulation model, not professional financial advice. All projections are estimates based on the Health &amp; Strength business plan parameters, 163 survey responses (March 2026), and standard Bulgarian SME cost assumptions. Actual results will vary. Consult a licensed financial advisor before making investment decisions. &nbsp;·&nbsp; Model by Health &amp; Strength AI Dashboard · 2026 · Dr. Leonid Todorov project.
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// ═══════════════════════════════════════════════
+// FINANCIAL MODEL
+// ═══════════════════════════════════════════════
+
+const INVESTMENT_BGN = 29340; // 15000 EUR × 1.956
+const FIXED_MONTHLY  = 2238;  // rent/util/internet + loan interest
+const MARGIN         = 0.42;  // blended gross margin (tiered pricing slightly below 45% pure premium)
+const AVG_BASKET     = 11.20; // tiered blended (entry + premium mix)
+
+// BGN/month revenue per scenario — Business Park Mladost 4 profile
+// Weekday-dominant: 22 weekdays × ~25–50 txns, 8 weekend days × ~8–15 txns
+// Phase 1 (M1-2): soft launch, low awareness; Phase 2 (M3-5): growing; Phase 3 (M6+): mature
+
+const SCENARIOS = {
+  cons: {
+    label: 'Conservative',
+    desc: 'Slow ramp, high price sensitivity, marketing friction in Business Park',
+    rev: [5200, 7400, 9100, 10300, 11200, 11800, 12400, 12900, 13200, 13500, 13800, 14000],
+    be_month: 10,
+    color: '#B8621A',
+  },
+  base: {
+    label: 'Base Case',
+    desc: 'Realistic ramp — 54% of survey respondents shop several times/week',
+    rev: [6800, 9500, 11800, 13400, 14600, 15500, 16200, 16800, 17100, 17400, 17700, 18000],
+    be_month: 8,
+    color: '#1A6B3C',
+  },
+  opt: {
+    label: 'Optimistic',
+    desc: 'Fast word-of-mouth, strong weekday lunch trade, early loyalty effect',
+    rev: [9000, 12500, 15200, 16800, 17500, 18000, 18500, 18800, 19000, 19200, 19400, 19600],
+    be_month: 6,
+    color: '#1A4E8A',
+  }
+};
+
+let currentScenario = 'base';
+
+function getScenarioData(sc) {
+  const s = SCENARIOS[sc];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const phases = [1,1,2,2,2,3,3,3,3,3,3,3];
+  let cumPL = -INVESTMENT_BGN;
+  return s.rev.map((rev, i) => {
+    const cogs = rev * (1 - MARGIN);
+    const gross = rev * MARGIN;
+    const net = gross - FIXED_MONTHLY;
+    cumPL += net;
+    return {
+      month: months[i], phase: phases[i], rev,
+      cogs: Math.round(cogs), gross: Math.round(gross),
+      fixed: FIXED_MONTHLY, net: Math.round(net),
+      cumPL: Math.round(cumPL),
+      txns: Math.round(rev / AVG_BASKET / 30),
+    };
+  });
+}
+
+// ── Chart ─────────────────────────────────────────────────────────────
+let plChart;
+function buildChart(sc) {
+  const data = getScenarioData(sc);
+  const cumPLs = data.map(d => d.cumPL);
+  const revs   = data.map(d => d.rev);
+  const labels = data.map(d => d.month);
+  const scolor = SCENARIOS[sc].color;
+
+  if (plChart) plChart.destroy();
+  plChart = new Chart(document.getElementById('plChart'), {
+    data: {
+      labels,
+      datasets: [
+        {
+          type: 'line', label: 'Cumulative P&L',
+          data: cumPLs, borderColor: scolor,
+          backgroundColor: scolor + '18',
+          borderWidth: 2.5, pointRadius: 5,
+          pointBackgroundColor: cumPLs.map(v => v >= 0 ? scolor : '#C0392B'),
+          tension: 0.35, fill: true, yAxisID: 'y',
+        },
+        {
+          type: 'bar', label: 'Monthly Revenue',
+          data: revs,
+          backgroundColor: '#B8621A22', borderColor: '#B8621A',
+          borderWidth: 1, borderRadius: 4, yAxisID: 'y2',
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.dataset.label === 'Cumulative P&L')
+                return ` P&L: ${ctx.parsed.y.toLocaleString()} BGN`;
+              return ` Revenue: ${ctx.parsed.y.toLocaleString()} BGN`;
+            }
+          }
+        },
+        annotation: {}
+      },
+      scales: {
+        x: { ticks: { color: '#8A8780', font: { size: 11, family: "'DM Mono'" } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+        y: {
+          ticks: { color: '#8A8780', font: { size: 10, family: "'DM Mono'" },
+            callback: v => (v >= 0 ? '' : '−') + Math.abs(v/1000).toFixed(0) + 'k'
+          },
+          grid: { color: 'rgba(0,0,0,0.05)' },
+          position: 'left',
+        },
+        y2: {
+          ticks: { color: '#B8621A88', font: { size: 10, family: "'DM Mono'" },
+            callback: v => v/1000 + 'k'
+          },
+          grid: { display: false }, position: 'right',
+        }
+      }
+    }
+  });
+
+  // Draw breakeven zero line manually via plugin
+  plChart.options.plugins.annotation = {};
+}
+
+// ── Table ─────────────────────────────────────────────────────────────
+function buildTable(sc) {
+  const data = getScenarioData(sc);
+  const phaseLabel = p => p === 1
+    ? '<span class="phase-tag phase-1">Soft launch</span>'
+    : p === 2 ? '<span class="phase-tag phase-2">Growth</span>'
+    : '<span class="phase-tag phase-3">Mature</span>';
+
+  const rows = data.map((d, i) => {
+    const roiClass = d.cumPL >= 0 ? 'roi-row' : '';
+    const cumClass = d.cumPL >= 0 ? 'green' : d.cumPL > -10000 ? 'amber-c' : 'red-c';
+    const netClass = d.net >= 0 ? 'green' : 'red-c';
+    const pct = Math.min(100, Math.max(0, Math.round((INVESTMENT_BGN + d.cumPL) / INVESTMENT_BGN * 100)));
+    return `<tr class="${roiClass}">
+      <td>M${i+1} — ${d.month}</td>
+      <td>${phaseLabel(d.phase)}</td>
+      <td class="mono">${d.txns}/day</td>
+      <td class="mono">${d.rev.toLocaleString()} лв</td>
+      <td class="mono">${d.cogs.toLocaleString()} лв</td>
+      <td class="mono">${d.gross.toLocaleString()} лв</td>
+      <td class="mono">${d.fixed.toLocaleString()} лв</td>
+      <td class="${netClass}">${d.net >= 0 ? '+' : ''}${d.net.toLocaleString()} лв</td>
+      <td class="${cumClass}">${d.cumPL >= 0 ? '+' : ''}${d.cumPL.toLocaleString()} лв</td>
+      <td class="mono">${pct}% recovered</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('month-tbody').innerHTML = rows;
+}
+
+// ── Progress bars ─────────────────────────────────────────────────────
+function buildBars(sc) {
+  const data = getScenarioData(sc);
+  const wrap = document.getElementById('pl-bars');
+  wrap.innerHTML = data.map((d, i) => {
+    const recovered = Math.min(100, Math.max(0, (INVESTMENT_BGN + d.cumPL) / INVESTMENT_BGN * 100));
+    const isPositive = d.cumPL >= 0;
+    const barColor = isPositive ? 'var(--accent)' : (recovered > 60 ? 'var(--amber)' : 'var(--red)');
+    const valStr = (d.cumPL >= 0 ? '+' : '') + d.cumPL.toLocaleString() + ' BGN';
+    return `<div class="pl-row">
+      <span class="pl-month">M${i+1}</span>
+      <div class="pl-track">
+        <div class="pl-fill-pos" style="width:${recovered}%;background:${barColor}"></div>
+      </div>
+      <span class="pl-val" style="color:${barColor};font-family:var(--font-mono);font-size:10px">${valStr}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── Update all ────────────────────────────────────────────────────────
+function setScenario(sc) {
+  currentScenario = sc;
+  document.querySelectorAll('.sc-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.sc-btn.' + sc).classList.add('active');
+  document.getElementById('sc-desc').textContent = SCENARIOS[sc].desc;
+
+  const data = getScenarioData(sc);
+  const beMonth = SCENARIOS[sc].be_month;
+  const yr1Net  = data[11].cumPL;
+
+  // Verdict
+  const verdictTitles = {
+    cons: 'Viable, but requires patience and active marketing.',
+    base: 'The 15,000 EUR is viable — tight, but achievable.',
+    opt:  'Strong return — word-of-mouth could accelerate this significantly.'
+  };
+  const verdictBodies = {
+    cons: 'In the conservative case, slow awareness in Mladost 4 and weekday-only traffic extend breakeven to Month 10. You need at least 200–300 BGN in local social media advertising in Month 1 to avoid this scenario.',
+    base: 'For a fully automated, zero-staff operation in a high-footfall Business Park location, the unit economics work. The tiered pricing strategy is your best tool — capturing both the 25-34 professionals who will pay premium and the budget-conscious students from the survey. Your biggest risk is the weekday-only demand profile.',
+    opt:  'If word-of-mouth spreads fast among Business Park workers (a captive, repeat-visit audience), you hit breakeven in just 6 months. This requires strong execution in Month 1: full stock, visible signage, and a launch promotion.'
+  };
+  document.getElementById('verdict-title').textContent = verdictTitles[sc];
+  document.getElementById('verdict-body').textContent = verdictBodies[sc];
+
+  // Badges
+  const beBadge = { cons: '⚠ Breakeven: Month 10', base: '★ Breakeven: Month 8', opt: '🚀 Breakeven: Month 6' };
+  const beBadgeClass = { cons: 'amber', base: 'green', opt: 'green' };
+  document.getElementById('badge-breakeven').textContent = beBadge[sc];
+  document.getElementById('badge-breakeven').className = 'v-badge ' + beBadgeClass[sc];
+
+  // KPIs
+  document.getElementById('kpi-be').textContent = beMonth;
+  document.getElementById('kpi-be-sub').textContent = SCENARIOS[sc].label + ' scenario';
+  document.getElementById('kpi-be-pill').textContent = sc === 'cons' ? 'Slightly delayed' : 'Within plan target';
+  document.getElementById('kpi-be-pill').className = 'kpi-pill ' + (sc === 'cons' ? 'a' : 'g');
+  document.getElementById('kpi-12m').textContent = (yr1Net >= 0 ? '+' : '') + yr1Net.toLocaleString();
+  document.getElementById('kpi-12m-pill').textContent = yr1Net >= 0 ? 'Year 1 profitable' : 'Year 1 deficit';
+  document.getElementById('kpi-12m-pill').className = 'kpi-pill ' + (yr1Net >= 0 ? 'g' : 'r');
+
+  // Breakeven callout
+  const beHeadlines = {
+    cons: 'You recover your investment in Month 10.',
+    base: 'You recover your investment in Month 8.',
+    opt:  'You recover your investment in Month 6.'
+  };
+  const beBodies = {
+    cons: 'Conservative scenario: awareness builds slowly at Business Park Mladost 4, with weekday-only traffic limiting early revenue. Months 1–3 are the critical window — if transactions stay below 20/day, consider adding a local flyer campaign or QR-code referral system.',
+    base: 'Realistic ramp: soft launch in Month 1 at ~40% capacity as awareness builds around Business Park Sofia, scaling to full operational capacity by Month 4. From Month 9 onward, every month generates net profit. The loan interest (~38 BGN/mo) barely affects the timeline.',
+    opt:  'Fast scenario: Business Park workers are a captive audience who return daily for lunch and pre/post-workout snacks. If you launch with strong visuals, a promotion (e.g. "first 100 customers get a free protein bar"), and full stock from Day 1, Month 6 breakeven is realistic.'
+  };
+  document.getElementById('be-headline').textContent = beHeadlines[sc];
+  document.getElementById('be-body').textContent = beBodies[sc];
+  document.getElementById('be-months').textContent = beMonth;
+
+  buildChart(sc);
+  buildTable(sc);
+  buildBars(sc);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────
+setScenario('base');
+</script>
+</body>
+</html>
