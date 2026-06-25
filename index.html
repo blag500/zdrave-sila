@@ -459,6 +459,9 @@
     display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
     gap: 12px; margin-bottom: 20px;
   }
+  @media (max-width: 900px) {
+    .gamma-summary { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  }
   .g-sum-card {
     background: var(--bg-panel); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 14px 16px;
@@ -1037,12 +1040,12 @@
         <div class="g-sum-val green" id="gs-margin">—</div>
       </div>
       <div class="g-sum-card">
-        <div class="g-sum-lbl">Транзакции / ден</div>
-        <div class="g-sum-val" id="gs-txn">—</div>
+        <div class="g-sum-lbl">Най-висок марж</div>
+        <div class="g-sum-val green" id="gs-max-margin">—</div>
       </div>
       <div class="g-sum-card">
-        <div class="g-sum-lbl">Марж / ден</div>
-        <div class="g-sum-val green" id="gs-daily-margin">—</div>
+        <div class="g-sum-lbl">Най-нисък марж</div>
+        <div class="g-sum-val" id="gs-min-margin">—</div>
       </div>
     </div>
 
@@ -1073,9 +1076,6 @@
             <th class="r">Достав. цена</th>
             <th class="r">Продажна цена</th>
             <th>Марж %</th>
-            <th class="r">Бр./ден</th>
-            <th class="r">Приход/ден</th>
-            <th class="r">Марж/ден</th>
           </tr>
         </thead>
         <tbody id="gamma-tbody"></tbody>
@@ -1348,8 +1348,6 @@ function renderEquipment() {
   document.getElementById('equip-amort').textContent = '€' + fmtN(capex) + ' / ' + fmtN(capex * RATE) + ' лв.';
 }
 
-// Editable volumes (can be changed per row)
-let vols = GAMMA.map(p => p[5]);
 
 // ── Basket ────────────────────────────────────────────────────
 let basket = [
@@ -1453,17 +1451,12 @@ function renderTable() {
   const tfoot = document.getElementById('gamma-tfoot');
   let html = '';
   let idx = 1;
-  let totalRev = 0, totalCost = 0, totalVol = 0;
+  let margins = [];
 
-  GAMMA.forEach((p, i) => {
+  GAMMA.forEach((p) => {
     const [cat, name, brand, cost, price] = p;
-    const vol  = vols[i];
     const margin = (price - cost) / price;
-    const rev    = price * vol;
-    const marg   = (price - cost) * vol;
-    totalRev  += rev;
-    totalCost += cost * vol;
-    totalVol  += vol;
+    margins.push(margin);
 
     if (activeCat !== 'all' && !cat.startsWith(activeCat)) return;
 
@@ -1484,37 +1477,28 @@ function renderTable() {
           <span class="margin-pct" style="color:${mColor}">${mPct}%</span>
         </div>
       </td>
-      <td class="r"><input class="vol-input" type="number" min="0" max="200" value="${vol}" data-idx="${i}" oninput="onVolChange(this)"></td>
-      <td class="r" style="color:var(--green)">${fmtN(rev)}</td>
-      <td class="r" style="color:${mColor}">${fmtN(marg)}</td>
     </tr>`;
   });
 
-  const blended = totalRev > 0 ? (totalRev - totalCost) / totalRev : 0;
-  const totalMarg = totalRev - totalCost;
+  const avgMargin = margins.reduce((s, m) => s + m, 0) / margins.length;
+  const maxMargin = Math.max(...margins);
+  const minMargin = Math.min(...margins);
 
   tfoot.innerHTML = `<tr style="background:var(--bg-card);font-weight:600">
-    <td colspan="7" style="padding:10px 12px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em">ОБЩО / СРЕДЕН МАРЖ: <span style="color:var(--green);font-size:12px">${(blended*100).toFixed(2)}%</span></td>
-    <td class="r" style="font-family:var(--font-mono);color:var(--text)">${totalVol}</td>
-    <td class="r" style="color:var(--green);font-family:var(--font-mono)">${fmtN(totalRev)}</td>
-    <td class="r" style="color:var(--green);font-family:var(--font-mono)">${fmtN(totalMarg)}</td>
+    <td colspan="7" style="padding:10px 12px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em">
+      ${GAMMA.length} SKU · Среден марж: <span style="color:var(--green)">${(avgMargin*100).toFixed(1)}%</span>
+      · диапазон <span style="color:var(--amber)">${(minMargin*100).toFixed(0)}%</span> – <span style="color:var(--green)">${(maxMargin*100).toFixed(0)}%</span>
+    </td>
   </tr>`;
 
   tbody.innerHTML = html;
 
-  // Update summary cards
-  document.getElementById('gs-skus').textContent = GAMMA.length;
-  document.getElementById('gs-margin').textContent = (blended*100).toFixed(1) + '%';
-  document.getElementById('gs-txn').textContent = totalVol;
-  document.getElementById('gs-daily-margin').textContent = fmtN(totalMarg) + ' лв.';
-
-  updateFinancials();
-}
-
-function onVolChange(input) {
-  const i = parseInt(input.dataset.idx);
-  vols[i] = parseFloat(input.value) || 0;
-  renderTable();
+  document.getElementById('gs-skus').textContent     = GAMMA.length;
+  document.getElementById('gs-margin').textContent   = (avgMargin*100).toFixed(1) + '%';
+  document.getElementById('gs-max-margin').textContent = (maxMargin*100).toFixed(0) + '%';
+  document.getElementById('gs-min-margin').textContent = (minMargin*100).toFixed(0) + '%';
+  const minEl = document.getElementById('gs-min-margin');
+  minEl.style.color = minMargin >= 0.40 ? 'var(--green)' : minMargin >= 0.30 ? 'var(--amber)' : 'var(--red)';
 }
 
 function updateFinancials() {
