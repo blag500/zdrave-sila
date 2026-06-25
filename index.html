@@ -680,8 +680,8 @@
   <!-- TAB NAV -->
   <nav class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('sim')" id="tab-sim">🤖 Live Simulation</button>
-    <button class="tab-btn" onclick="switchTab('survey')" id="tab-survey">📊 Survey Insights <span style="font-family:var(--font-mono);font-size:10px;background:rgba(0,200,150,0.15);color:var(--green);padding:2px 6px;border-radius:4px;margin-left:4px;">n=163</span></button>
-    <button class="tab-btn" onclick="switchTab('improve')" id="tab-improve">🔧 Simulation Improvements</button>
+    <button class="tab-btn" onclick="switchTab('survey')" id="tab-survey">📊 <span data-t="tab_survey">Survey Insights</span> <span style="font-family:var(--font-mono);font-size:10px;background:rgba(0,200,150,0.15);color:var(--green);padding:2px 6px;border-radius:4px;margin-left:4px;">n=163</span></button>
+    <button class="tab-btn" onclick="switchTab('improve')" id="tab-improve">🔧 <span data-t="tab_improve">Simulation Improvements</span></button>
     <button class="tab-btn" onclick="switchTab('gamma')"  id="tab-gamma">📦 <span data-t="tab_gamma">Продуктова гама</span></button>
     <button class="tab-btn" onclick="switchTab('fin')"    id="tab-fin">💰 <span data-t="tab_fin">Финансов калкулатор</span></button>
     <div class="lang-toggle">
@@ -782,20 +782,20 @@
 
     <div class="survey-header-bar">
       <div class="survey-title-block">
-        <h2>Community Survey Results</h2>
-        <p>Социален павилион на самообслужване — March 2026 · Mladost &amp; Druzhba, Sofia</p>
+        <h2 data-t="survey_title">Community Survey Results</h2>
+        <p data-t="survey_sub">Социален павилион на самообслужване — March 2026 · Mladost &amp; Druzhba, Sofia</p>
       </div>
       <div class="survey-meta">
-        <div class="survey-meta-item"><div class="val">163</div><div class="lbl">Responses</div></div>
-        <div class="survey-meta-item"><div class="val">9</div><div class="lbl">Days</div></div>
-        <div class="survey-meta-item"><div class="val">4.1</div><div class="lbl">Avg 24/7 Score</div></div>
+        <div class="survey-meta-item"><div class="val">163</div><div class="lbl" data-t="meta_resp">Responses</div></div>
+        <div class="survey-meta-item"><div class="val">9</div><div class="lbl" data-t="meta_days">Days</div></div>
+        <div class="survey-meta-item"><div class="val">4.1</div><div class="lbl" data-t="meta_score">Avg 24/7 Score</div></div>
       </div>
     </div>
 
     <!-- Row 1: Age + District + Occupation -->
     <div class="survey-grid">
       <div class="s-panel">
-        <div class="s-panel-title">Age Distribution (n=163)</div>
+        <div class="s-panel-title" data-t="sp_age">Age Distribution (n=163)</div>
         <div class="bar-row"><span class="bar-label">Under 18</span><div class="bar-track"><div class="bar-fill" style="width:9%;background:var(--purple)"></div></div><span class="bar-pct">9%</span><span class="bar-count">15</span></div>
         <div class="bar-row"><span class="bar-label">18–24</span><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--blue)"></div></div><span class="bar-pct">18%</span><span class="bar-count">29</span></div>
         <div class="bar-row"><span class="bar-label">25–34 ★</span><div class="bar-track"><div class="bar-fill" style="width:38%;background:var(--green)"></div></div><span class="bar-pct">38%</span><span class="bar-count">62</span></div>
@@ -804,13 +804,13 @@
         <div class="bar-row"><span class="bar-label">55–64</span><div class="bar-track"><div class="bar-fill" style="width:7%;background:var(--text-muted)"></div></div><span class="bar-pct">7%</span><span class="bar-count">11</span></div>
         <div class="bar-row"><span class="bar-label">65+</span><div class="bar-track"><div class="bar-fill" style="width:1%;background:var(--text-muted)"></div></div><span class="bar-pct">1%</span><span class="bar-count">1</span></div>
         <div class="insight-box" style="margin-top:12px">
-          <div class="i-title">★ Core audience: 25–44 (65% of responses)</div>
+          <div class="i-title" data-t="ins_core">★ Core audience: 25–44 (65% of responses)</div>
           <div class="i-body">Employed adults with disposable income and health awareness. This validates the premium-price strategy.</div>
         </div>
       </div>
 
       <div class="s-panel">
-        <div class="s-panel-title">District Breakdown</div>
+        <div class="s-panel-title" data-t="sp_district">District Breakdown</div>
         <div class="bar-row"><span class="bar-label">Druzhba 2 ★</span><div class="bar-track"><div class="bar-fill" style="width:38%;background:var(--green)"></div></div><span class="bar-pct">38%</span><span class="bar-count">62</span></div>
         <div class="bar-row"><span class="bar-label">Mladost 1</span><div class="bar-track"><div class="bar-fill" style="width:25%;background:var(--blue)"></div></div><span class="bar-pct">25%</span><span class="bar-count">41</span></div>
         <div class="bar-row"><span class="bar-label">Druzhba 1</span><div class="bar-track"><div class="bar-fill" style="width:14%;background:var(--blue)"></div></div><span class="bar-pct">14%</span><span class="bar-count">23</span></div>
@@ -819,13 +819,13 @@
         <div class="bar-row"><span class="bar-label">Mladost 2</span><div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--amber)"></div></div><span class="bar-pct">10%</span><span class="bar-count">17</span></div>
         <div class="bar-row"><span class="bar-label">Mladost 1A</span><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--text-muted)"></div></div><span class="bar-pct">4%</span><span class="bar-count">6</span></div>
         <div class="insight-box amber" style="margin-top:12px">
-          <div class="i-title">⚡ Druzhba 2 leads — underserved demand signal</div>
+          <div class="i-title" data-t="ins_druzhba">⚡ Druzhba 2 leads — underserved demand signal</div>
           <div class="i-body">Druzhba 2 residents cite "lack of nearby store" as main grievance. High-priority location.</div>
         </div>
       </div>
 
       <div class="s-panel">
-        <div class="s-panel-title">Occupation (primary segment)</div>
+        <div class="s-panel-title" data-t="sp_occ">Occupation (primary segment)</div>
         <div class="bar-row"><span class="bar-label">Employee (служител)</span><div class="bar-track"><div class="bar-fill" style="width:66%;background:var(--green)"></div></div><span class="bar-pct">66%</span></div>
         <div class="bar-row"><span class="bar-label">Student (студент)</span><div class="bar-track"><div class="bar-fill" style="width:11%;background:var(--blue)"></div></div><span class="bar-pct">11%</span></div>
         <div class="bar-row"><span class="bar-label">Freelance / free prof.</span><div class="bar-track"><div class="bar-fill" style="width:9%;background:var(--purple)"></div></div><span class="bar-pct">9%</span></div>
@@ -833,7 +833,7 @@
         <div class="bar-row"><span class="bar-label">Own business</span><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--amber)"></div></div><span class="bar-pct">4%</span></div>
         <div class="bar-row"><span class="bar-label">Other (домакиня, пенс.)</span><div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--text-muted)"></div></div><span class="bar-pct">3%</span></div>
         <div class="insight-box blue" style="margin-top:12px">
-          <div class="i-title">Employed adults = primary revenue driver</div>
+          <div class="i-title" data-t="ins_employed">Employed adults = primary revenue driver</div>
           <div class="i-body">Peak hours align with commute patterns: 7–9am and 5–7pm. Simulation peaks are survey-calibrated.</div>
         </div>
       </div>
@@ -842,37 +842,37 @@
     <!-- Row 2: Shopping frequency + Main pain + Distance -->
     <div class="survey-grid">
       <div class="s-panel">
-        <div class="s-panel-title">Shopping Frequency</div>
+        <div class="s-panel-title" data-t="sp_freq">Shopping Frequency</div>
         <div class="bar-row"><span class="bar-label">Several times / week</span><div class="bar-track"><div class="bar-fill" style="width:54%;background:var(--green)"></div></div><span class="bar-pct">54%</span></div>
         <div class="bar-row"><span class="bar-label">Rarely</span><div class="bar-track"><div class="bar-fill" style="width:22%;background:var(--amber)"></div></div><span class="bar-pct">22%</span></div>
         <div class="bar-row"><span class="bar-label">Several times / month</span><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--blue)"></div></div><span class="bar-pct">15%</span></div>
         <div class="bar-row"><span class="bar-label">Every day</span><div class="bar-track"><div class="bar-fill" style="width:9%;background:var(--purple)"></div></div><span class="bar-pct">9%</span></div>
         <div class="insight-box">
-          <div class="i-title">54% shop multiple times per week</div>
+          <div class="i-title" data-t="ins_repeat">54% shop multiple times per week</div>
           <div class="i-body">High repeat-visit potential. Loyalty/subscription mechanics could unlock significant recurring revenue.</div>
         </div>
       </div>
 
       <div class="s-panel">
-        <div class="s-panel-title">Biggest Pain Point</div>
+        <div class="s-panel-title" data-t="sp_pain">Biggest Pain Point</div>
         <div class="bar-row"><span class="bar-label">High prices</span><div class="bar-track"><div class="bar-fill" style="width:46%;background:var(--red)"></div></div><span class="bar-pct">46%</span></div>
         <div class="bar-row"><span class="bar-label">No store nearby</span><div class="bar-track"><div class="bar-fill" style="width:35%;background:var(--amber)"></div></div><span class="bar-pct">35%</span></div>
         <div class="bar-row"><span class="bar-label">Limited selection</span><div class="bar-track"><div class="bar-fill" style="width:16%;background:var(--blue)"></div></div><span class="bar-pct">16%</span></div>
         <div class="bar-row"><span class="bar-label">No inconvenience</span><div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--green)"></div></div><span class="bar-pct">3%</span></div>
         <div class="insight-box amber">
-          <div class="i-title">⚠ Price sensitivity is the #1 barrier</div>
+          <div class="i-title" data-t="ins_price">⚠ Price sensitivity is the #1 barrier</div>
           <div class="i-body">46% cite high prices. A tiered SKU strategy (entry-level + premium) would serve both price-sensitive and premium segments.</div>
         </div>
       </div>
 
       <div class="s-panel">
-        <div class="s-panel-title">Max Walk Distance to Pavilion</div>
+        <div class="s-panel-title" data-t="sp_dist">Max Walk Distance to Pavilion</div>
         <div class="bar-row"><span class="bar-label">Up to 2 min</span><div class="bar-track"><div class="bar-fill" style="width:7%;background:var(--green)"></div></div><span class="bar-pct">7%</span></div>
         <div class="bar-row"><span class="bar-label">Up to 5 min ★</span><div class="bar-track"><div class="bar-fill" style="width:24%;background:var(--green)"></div></div><span class="bar-pct">24%</span></div>
         <div class="bar-row"><span class="bar-label">Up to 10 min ★</span><div class="bar-track"><div class="bar-fill" style="width:47%;background:var(--blue)"></div></div><span class="bar-pct">47%</span></div>
         <div class="bar-row"><span class="bar-label">More than 10 min</span><div class="bar-track"><div class="bar-fill" style="width:22%;background:var(--amber)"></div></div><span class="bar-pct">22%</span></div>
         <div class="insight-box blue">
-          <div class="i-title">78% will walk ≤10 min</div>
+          <div class="i-title" data-t="ins_walk">78% will walk ≤10 min</div>
           <div class="i-body">Confirms the 150m-from-transit placement rule. Catchment radius ~700m on foot covers most respondents.</div>
         </div>
       </div>
@@ -881,7 +881,7 @@
     <!-- Row 3: Preferred location + Transport mode -->
     <div class="survey-grid-2">
       <div class="s-panel">
-        <div class="s-panel-title">Preferred Pavilion Location (open text — top themes)</div>
+        <div class="s-panel-title" data-t="sp_loc">Preferred Pavilion Location (open text — top themes)</div>
         <div style="margin-bottom:12px;">
           <div class="bar-row"><span class="bar-label" style="min-width:200px">Near metro station</span><div class="bar-track"><div class="bar-fill" style="width:29%;background:var(--green)"></div></div><span class="bar-pct">29%</span></div>
           <div class="bar-row"><span class="bar-label" style="min-width:200px">Inside neighbourhood</span><div class="bar-track"><div class="bar-fill" style="width:27%;background:var(--blue)"></div></div><span class="bar-pct">27%</span></div>
@@ -890,7 +890,7 @@
           <div class="bar-row"><span class="bar-label" style="min-width:200px">Near workplace</span><div class="bar-track"><div class="bar-fill" style="width:7%;background:var(--amber)"></div></div><span class="bar-pct">7%</span></div>
           <div class="bar-row"><span class="bar-label" style="min-width:200px">Near market/supermarket</span><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--text-muted)"></div></div><span class="bar-pct">4%</span></div>
         </div>
-        <div class="s-panel-title" style="margin-top:16px">Frequently Cited Specific Spots</div>
+        <div class="s-panel-title" style="margin-top:16px" data-t="sp_spots">Frequently Cited Specific Spots</div>
         <div class="location-tags">
           <span class="loc-tag hot">Druzhba 1 Lakeside<span class="freq">×12</span></span>
           <span class="loc-tag hot">Mladost 1 Metro exit<span class="freq">×10</span></span>
@@ -906,24 +906,24 @@
       </div>
 
       <div class="s-panel">
-        <div class="s-panel-title">Primary Transport Mode</div>
+        <div class="s-panel-title" data-t="sp_transport">Primary Transport Mode</div>
         <div class="bar-row"><span class="bar-label">Walking</span><div class="bar-track"><div class="bar-fill" style="width:43%;background:var(--green)"></div></div><span class="bar-pct">43%</span></div>
         <div class="bar-row"><span class="bar-label">Private car</span><div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--amber)"></div></div><span class="bar-pct">40%</span></div>
         <div class="bar-row"><span class="bar-label">Public transport</span><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--blue)"></div></div><span class="bar-pct">15%</span></div>
         <div class="bar-row"><span class="bar-label">Bicycle</span><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--purple)"></div></div><span class="bar-pct">2%</span></div>
         <div class="insight-box">
-          <div class="i-title">83% walk or drive → needs parking or walkable spot</div>
+          <div class="i-title" data-t="ins_transport">83% walk or drive → needs parking or walkable spot</div>
           <div class="i-body">Near-metro and near-parking locations serve both segments. Pure transit hubs miss the 40% car segment.</div>
         </div>
 
-        <div class="s-panel-title" style="margin-top:20px">24/7 Availability Importance (1–5 scale)</div>
+        <div class="s-panel-title" style="margin-top:20px" data-t="sp_247">24/7 Availability Importance (1–5 scale)</div>
         <div class="bar-row"><span class="bar-label">5 — Very important</span><div class="bar-track"><div class="bar-fill" style="width:38%;background:var(--green)"></div></div><span class="bar-pct">38%</span></div>
         <div class="bar-row"><span class="bar-label">4</span><div class="bar-track"><div class="bar-fill" style="width:19%;background:var(--blue)"></div></div><span class="bar-pct">19%</span></div>
         <div class="bar-row"><span class="bar-label">3</span><div class="bar-track"><div class="bar-fill" style="width:24%;background:var(--amber)"></div></div><span class="bar-pct">24%</span></div>
         <div class="bar-row"><span class="bar-label">2</span><div class="bar-track"><div class="bar-fill" style="width:8%;background:var(--amber)"></div></div><span class="bar-pct">8%</span></div>
         <div class="bar-row"><span class="bar-label">1 — Not important</span><div class="bar-track"><div class="bar-fill" style="width:11%;background:var(--red)"></div></div><span class="bar-pct">11%</span></div>
         <div class="insight-box blue" style="margin-top:8px">
-          <div class="i-title">57% rated 24/7 as 4 or 5 — strong signal</div>
+          <div class="i-title" data-t="ins_247">57% rated 24/7 as 4 or 5 — strong signal</div>
           <div class="i-body">The 24/7 format is a genuine differentiator. Night-hour revenue in the simulation has been adjusted accordingly.</div>
         </div>
       </div>
@@ -931,7 +931,7 @@
 
     <!-- Row 4: Products demanded -->
     <div class="s-panel survey-grid-full">
-      <div class="s-panel-title">Most Requested Products &amp; Brands (from open responses)</div>
+      <div class="s-panel-title" data-t="sp_products">Most Requested Products &amp; Brands (from open responses)</div>
       <div class="product-chips">
         <span class="chip highlight">Skyr <span class="n">×18</span></span>
         <span class="chip highlight">Protein powder / bars <span class="n">×17</span></span>
@@ -963,14 +963,14 @@
         <span class="chip">Protein sandwiches <span class="n">×5</span></span>
       </div>
       <div class="insight-box" style="margin-top:14px">
-        <div class="i-title">★ Survey-validated top SKU categories for inventory model</div>
+        <div class="i-title" data-t="ins_sku">★ Survey-validated top SKU categories for inventory model</div>
         <div class="i-body">Skyr + dairy proteins rank #1. Ready-to-eat salads and fresh options are highly demanded but not currently in the simulation SKU list — a gap to address. Gluten-free is a cross-cutting need (13 mentions) that should be a labelling priority, not a separate category.</div>
       </div>
     </div>
 
     <!-- Selected verbatim quotes -->
     <div class="s-panel survey-grid-full">
-      <div class="s-panel-title">Selected Verbatim Responses (translated)</div>
+      <div class="s-panel-title" data-t="sp_verbatim">Selected Verbatim Responses (translated)</div>
       <div class="quote-grid">
         <div class="quote-card"><div class="quote-text">"Near the exit of Mladost 1 metro station — FitPam, isotonic drinks. There's a healthy shop nearby but it's always crowded and closes at 22:00; late-night options don't carry health foods."</div><div class="quote-meta">Female, 25–34, Employee, Mladost 1</div></div>
         <div class="quote-card"><div class="quote-text">"The market at Druzhba 2 near 68 SOU school — great wide space, there's even a BOX NOW parcel locker there. Students are serious potential customers."</div><div class="quote-meta">Female, 55–64, Business owner, Druzhba 2</div></div>
@@ -989,7 +989,7 @@
     <div class="sim-note">
       <div class="note-icon">🧠</div>
       <div>
-        <div class="note-title">How the survey upgrades this simulation</div>
+        <div class="note-title" data-t="imp_note_title">How the survey upgrades this simulation</div>
         <div class="note-body">
           The original simulation used generic placeholder assumptions. After analysing <strong>163 real responses</strong> from Mladost &amp; Druzhba residents, we've identified 8 high-impact improvements that would make this simulation measurably more realistic for planning, investor presentations, and operational decisions.
         </div>
@@ -999,80 +999,80 @@
     <div class="improvements-grid">
 
       <div class="improvement-card">
-        <div class="imp-tag">SKU Catalogue</div>
-        <h4>1. Add Survey-Validated Products</h4>
+        <div class="imp-tag" data-t="imp1_tag">SKU Catalogue</div>
+        <h4 data-t="imp1_h4">1. Add Survey-Validated Products</h4>
         <p>Current SKUs are generic. Survey reveals top demanded items: <strong>fresh salads (×15), ready sandwiches (×5), smoothies/freshes (×7), and local dairy (×11)</strong>. Add a 5th SKU category: <em>"Fresh &amp; Ready"</em> (salads, sandwiches, smoothies) with shorter expiry windows and dynamic markdown logic. This is the single biggest gap between simulation and real demand.</p>
       </div>
 
       <div class="improvement-card">
-        <div class="imp-tag amber">Traffic Curve</div>
-        <h4>2. Survey-Calibrated Peak Hours</h4>
+        <div class="imp-tag amber" data-t="imp2_tag">Traffic Curve</div>
+        <h4 data-t="imp2_h4">2. Survey-Calibrated Peak Hours</h4>
         <p>54% of respondents shop several times per week; 66% are employed workers. Real peaks should be <strong>7–9am (commute in)</strong> and <strong>17–19pm (commute out)</strong>, with a secondary <strong>lunch peak 12–13pm</strong>. Current simulation weights are too flat mid-day. Night transactions (22:00–06:00) should remain non-zero — 57% rated 24/7 availability 4 or 5 out of 5.</p>
       </div>
 
       <div class="improvement-card">
-        <div class="imp-tag blue">Pricing</div>
-        <h4>3. Price Sensitivity Scenario</h4>
+        <div class="imp-tag blue" data-t="imp3_tag">Pricing</div>
+        <h4 data-t="imp3_h4">3. Price Sensitivity Scenario</h4>
         <p><strong>46% cite high prices as their main pain point</strong> — the #1 complaint. The simulation should model two pricing scenarios: "Premium only" vs "Tiered (entry + premium)". A tiered approach could increase transaction volume by an estimated 20–30% among price-sensitive 18–24 year old students and school pupils who represent 25% of respondents.</p>
       </div>
 
       <div class="improvement-card">
-        <div class="imp-tag">Location Score</div>
-        <h4>4. Two-Location Comparative Simulation</h4>
+        <div class="imp-tag" data-t="imp4_tag">Location Score</div>
+        <h4 data-t="imp4_h4">4. Two-Location Comparative Simulation</h4>
         <p>Survey data clearly points to <strong>two distinct top locations</strong>: Druzhba 1 lakeside (sports/recreation crowd, 12 mentions) and Mladost 1 metro exit (commuter crowd, 10 mentions). The simulation should support side-by-side comparison of revenue KPIs per location, using different foot traffic profiles (sports/recreation vs transit commuter patterns).</p>
       </div>
 
       <div class="improvement-card">
-        <div class="imp-tag amber">Audience Mix</div>
-        <h4>5. Student-Hour Demand Spike</h4>
+        <div class="imp-tag amber" data-t="imp5_tag">Audience Mix</div>
+        <h4 data-t="imp5_h4">5. Student-Hour Demand Spike</h4>
         <p>School pupils and university students make up <strong>18% of respondents</strong> and specifically request affordable snacks for "eating on the go". Add a <em>school_hour_boost</em> parameter (13:00–15:00 on weekdays) with +40% transaction volume spike and lower average basket (~8 BGN), triggering the existing upsell mode automatically.</p>
       </div>
 
       <div class="improvement-card">
-        <div class="imp-tag blue">Demand Driver</div>
-        <h4>6. Gluten-Free / Allergen Flag</h4>
+        <div class="imp-tag blue" data-t="imp6_tag">Demand Driver</div>
+        <h4 data-t="imp6_h4">6. Gluten-Free / Allergen Flag</h4>
         <p>Gluten-free is the most cross-cutting specific need (13 explicit mentions), followed by lactose-free (4) and no added sugar (7). Add a <em>dietary_flag_demand</em> metric to inventory: SKUs without a gluten-free variant should be flagged. When flag_demand &gt; 10% of transactions, auto-trigger a <em>SKU_GAP alert</em> recommending a new product line.</p>
       </div>
 
       <div class="improvement-card">
-        <div class="imp-tag red">Risk</div>
-        <h4>7. Price-Driven Churn Scenario</h4>
+        <div class="imp-tag red" data-t="imp7_tag">Risk</div>
+        <h4 data-t="imp7_h4">7. Price-Driven Churn Scenario</h4>
         <p>If the simulation's price boost action is used &gt;2× in a week, it should now trigger a <em>PRICE_CHURN risk</em> — modelling that 46% price-sensitive segment would reduce visit frequency. This reflects a real operational risk completely missing from the current version: the tension between margin optimisation and volume retention.</p>
       </div>
 
       <div class="improvement-card">
-        <div class="imp-tag">Realism</div>
-        <h4>8. Seasonal &amp; Weekend Modifiers</h4>
+        <div class="imp-tag" data-t="imp8_tag">Realism</div>
+        <h4 data-t="imp8_h4">8. Seasonal &amp; Weekend Modifiers</h4>
         <p>Druzhba lakeside and park locations show high weekend demand (jogging, cycling, recreation). Add a <em>weekend_multiplier</em> (+35% transactions Sat/Sun for park locations, −15% for Business Park locations which are weekday-dominant). Summer should boost isotonics ×1.5 (per business plan), winter boosts protein bars ×1.3. The seasonal action button now applies this.</p>
       </div>
 
     </div>
 
     <div class="s-panel" style="margin-top:16px">
-      <div class="s-panel-title">Priority Implementation Roadmap</div>
+      <div class="s-panel-title" data-t="imp_roadmap">Priority Implementation Roadmap</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
         <div style="display:flex;gap:12px;align-items:center;padding:10px;background:var(--bg-card);border-radius:var(--radius);">
-          <span style="font-family:var(--font-mono);font-size:11px;color:var(--green);min-width:60px">HIGH</span>
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--green);min-width:60px" data-t="imp_high">HIGH</span>
           <span style="font-size:12px;color:var(--text-dim)">Add "Fresh &amp; Ready" SKU category with expiry-cascade markdown logic (#1)</span>
           <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-left:auto">~4h dev</span>
         </div>
         <div style="display:flex;gap:12px;align-items:center;padding:10px;background:var(--bg-card);border-radius:var(--radius);">
-          <span style="font-family:var(--font-mono);font-size:11px;color:var(--green);min-width:60px">HIGH</span>
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--green);min-width:60px" data-t="imp_high">HIGH</span>
           <span style="font-size:12px;color:var(--text-dim)">Recalibrate hourly traffic curve to commuter profile + night baseline (#2)</span>
           <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-left:auto">~1h dev</span>
         </div>
         <div style="display:flex;gap:12px;align-items:center;padding:10px;background:var(--bg-card);border-radius:var(--radius);">
-          <span style="font-family:var(--font-mono);font-size:11px;color:var(--amber);min-width:60px">MED</span>
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--amber);min-width:60px" data-t="imp_med">MED</span>
           <span style="font-size:12px;color:var(--text-dim)">Two-location comparison mode with different foot traffic profiles (#4)</span>
           <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-left:auto">~6h dev</span>
         </div>
         <div style="display:flex;gap:12px;align-items:center;padding:10px;background:var(--bg-card);border-radius:var(--radius);">
-          <span style="font-family:var(--font-mono);font-size:11px;color:var(--amber);min-width:60px">MED</span>
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--amber);min-width:60px" data-t="imp_med">MED</span>
           <span style="font-size:12px;color:var(--text-dim)">Tiered pricing scenario toggle (Premium-only vs Entry+Premium) (#3)</span>
           <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-left:auto">~3h dev</span>
         </div>
         <div style="display:flex;gap:12px;align-items:center;padding:10px;background:var(--bg-card);border-radius:var(--radius);">
-          <span style="font-family:var(--font-mono);font-size:11px;color:var(--blue);min-width:60px">LOW</span>
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--blue);min-width:60px" data-t="imp_low">LOW</span>
           <span style="font-size:12px;color:var(--text-dim)">Weekend/seasonal modifier + school-hour spike (#5, #8)</span>
           <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-left:auto">~2h dev</span>
         </div>
@@ -1565,6 +1565,7 @@ function fmtN(n)  { return n.toLocaleString('bg-BG', {minimumFractionDigits:2, m
 let lang = 'bg';
 const T = {
   bg: {
+    tab_survey:'Резултати от анкета', tab_improve:'Подобрения на симулацията',
     tab_gamma:'Продуктова гама', tab_fin:'Финансов калкулатор',
     gs_skus:'Общо SKU', gs_margin:'Среден марж', gs_max:'Най-висок марж', gs_min:'Най-нисък марж',
     th_cat:'Категория', th_product:'Продукт', th_brand:'Марка', th_cost:'Достав. цена', th_price:'Продажна цена', th_margin:'Марж %',
@@ -1588,8 +1589,36 @@ const T = {
     verdict_ok:'✓ ОК', verdict_exp:'✗ Скъп', viewing:'🔍 оглед', max_rent_lbl:'Макс. наем:',
     rent_desc: (lv, eur) => `Целева оперативна печалба: <strong style="color:var(--text)">1 500 лв./мес.</strong> — при текущия обем транзакции, максималният наем е <strong style="color:var(--green)">${lv}</strong> лв./мес. (<strong style="color:var(--green)">${eur}</strong> €/мес.)`,
     mo:'/мес.',
+    survey_title:'Резултати от анкета', survey_sub:'Павилион за самообслужване — март 2026 · Младост & Дружба, София',
+    meta_resp:'Отговора', meta_days:'Дни', meta_score:'Ср. 24/7 оценка',
+    sp_age:'Разпределение по възраст (n=163)', sp_district:'Разпределение по квартал', sp_occ:'Заетост (основен сегмент)',
+    sp_freq:'Честота на пазаруване', sp_pain:'Основен проблем', sp_dist:'Максимално разстояние до павилиона',
+    sp_loc:'Предпочитана локация (отговори — топ теми)', sp_spots:'Конкретни споменати места',
+    sp_transport:'Основен вид транспорт', sp_247:'Важност на 24/7 (скала 1–5)',
+    sp_products:'Най-желани продукти & марки (от отворени отговори)', sp_verbatim:'Избрани дословни отговори',
+    ins_core:'★ Основна аудитория: 25–44 (65% от отговорите)',
+    ins_druzhba:'⚡ Дружба 2 води — сигнал за неудовлетворено търсене',
+    ins_employed:'Наети служители = основен генератор на приходи',
+    ins_repeat:'54% пазаруват многократно седмично',
+    ins_price:'⚠ Ценовата чувствителност е пречка №1',
+    ins_walk:'78% ще изминат ≤10 мин.',
+    ins_transport:'83% ходят пеша или с кола → нужен паркинг или пешеходна зона',
+    ins_247:'57% оцениха 24/7 с 4 или 5 — силен сигнал',
+    ins_sku:'★ Анкета-валидирани топ категории за инвентарния модел',
+    imp_note_title:'Как анкетата надгражда симулацията',
+    imp_roadmap:'Приоритетна пътна карта за имплементация',
+    imp_high:'ВИСОК', imp_med:'СРЕДЕН', imp_low:'НИСЪК',
+    imp1_tag:'SKU Каталог', imp1_h4:'1. Добавяне на анкета-валидирани продукти',
+    imp2_tag:'Трафик крива', imp2_h4:'2. Пикове по данни от анкетата',
+    imp3_tag:'Ценообразуване', imp3_h4:'3. Сценарий за ценова чувствителност',
+    imp4_tag:'Локация', imp4_h4:'4. Сравнителна симулация на две локации',
+    imp5_tag:'Аудитория', imp5_h4:'5. Пик на търсене в учебни часове',
+    imp6_tag:'Търсене', imp6_h4:'6. Флаг за глутен / алергени',
+    imp7_tag:'Риск', imp7_h4:'7. Сценарий за отлив заради цените',
+    imp8_tag:'Реализъм', imp8_h4:'8. Сезонни & уикенд модификатори',
   },
   en: {
+    tab_survey:'Survey Insights', tab_improve:'Simulation Improvements',
     tab_gamma:'Product Range', tab_fin:'Financial Calculator',
     gs_skus:'Total SKUs', gs_margin:'Avg Margin', gs_max:'Best Margin', gs_min:'Worst Margin',
     th_cat:'Category', th_product:'Product', th_brand:'Brand', th_cost:'Cost price', th_price:'Retail price', th_margin:'Margin %',
@@ -1613,6 +1642,33 @@ const T = {
     verdict_ok:'✓ OK', verdict_exp:'✗ Too exp.', viewing:'🔍 viewing', max_rent_lbl:'Max rent:',
     rent_desc: (lv, eur) => `Target operating profit: <strong style="color:var(--text)">1,500 BGN/mo.</strong> — at current transaction volume, the maximum rent is <strong style="color:var(--green)">${lv}</strong> BGN/mo. (<strong style="color:var(--green)">${eur}</strong> €/mo.)`,
     mo:'/mo.',
+    survey_title:'Community Survey Results', survey_sub:'Unattended Kiosk — March 2026 · Mladost & Druzhba, Sofia',
+    meta_resp:'Responses', meta_days:'Days', meta_score:'Avg 24/7 Score',
+    sp_age:'Age Distribution (n=163)', sp_district:'District Breakdown', sp_occ:'Occupation (primary segment)',
+    sp_freq:'Shopping Frequency', sp_pain:'Biggest Pain Point', sp_dist:'Max Walk Distance',
+    sp_loc:'Preferred Pavilion Location (responses — top themes)', sp_spots:'Frequently Cited Specific Spots',
+    sp_transport:'Primary Transport Mode', sp_247:'24/7 Importance (scale 1–5)',
+    sp_products:'Most Requested Products & Brands (from open answers)', sp_verbatim:'Selected Verbatim Responses',
+    ins_core:'★ Core audience: 25–44 (65% of responses)',
+    ins_druzhba:'⚡ Druzhba 2 leads — signal of unmet demand',
+    ins_employed:'Employed workers = primary revenue driver',
+    ins_repeat:'54% shop multiple times per week',
+    ins_price:'⚠ Price sensitivity is barrier #1',
+    ins_walk:'78% will walk ≤10 min.',
+    ins_transport:'83% walk or drive → need parking or pedestrian zone',
+    ins_247:'57% rated 24/7 at 4 or 5 — strong signal',
+    ins_sku:'★ Survey-validated top SKU categories for the inventory model',
+    imp_note_title:'How the survey upgrades this simulation',
+    imp_roadmap:'Priority Implementation Roadmap',
+    imp_high:'HIGH', imp_med:'MED', imp_low:'LOW',
+    imp1_tag:'SKU Catalogue', imp1_h4:'1. Add Survey-Validated Products',
+    imp2_tag:'Traffic Curve', imp2_h4:'2. Peak Hours from Survey Data',
+    imp3_tag:'Pricing', imp3_h4:'3. Price Sensitivity Scenario',
+    imp4_tag:'Location', imp4_h4:'4. Two-Location Comparison Simulation',
+    imp5_tag:'Audience', imp5_h4:'5. School-Hours Demand Spike',
+    imp6_tag:'Demand', imp6_h4:'6. Gluten/Allergen Flag',
+    imp7_tag:'Risk', imp7_h4:'7. Price-Driven Churn Scenario',
+    imp8_tag:'Realism', imp8_h4:'8. Seasonal & Weekend Modifiers',
   }
 };
 
