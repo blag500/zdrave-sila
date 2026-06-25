@@ -1141,7 +1141,6 @@
         <div class="pl-row"><span class="pl-label">Себестойност на стоките (COGS)</span><span class="pl-val" id="pl-cogs" style="color:var(--red)">—</span></div>
         <div class="pl-row total"><span class="pl-label">Брутна печалба</span><span class="pl-val" id="pl-gp" style="color:var(--green)">—</span></div>
         <div class="pl-row"><span class="pl-label">Постоянни разходи</span><span class="pl-val" id="pl-fixed" style="color:var(--amber)">—</span></div>
-        <div class="pl-row"><span class="pl-label">Амортизация (24 мес.)</span><span class="pl-val" id="pl-amort" style="color:var(--amber)">—</span></div>
         <div class="pl-row ebitda" id="pl-ebitda-row">
           <span class="pl-label" style="font-weight:600">Оперативна печалба (EBITDA)</span>
           <span class="pl-val" id="pl-ebitda" style="font-size:18px">—</span>
@@ -1184,15 +1183,15 @@
       </div>
       <div class="capex-cards">
         <div class="capex-card">
-          <div class="capex-lbl">Месечна амортизация</div>
-          <div class="capex-val" id="equip-amort" style="color:var(--amber)">—</div>
+          <div class="capex-lbl">Обща инвестиция</div>
+          <div class="capex-val" style="color:var(--amber)" id="equip-amort">—</div>
         </div>
         <div class="capex-card">
-          <div class="capex-lbl">Период</div>
-          <div class="capex-val" style="color:var(--text)">24 месеца</div>
+          <div class="capex-lbl">Нетна печалба / мес.</div>
+          <div class="capex-val" id="equip-net-monthly" style="color:var(--green)">—</div>
         </div>
-        <div class="capex-card">
-          <div class="capex-lbl">Payback период</div>
+        <div class="capex-card" style="border:1px solid rgba(0,200,150,0.2)">
+          <div class="capex-lbl">Инвестицията се връща за</div>
           <div class="capex-val" id="equip-payback" style="color:var(--green)">—</div>
         </div>
       </div>
@@ -1345,9 +1344,8 @@ function renderEquipment() {
     </tr>`;
   }).join('');
   const capex = getCapex();
-  const amortEur = capex / 24;
   document.getElementById('equip-total').textContent = '€' + fmtN(capex);
-  document.getElementById('equip-amort').textContent = '€' + fmtN(amortEur) + ' / ' + fmtN(amortEur * RATE) + ' лв.';
+  document.getElementById('equip-amort').textContent = '€' + fmtN(capex) + ' / ' + fmtN(capex * RATE) + ' лв.';
 }
 
 // Editable volumes (can be changed per row)
@@ -1535,16 +1533,14 @@ function updateFinancials() {
   const monthlyCOGS = monthlyRev * (1 - blended);
   const grossProfit = monthlyRev - monthlyCOGS;
   const rentLv      = rentEur * RATE;
-  const amortLv     = getCapex() * RATE / 24;
   const totalFixed  = FIXED_EX_RENT + rentLv;
-  const ebitda      = grossProfit - totalFixed - amortLv;
-  const bePerDay    = Math.ceil((totalFixed + amortLv) / (blended * avgTicket));
+  const ebitda      = grossProfit - totalFixed;
+  const bePerDay    = Math.ceil(totalFixed / (blended * avgTicket));
 
   document.getElementById('pl-rev').textContent    = fmtLv(monthlyRev);
   document.getElementById('pl-cogs').textContent   = '− ' + fmtLv(monthlyCOGS);
   document.getElementById('pl-gp').textContent     = fmtLv(grossProfit);
   document.getElementById('pl-fixed').textContent  = '− ' + fmtLv(totalFixed);
-  document.getElementById('pl-amort').textContent  = '− ' + fmtLv(amortLv);
   document.getElementById('pl-ebitda').textContent = (ebitda >= 0 ? '' : '− ') + fmtLv(Math.abs(ebitda));
   document.getElementById('pl-ebitda').style.color = ebitda >= 0 ? 'var(--green)' : 'var(--red)';
   document.getElementById('pl-ebitda-row').className = 'pl-row ebitda' + (ebitda < 0 ? ' neg' : '');
@@ -1557,7 +1553,7 @@ function updateFinancials() {
   document.getElementById('pl-be').textContent   = bePerDay;
   document.getElementById('pl-margin-pct').textContent = (blended*100).toFixed(1) + '%';
 
-  // Payback period
+  // Payback: нетна печалба/месец → колко месеца да се върне инвестицията
   const paybackEl = document.getElementById('equip-payback');
   if (netPnl > 0) {
     const pb = Math.ceil(getCapex() * RATE / netPnl);
@@ -1566,9 +1562,12 @@ function updateFinancials() {
   } else {
     paybackEl.textContent = '∞'; paybackEl.style.color = 'var(--red)';
   }
+  // Update net profit display in equipment section
+  const npEl = document.getElementById('equip-net-monthly');
+  if (npEl) { npEl.textContent = fmtLv(Math.max(0, netPnl)) + '/мес.'; }
 
-  // Max rent (includes amortization)
-  const maxRentLv  = grossProfit - FIXED_EX_RENT - amortLv - TARGET_EBITDA;
+  // Max rent
+  const maxRentLv  = grossProfit - FIXED_EX_RENT - TARGET_EBITDA;
   const maxRentEur = maxRentLv / RATE;
   document.getElementById('max-rent-lv').textContent  = fmtN(Math.max(0, maxRentLv));
   document.getElementById('max-rent-eur').textContent = Math.max(0, maxRentEur).toFixed(0);
@@ -1579,7 +1578,7 @@ function updateFinancials() {
   rtbody.innerHTML = SPACES.map(sp => {
     const spLv     = sp.eur * RATE;
     const spFixed  = FIXED_EX_RENT + spLv;
-    const spEBITDA = grossProfit - spFixed - amortLv;
+    const spEBITDA = grossProfit - spFixed;
     const ok = sp.eur <= maxRentEur;
     return `<tr>
       <td style="color:var(--text);font-weight:500">${sp.name}</td>
