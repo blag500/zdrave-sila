@@ -1183,6 +1183,10 @@
           <label>Наем (€/мес.) <span id="lbl-rent">180</span></label>
           <input type="range" class="green-range" id="sl-rent" min="100" max="1100" value="180" step="10" oninput="updateFinancials()">
         </div>
+        <div id="pl-daily-bridge" style="margin-top:12px;display:flex;align-items:baseline;justify-content:space-between;padding:8px 12px;background:rgba(0,200,150,0.07);border:1px solid rgba(0,200,150,0.18);border-radius:8px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">
+          <span><span id="pl-daily-customers" style="color:var(--text)">—</span> кл. × <span id="pl-daily-ticket" style="color:var(--text)">—</span></span>
+          <span style="font-size:15px;font-weight:700;color:var(--green)" id="pl-daily-rev">—</span>
+        </div>
         <div style="margin-top:8px;padding:10px 12px;background:var(--bg-card);border-radius:var(--radius);font-size:11px;color:var(--text-muted);font-family:var(--font-mono);line-height:1.7">
           <span style="color:var(--text);font-weight:600">Постоянни разходи (без наем): 1 070 лв./мес.</span><br>
           <span style="opacity:0.7">Счетоводство 150 · Застраховка 80 · Консумативи 100</span><br>
@@ -1193,10 +1197,6 @@
       </div>
       <div class="fin-panel">
         <div class="fin-panel-title">Месечен P&amp;L</div>
-        <div id="pl-daily-bridge" style="display:flex;align-items:baseline;justify-content:space-between;padding:8px 12px;margin-bottom:10px;background:rgba(0,200,150,0.07);border:1px solid rgba(0,200,150,0.18);border-radius:8px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">
-          <span><span id="pl-daily-customers" style="color:var(--text)">—</span> кл. × <span id="pl-daily-ticket" style="color:var(--text)">—</span></span>
-          <span style="font-size:15px;font-weight:700;color:var(--green)" id="pl-daily-rev">—</span>
-        </div>
         <div class="pl-row"><span class="pl-label">Приход</span><span class="pl-val" id="pl-rev" style="color:var(--green)">—</span></div>
         <div class="pl-row"><span class="pl-label">Себестойност на стоките (COGS)</span><span class="pl-val" id="pl-cogs" style="color:var(--red)">—</span></div>
         <div class="pl-row total"><span class="pl-label">Брутна печалба</span><span class="pl-val" id="pl-gp" style="color:var(--green)">—</span></div>
