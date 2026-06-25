@@ -1189,6 +1189,10 @@
       <!-- P&L output -->
       <div class="fin-panel">
         <div class="fin-panel-title">Месечен P&amp;L</div>
+        <div id="pl-daily-bridge" style="display:flex;align-items:baseline;justify-content:space-between;padding:8px 12px;margin-bottom:10px;background:rgba(0,200,150,0.07);border:1px solid rgba(0,200,150,0.18);border-radius:8px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">
+          <span><span id="pl-daily-customers" style="color:var(--text)">—</span> кл. × <span id="pl-daily-ticket" style="color:var(--text)">—</span></span>
+          <span style="font-size:15px;font-weight:700;color:var(--green)" id="pl-daily-rev">—</span>
+        </div>
         <div class="pl-row"><span class="pl-label">Приход</span><span class="pl-val" id="pl-rev" style="color:var(--green)">—</span></div>
         <div class="pl-row"><span class="pl-label">Себестойност на стоките (COGS)</span><span class="pl-val" id="pl-cogs" style="color:var(--red)">—</span></div>
         <div class="pl-row total"><span class="pl-label">Брутна печалба</span><span class="pl-val" id="pl-gp" style="color:var(--green)">—</span></div>
@@ -1643,6 +1647,10 @@ function updateFinancials() {
   const totalFixed  = FIXED_EX_RENT + rentLv;
   const ebitda      = grossProfit - totalFixed;
   const bePerDay    = Math.ceil(totalFixed / (blended * avgTicket));
+
+  document.getElementById('pl-daily-customers').textContent = customersPerDay;
+  document.getElementById('pl-daily-ticket').textContent    = fmt(avgTicket);
+  document.getElementById('pl-daily-rev').textContent       = fmt(customersPerDay * avgTicket) + ' / ден';
 
   document.getElementById('pl-rev').textContent    = fmt(monthlyRev);
   document.getElementById('pl-cogs').textContent   = '− ' + fmt(monthlyCOGS);
