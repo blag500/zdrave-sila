@@ -527,6 +527,31 @@
   .verdict-pill.ok  { background: rgba(0,200,150,0.12); color: var(--green); }
   .verdict-pill.over{ background: rgba(255,77,109,0.12); color: var(--red);   }
 
+  .scenario-bar {
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .scenario-lbl {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--text-muted); margin-right: 4px;
+  }
+  .scenario-btn {
+    display: flex; align-items: center; gap: 7px;
+    padding: 7px 16px; border-radius: 99px; cursor: pointer;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-muted); transition: all var(--transition);
+  }
+  .scenario-btn:hover { border-color: currentColor; opacity: 0.85; }
+  .scenario-btn.pessimist        { color: var(--red);   }
+  .scenario-btn.pessimist.active { background: rgba(255,77,109,0.12); border-color: var(--red); }
+  .scenario-btn.realistic        { color: var(--amber); }
+  .scenario-btn.realistic.active { background: rgba(245,166,35,0.12); border-color: var(--amber); }
+  .scenario-btn.optimist         { color: var(--green); }
+  .scenario-btn.optimist.active  { background: rgba(0,200,150,0.12); border-color: var(--green); }
+  .scenario-btn.custom           { color: var(--text-muted); font-style: italic; }
+  .scenario-btn.custom.active    { background: rgba(255,255,255,0.05); border-color: var(--border-em); color: var(--text); }
+
   .basket-table { width: 100%; border-collapse: collapse; font-size: 12px; }
   .basket-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
   .basket-table tr:last-child td { border-bottom: none; }
@@ -1083,6 +1108,15 @@
       </table>
     </div>
 
+    <!-- Scenario selector -->
+    <div class="scenario-bar">
+      <span class="scenario-lbl">Сценарий:</span>
+      <button class="scenario-btn pessimist" id="sc-pessimist" onclick="applyScenario('pessimist')">🔴 Песимистичен</button>
+      <button class="scenario-btn realistic" id="sc-realistic"  onclick="applyScenario('realistic')">🟡 Реалистичен</button>
+      <button class="scenario-btn optimist"  id="sc-optimist"  onclick="applyScenario('optimist')">🟢 Оптимистичен</button>
+      <button class="scenario-btn custom active" id="sc-custom" style="display:none">✏ Персонализиран</button>
+    </div>
+
     <!-- Basket constructor -->
     <div class="panel" style="margin-bottom:16px">
       <div class="panel-header">
@@ -1120,7 +1154,7 @@
         <div class="fin-panel-title">Финансов калкулатор</div>
         <div class="slider-row">
           <label>Клиенти / ден <span id="lbl-customers">80</span></label>
-          <input type="range" class="green-range" id="sl-customers" min="10" max="250" value="80" oninput="updateFinancials()">
+          <input type="range" class="green-range" id="sl-customers" min="10" max="250" value="80" oninput="markCustom();updateFinancials()">
         </div>
         <div class="slider-row">
           <label>Наем (€/мес.) <span id="lbl-rent">180</span></label>
@@ -1349,6 +1383,57 @@ function renderEquipment() {
 }
 
 
+// ── Scenarios ─────────────────────────────────────────────────
+const SCENARIOS = {
+  pessimist: {
+    customers: 40,
+    basket: [
+      { idx: 29, qty: 1 },  // Натурален десерт 1.99
+      { idx: 20, qty: 1 },  // Вода 0.99
+    ]
+  },
+  realistic: {
+    customers: 75,
+    basket: [
+      { idx: 0,  qty: 1 },  // Born Winner бар 3.99
+      { idx: 26, qty: 1 },  // Dr.Witt 2.50
+    ]
+  },
+  optimist: {
+    customers: 130,
+    basket: [
+      { idx: 6,  qty: 1 },  // RTD шейк Born Winner 5.99
+      { idx: 37, qty: 1 },  // XFUEL chips 4.30
+      { idx: 20, qty: 1 },  // Вода 0.99
+    ]
+  }
+};
+
+let activeScenario = null;
+
+function applyScenario(key) {
+  const sc = SCENARIOS[key];
+  activeScenario = key;
+  basket = sc.basket.map(r => ({ ...r }));
+  document.getElementById('sl-customers').value = sc.customers;
+  document.getElementById('lbl-customers').textContent = sc.customers;
+  ['pessimist','realistic','optimist'].forEach(k => {
+    document.getElementById('sc-' + k).classList.toggle('active', k === key);
+  });
+  document.getElementById('sc-custom').style.display = 'none';
+  renderBasket();
+  updateFinancials();
+}
+
+function markCustom() {
+  if (activeScenario === null) return;
+  activeScenario = null;
+  ['pessimist','realistic','optimist'].forEach(k => {
+    document.getElementById('sc-' + k).classList.remove('active');
+  });
+  document.getElementById('sc-custom').style.display = '';
+}
+
 // ── Basket ────────────────────────────────────────────────────
 let basket = [
   { idx: 0,  qty: 1 },  // Born Winner бар
@@ -1382,18 +1467,21 @@ function renderBasket() {
 }
 
 function onBasketSelect(el) {
+  markCustom();
   basket[+el.dataset.i].idx = +el.value;
   updateBasketSummary();
   updateFinancials();
 }
 
 function onBasketQty(el) {
+  markCustom();
   basket[+el.dataset.i].qty = Math.max(1, +el.value || 1);
   updateBasketSummary();
   updateFinancials();
 }
 
 function addBasketRow() {
+  markCustom();
   basket.push({ idx: 0, qty: 1 });
   renderBasket();
   updateFinancials();
@@ -1401,6 +1489,7 @@ function addBasketRow() {
 
 function removeBasketRow(i) {
   if (basket.length <= 1) return;
+  markCustom();
   basket.splice(i, 1);
   renderBasket();
   updateFinancials();
