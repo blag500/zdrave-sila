@@ -527,6 +527,20 @@
   @media (max-width: 760px) {
     .fin-grid { grid-template-columns: 1fr; }
     .gamma-summary { grid-template-columns: 1fr 1fr; }
+    .fin-panel { padding: 14px; }
+    .g-sum-card { padding: 10px 12px; }
+    .g-sum-val { font-size: 18px; }
+    .cat-filter { font-size: 10px; padding: 4px 10px; }
+    .hide-mobile { display: none !important; }
+    .gamma-table-wrap::before {
+      content: 'скролирай →';
+      display: block; font-family: var(--font-mono);
+      font-size: 9px; color: var(--text-muted);
+      text-align: right; margin-bottom: 6px; letter-spacing: 0.05em;
+    }
+    .rent-table { font-size: 11px; }
+    .rent-table td, .rent-table th { padding: 8px 8px; }
+    .panel { padding: 14px; }
   }
 </style>
 </head>
@@ -982,6 +996,7 @@
       <button class="cat-filter" onclick="filterCat('Млечни')">Млечни</button>
       <button class="cat-filter" onclick="filterCat('Натурални барове')">Натурални барове</button>
       <button class="cat-filter" onclick="filterCat('Добавки')">Добавки</button>
+      <button class="cat-filter" onclick="filterCat('Протеинов чипс')">Протеинов чипс</button>
     </div>
 
     <!-- Product table -->
@@ -1025,7 +1040,8 @@
         </div>
         <div style="margin-top:8px;padding:10px 12px;background:var(--bg-card);border-radius:var(--radius);font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">
           Постоянни разходи (без наем): <span style="color:var(--text)">1 540 лв./мес.</span><br>
-          EUR/BGN: <span style="color:var(--text)">1.95583</span> (официален фиксиран курс)
+          EUR/BGN: <span style="color:var(--text)">1.95583</span> (официален фиксиран курс)<br>
+          <span style="color:var(--amber)">⚠ Доставни цени са прогнозни</span> — актуализирай след преговори с доставчици
         </div>
       </div>
       <!-- P&L output -->
@@ -1060,10 +1076,10 @@
         <thead>
           <tr>
             <th>Помещение</th>
-            <th>Площ</th>
+            <th class="hide-mobile">Площ</th>
             <th>Наем €/мес.</th>
-            <th>Наем лв./мес.</th>
-            <th>EBITDA при наем</th>
+            <th class="hide-mobile">Наем лв./мес.</th>
+            <th>EBITDA/мес.</th>
             <th>Статус</th>
           </tr>
         </thead>
@@ -1094,6 +1110,7 @@ const CAT_COLORS = {
   'Млечни':            '#FB7185',
   'Натурални барове':  '#84CC16',
   'Добавки':           '#94A3B8',
+  'Протеинов чипс':   '#FF6B35',
 };
 
 // [cat, name, brand, cost, price, volPerDay]
@@ -1124,6 +1141,7 @@ const GAMMA = [
   ['Напитки',           'Кокосова вода 330ml',          'Harmonica',       2.50, 4.99, 5],
   ['Напитки',           'Студено изцеден сок 330ml',    'Harmonica',       2.80, 5.29, 4],
   ['Напитки',           'Студен зелен чай 330ml',       'Smart Organic',   1.80, 3.49, 4],
+  ['Напитки',           'Dr.Witt функционална 250ml',   'Dr.Witt',         1.25, 2.50, 8],
   ['Млечни',            'Skyr ванилия 200g',            'Arla',            1.80, 3.49, 4],
   ['Млечни',            'Протеиново кисело мляко 200g', 'Danone Oikos',    1.50, 2.99, 4],
   ['Натурални барове',  'Натурален десерт 30g',         'Harmonika',       1.00, 1.99, 6],
@@ -1134,13 +1152,17 @@ const GAMMA = [
   ['Добавки',           'Магнезий сашет',               'Ostrovit',        0.80, 1.99, 3],
   ['Добавки',           'Електролити сашет',            'myprotein',       1.20, 2.49, 3],
   ['Добавки',           'Мелатонин 1mg',                'QNT',             0.50, 1.29, 2],
+  ['Протеинов чипс',   'Protein Lentil Chips 40g',     'XFUEL',           2.10, 4.30, 5],
+  ['Протеинов чипс',   'Pyramids HP Chips Tomato 60g', 'Popcrop',         2.10, 4.30, 4],
 ];
 
 const SPACES = [
-  { name: 'Младост 2 — 20 кв.м.',   sqm: 20,  eur: 180  },
-  { name: 'Младост 2 — 25 кв.м.',   sqm: 25,  eur: 349  },
-  { name: 'Младост 1 — 50 кв.м.',   sqm: 50,  eur: 300  },
-  { name: 'Младост 4 — 66+ кв.м.',  sqm: 66,  eur: 1055 },
+  { name: 'Младост 2 — 20 кв.м.',            sqm: 20,  eur: 180  },
+  { name: 'Младост 2 — 25 кв.м.',            sqm: 25,  eur: 349  },
+  { name: 'Младост 1 — 50 кв.м.',            sqm: 50,  eur: 300  },
+  { name: 'Младост 1 — 60 кв.м. (партер)',   sqm: 60,  eur: 600, viewing: true },
+  { name: 'Младост 1 — 65 кв.м. (Соф. герои 3Б)', sqm: 65, eur: 800, viewing: true },
+  { name: 'Младост 4 — 66+ кв.м.',           sqm: 66,  eur: 1055 },
 ];
 
 // Editable volumes (can be changed per row)
@@ -1287,11 +1309,11 @@ function updateFinancials() {
     const ok = sp.eur <= maxRentEur;
     return `<tr>
       <td style="color:var(--text);font-weight:500">${sp.name}</td>
-      <td style="font-family:var(--font-mono)">${sp.sqm} кв.м.</td>
+      <td class="hide-mobile" style="font-family:var(--font-mono)">${sp.sqm} кв.м.</td>
       <td style="font-family:var(--font-mono)">€${sp.eur}</td>
-      <td style="font-family:var(--font-mono)">${fmtN(spLv)}</td>
+      <td class="hide-mobile" style="font-family:var(--font-mono)">${fmtN(spLv)}</td>
       <td style="font-family:var(--font-mono);color:${spEBITDA>=0?'var(--green)':'var(--red)'}">${(spEBITDA>=0?'':' −')}${fmtN(Math.abs(spEBITDA))} лв.</td>
-      <td><span class="verdict-pill ${ok?'ok':'over'}">${ok?'✓ ОК':'✗ Скъп'}</span></td>
+      <td><span class="verdict-pill ${ok?'ok':'over'}">${ok?'✓ ОК':'✗ Скъп'}</span>${sp.viewing?' <span style="font-size:9px;font-family:var(--font-mono);color:var(--amber);letter-spacing:0.04em">🔍 оглед</span>':''}</td>
     </tr>`;
   }).join('');
 }
