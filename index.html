@@ -1494,7 +1494,7 @@ function renderBasket() {
 function onBasketSelect(el) {
   markCustom();
   basket[+el.dataset.i].idx = +el.value;
-  updateBasketSummary();
+  renderBasket();
   updateFinancials();
 }
 
