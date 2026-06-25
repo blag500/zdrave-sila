@@ -524,7 +524,30 @@
   .verdict-pill.ok  { background: rgba(0,200,150,0.12); color: var(--green); }
   .verdict-pill.over{ background: rgba(255,77,109,0.12); color: var(--red);   }
 
+  .equip-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 420px; }
+  .equip-table thead th {
+    font-family: var(--font-mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--text-muted);
+    padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left;
+  }
+  .equip-table thead th.r { text-align: right; }
+  .equip-table tbody td { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--text-dim); }
+  .equip-table tbody td.r { text-align: right; font-family: var(--font-mono); }
+  .equip-table tbody tr:last-child td { border-bottom: none; }
+  .equip-toggle {
+    padding: 4px 12px; border-radius: 99px; font-family: var(--font-mono);
+    font-size: 10px; cursor: pointer; transition: all var(--transition);
+    border: 1px solid var(--border); background: transparent; color: var(--text-muted);
+  }
+  .equip-toggle.active { border-color: var(--green); background: rgba(0,200,150,0.1); color: var(--green); }
+  .capex-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 14px; }
+  .capex-card { background: var(--bg-card); border-radius: var(--radius); padding: 12px; }
+  .capex-lbl { font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 4px; }
+  .capex-val { font-family: var(--font-display); font-size: 15px; }
+
   @media (max-width: 760px) {
+    .capex-cards { grid-template-columns: 1fr 1fr; }
+
     .fin-grid { grid-template-columns: 1fr; }
     .gamma-summary { grid-template-columns: 1fr 1fr; }
     .fin-panel { padding: 14px; }
@@ -1027,16 +1050,12 @@
       <div class="fin-panel">
         <div class="fin-panel-title">Финансов калкулатор</div>
         <div class="slider-row">
-          <label>Транзакции / ден / машина <span id="lbl-txn">40</span></label>
-          <input type="range" class="green-range" id="sl-txn" min="5" max="100" value="40" oninput="updateFinancials()">
+          <label>Клиенти / ден <span id="lbl-customers">80</span></label>
+          <input type="range" class="green-range" id="sl-customers" min="10" max="250" value="80" oninput="updateFinancials()">
         </div>
         <div class="slider-row">
           <label>Наем (€/мес.) <span id="lbl-rent">180</span></label>
-          <input type="range" class="green-range" id="sl-rent" min="100" max="600" value="180" step="10" oninput="updateFinancials()">
-        </div>
-        <div class="slider-row">
-          <label>Машини <span id="lbl-machines">2</span></label>
-          <input type="range" class="green-range" id="sl-machines" min="1" max="4" value="2" oninput="updateFinancials()">
+          <input type="range" class="green-range" id="sl-rent" min="100" max="1100" value="180" step="10" oninput="updateFinancials()">
         </div>
         <div style="margin-top:8px;padding:10px 12px;background:var(--bg-card);border-radius:var(--radius);font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">
           Постоянни разходи (без наем): <span style="color:var(--text)">1 540 лв./мес.</span><br>
@@ -1051,6 +1070,7 @@
         <div class="pl-row"><span class="pl-label">COGS (1 − марж%)</span><span class="pl-val" id="pl-cogs" style="color:var(--red)">—</span></div>
         <div class="pl-row total"><span class="pl-label">Брутна печалба</span><span class="pl-val" id="pl-gp" style="color:var(--green)">—</span></div>
         <div class="pl-row"><span class="pl-label">Постоянни разходи</span><span class="pl-val" id="pl-fixed" style="color:var(--amber)">—</span></div>
+        <div class="pl-row"><span class="pl-label">Амортизация (24 мес.)</span><span class="pl-val" id="pl-amort" style="color:var(--amber)">—</span></div>
         <div class="pl-row ebitda" id="pl-ebitda-row">
           <span class="pl-label" style="font-weight:600">EBITDA</span>
           <span class="pl-val" id="pl-ebitda" style="font-size:18px">—</span>
@@ -1064,8 +1084,45 @@
           <span class="pl-val" id="pl-net" style="font-size:18px;font-weight:700">—</span>
         </div>
         <div style="margin-top:10px;display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">
-          <span>Break-even: <span id="pl-be" style="color:var(--text)">—</span> txn/ден/маш.</span>
+          <span>Break-even: <span id="pl-be" style="color:var(--text)">—</span> клиенти/ден</span>
           <span>Марж: <span id="pl-margin-pct" style="color:var(--green)">—</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equipment & Capex -->
+    <div class="panel" style="margin-bottom:16px">
+      <div class="panel-header">
+        <span class="panel-title">Оборудване &amp; Капиталови разходи</span>
+        <div style="display:flex;gap:6px">
+          <button id="equip-btn-new" class="equip-toggle active" onclick="toggleEquip(true)">Ново</button>
+          <button id="equip-btn-used" class="equip-toggle" onclick="toggleEquip(false)">Употребявано</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="equip-table">
+          <thead><tr><th>Артикул</th><th class="r">Бр.</th><th class="r">Единична цена</th><th class="r">Общо</th></tr></thead>
+          <tbody id="equip-tbody"></tbody>
+          <tfoot>
+            <tr style="font-weight:600;background:var(--bg-card)">
+              <td colspan="3" style="padding:10px 12px;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)">Обща инвестиция (Capex)</td>
+              <td class="r" id="equip-total" style="padding:10px 12px;color:var(--green);font-family:var(--font-mono);font-size:14px">—</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="capex-cards">
+        <div class="capex-card">
+          <div class="capex-lbl">Месечна амортизация</div>
+          <div class="capex-val" id="equip-amort" style="color:var(--amber)">—</div>
+        </div>
+        <div class="capex-card">
+          <div class="capex-lbl">Период</div>
+          <div class="capex-val" style="color:var(--text)">24 месеца</div>
+        </div>
+        <div class="capex-card">
+          <div class="capex-lbl">Payback период</div>
+          <div class="capex-val" id="equip-payback" style="color:var(--green)">—</div>
         </div>
       </div>
     </div>
@@ -1173,6 +1230,55 @@ const SPACES = [
   { name: 'Младост 4 — 66+ кв.м.',           sqm: 66,  eur: 1055 },
 ];
 
+// [name, qty, newPrice€, usedPrice€ or null]
+const EQUIP = [
+  ['Self-checkout POS терминал',      1, 1200, 500 ],
+  ['Фискален принтер (НАП)',           1,  380, 160 ],
+  ['Хладилна витрина 600L',            1, 2400, 950 ],
+  ['Хладилна витрина 300L',            1, 1400, 550 ],
+  ['Гондолен стелаж (двустранен)',     3,  280, 110 ],
+  ['Стенен стелаж',                    2,  160,  60 ],
+  ['Камери + рекордер (к-т)',          1,  380, 190 ],
+  ['LED осветление рафтове (к-т)',     1,  280, null],
+  ['Светеща табела',                   1,  580, 280 ],
+  ['Интернет рутер',                   1,   75, null],
+  ['POS софтуер лиценз/год.',          1,  290, null],
+  ['Монтаж + инсталация',              1,  750, 350 ],
+];
+
+let useNew = true;
+
+function getCapex() {
+  return EQUIP.reduce((s, e) => s + e[1] * (useNew ? e[2] : (e[3] ?? e[2])), 0);
+}
+
+function toggleEquip(isNew) {
+  useNew = isNew;
+  document.getElementById('equip-btn-new').classList.toggle('active', isNew);
+  document.getElementById('equip-btn-used').classList.toggle('active', !isNew);
+  renderEquipment();
+  updateFinancials();
+}
+
+function renderEquipment() {
+  const tbody = document.getElementById('equip-tbody');
+  tbody.innerHTML = EQUIP.map(e => {
+    const unitP = useNew ? e[2] : (e[3] ?? e[2]);
+    const total = e[1] * unitP;
+    const onlyNew = !useNew && e[3] === null;
+    return `<tr>
+      <td>${e[0]}${onlyNew ? ' <span style="font-size:9px;color:var(--text-muted);font-family:var(--font-mono)">(само ново)</span>' : ''}</td>
+      <td class="r">${e[1]}</td>
+      <td class="r">€${unitP}</td>
+      <td class="r" style="color:var(--green)">€${fmtN(total)}</td>
+    </tr>`;
+  }).join('');
+  const capex = getCapex();
+  const amortEur = capex / 24;
+  document.getElementById('equip-total').textContent = '€' + fmtN(capex);
+  document.getElementById('equip-amort').textContent = '€' + fmtN(amortEur) + ' / ' + fmtN(amortEur * RATE) + ' лв.';
+}
+
 // Editable volumes (can be changed per row)
 let vols = GAMMA.map(p => p[5]);
 
@@ -1265,50 +1371,57 @@ function onVolChange(input) {
 }
 
 function updateFinancials() {
-  const txnPerMachine = parseInt(document.getElementById('sl-txn').value);
-  const rentEur       = parseInt(document.getElementById('sl-rent').value);
-  const machines      = parseInt(document.getElementById('sl-machines').value);
+  const customersPerDay = parseInt(document.getElementById('sl-customers').value);
+  const rentEur         = parseInt(document.getElementById('sl-rent').value);
 
-  document.getElementById('lbl-txn').textContent      = txnPerMachine;
-  document.getElementById('lbl-rent').textContent     = rentEur;
-  document.getElementById('lbl-machines').textContent = machines;
+  document.getElementById('lbl-customers').textContent = customersPerDay;
+  document.getElementById('lbl-rent').textContent      = rentEur;
 
-  // Blended margin from product table
+  // Blended margin + avg ticket from product table
   const totalRev  = GAMMA.reduce((s,_,i) => s + GAMMA[i][4] * vols[i], 0);
   const totalCost = GAMMA.reduce((s,_,i) => s + GAMMA[i][3] * vols[i], 0);
+  const totalVol  = GAMMA.reduce((s,_,i) => s + vols[i], 0);
   const blended   = totalRev > 0 ? (totalRev - totalCost) / totalRev : 0.55;
+  const avgTicket = totalVol > 0 ? totalRev / totalVol : 4.20;
 
-  // Avg ticket from product table weighted average
-  const avgTicket = totalRev > 0 ? totalRev / GAMMA.reduce((s,_,i) => s + vols[i], 0) : 4.20;
+  const monthlyRev  = customersPerDay * avgTicket * DAYS;
+  const monthlyCOGS = monthlyRev * (1 - blended);
+  const grossProfit = monthlyRev - monthlyCOGS;
+  const rentLv      = rentEur * RATE;
+  const amortLv     = getCapex() * RATE / 24;
+  const totalFixed  = FIXED_EX_RENT + rentLv;
+  const ebitda      = grossProfit - totalFixed - amortLv;
+  const bePerDay    = Math.ceil((totalFixed + amortLv) / (blended * avgTicket));
 
-  const monthlyRev   = machines * txnPerMachine * avgTicket * DAYS;
-  const monthlyCOGS  = monthlyRev * (1 - blended);
-  const grossProfit  = monthlyRev - monthlyCOGS;
-  const rentLv       = rentEur * RATE;
-  const totalFixed   = FIXED_EX_RENT + rentLv;
-  const ebitda       = grossProfit - totalFixed;
-
-  const beTotal    = Math.ceil(totalFixed / (blended * avgTicket));
-  const beMachine  = Math.ceil(beTotal / machines / DAYS);
-
-  document.getElementById('pl-rev').textContent       = fmtLv(monthlyRev);
-  document.getElementById('pl-cogs').textContent      = '− ' + fmtLv(monthlyCOGS);
-  document.getElementById('pl-gp').textContent        = fmtLv(grossProfit);
-  document.getElementById('pl-fixed').textContent     = '− ' + fmtLv(totalFixed);
-  document.getElementById('pl-ebitda').textContent    = (ebitda >= 0 ? '' : '− ') + fmtLv(Math.abs(ebitda));
-  document.getElementById('pl-ebitda').style.color    = ebitda >= 0 ? 'var(--green)' : 'var(--red)';
-  document.getElementById('pl-ebitda-row').className  = 'pl-row ebitda' + (ebitda < 0 ? ' neg' : '');
+  document.getElementById('pl-rev').textContent    = fmtLv(monthlyRev);
+  document.getElementById('pl-cogs').textContent   = '− ' + fmtLv(monthlyCOGS);
+  document.getElementById('pl-gp').textContent     = fmtLv(grossProfit);
+  document.getElementById('pl-fixed').textContent  = '− ' + fmtLv(totalFixed);
+  document.getElementById('pl-amort').textContent  = '− ' + fmtLv(amortLv);
+  document.getElementById('pl-ebitda').textContent = (ebitda >= 0 ? '' : '− ') + fmtLv(Math.abs(ebitda));
+  document.getElementById('pl-ebitda').style.color = ebitda >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('pl-ebitda-row').className = 'pl-row ebitda' + (ebitda < 0 ? ' neg' : '');
 
   const tax    = ebitda > 0 ? ebitda * 0.10 : 0;
   const netPnl = ebitda - tax;
-  document.getElementById('pl-tax').textContent    = ebitda > 0 ? '− ' + fmtLv(tax) : '0.00 лв.';
-  document.getElementById('pl-net').textContent    = (netPnl >= 0 ? '' : '− ') + fmtLv(Math.abs(netPnl));
-  document.getElementById('pl-net').style.color    = netPnl >= 0 ? 'var(--green)' : 'var(--red)';
-  document.getElementById('pl-be').textContent        = beMachine;
+  document.getElementById('pl-tax').textContent  = ebitda > 0 ? '− ' + fmtLv(tax) : '0.00 лв.';
+  document.getElementById('pl-net').textContent  = (netPnl >= 0 ? '' : '− ') + fmtLv(Math.abs(netPnl));
+  document.getElementById('pl-net').style.color  = netPnl >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('pl-be').textContent   = bePerDay;
   document.getElementById('pl-margin-pct').textContent = (blended*100).toFixed(1) + '%';
 
-  // Max rent
-  const maxRentLv  = grossProfit - FIXED_EX_RENT - TARGET_EBITDA;
+  // Payback period
+  const paybackEl = document.getElementById('equip-payback');
+  if (netPnl > 0) {
+    const pb = Math.ceil(getCapex() * RATE / netPnl);
+    paybackEl.textContent = pb + ' мес.';
+    paybackEl.style.color = pb <= 24 ? 'var(--green)' : pb <= 48 ? 'var(--amber)' : 'var(--red)';
+  } else {
+    paybackEl.textContent = '∞'; paybackEl.style.color = 'var(--red)';
+  }
+
+  // Max rent (includes amortization)
+  const maxRentLv  = grossProfit - FIXED_EX_RENT - amortLv - TARGET_EBITDA;
   const maxRentEur = maxRentLv / RATE;
   document.getElementById('max-rent-lv').textContent  = fmtN(Math.max(0, maxRentLv));
   document.getElementById('max-rent-eur').textContent = Math.max(0, maxRentEur).toFixed(0);
@@ -1317,9 +1430,9 @@ function updateFinancials() {
   // Rent table
   const rtbody = document.getElementById('rent-tbody');
   rtbody.innerHTML = SPACES.map(sp => {
-    const spLv    = sp.eur * RATE;
-    const spFixed = FIXED_EX_RENT + spLv;
-    const spEBITDA = grossProfit - spFixed;
+    const spLv     = sp.eur * RATE;
+    const spFixed  = FIXED_EX_RENT + spLv;
+    const spEBITDA = grossProfit - spFixed - amortLv;
     const ok = sp.eur <= maxRentEur;
     return `<tr>
       <td style="color:var(--text);font-weight:500">${sp.name}</td>
@@ -1337,6 +1450,7 @@ document.getElementById('tab-gamma').addEventListener('click', () => {
   setTimeout(() => { renderTable(); }, 50);
 });
 // Also init immediately in case tab is opened programmatically
+renderEquipment();
 renderTable();
 </script>
 
