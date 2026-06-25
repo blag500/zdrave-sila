@@ -539,6 +539,18 @@
     letter-spacing: 0.04em;
   }
   .cur-btn.active { background: var(--green); color: #0A0D0F; }
+  .lang-toggle {
+    margin-left: auto; display: inline-flex; align-items: center;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 99px; padding: 3px; gap: 2px;
+  }
+  .lang-btn {
+    padding: 4px 12px; border-radius: 99px; border: none; background: transparent;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+    color: var(--text-muted); cursor: pointer; transition: all var(--transition);
+    letter-spacing: 0.08em;
+  }
+  .lang-btn.active { background: var(--accent); color: #0A0D0F; }
 
   .scenario-bar {
     display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
@@ -670,8 +682,12 @@
     <button class="tab-btn active" onclick="switchTab('sim')" id="tab-sim">🤖 Live Simulation</button>
     <button class="tab-btn" onclick="switchTab('survey')" id="tab-survey">📊 Survey Insights <span style="font-family:var(--font-mono);font-size:10px;background:rgba(0,200,150,0.15);color:var(--green);padding:2px 6px;border-radius:4px;margin-left:4px;">n=163</span></button>
     <button class="tab-btn" onclick="switchTab('improve')" id="tab-improve">🔧 Simulation Improvements</button>
-    <button class="tab-btn" onclick="switchTab('gamma')"  id="tab-gamma">📦 Продуктова гама</button>
-    <button class="tab-btn" onclick="switchTab('fin')"    id="tab-fin">💰 Финансов калкулатор</button>
+    <button class="tab-btn" onclick="switchTab('gamma')"  id="tab-gamma">📦 <span data-t="tab_gamma">Продуктова гама</span></button>
+    <button class="tab-btn" onclick="switchTab('fin')"    id="tab-fin">💰 <span data-t="tab_fin">Финансов калкулатор</span></button>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="lang-bg" onclick="applyLang('bg')">БГ</button>
+      <button class="lang-btn" id="lang-en" onclick="applyLang('en')">EN</button>
+    </div>
   </nav>
 
   <!-- ═══════════════════ TAB: SIMULATION ═══════════════════ -->
@@ -1071,36 +1087,36 @@
     <!-- Summary cards -->
     <div class="gamma-summary">
       <div class="g-sum-card">
-        <div class="g-sum-lbl">Общо SKU</div>
+        <div class="g-sum-lbl" data-t="gs_skus">Общо SKU</div>
         <div class="g-sum-val" id="gs-skus">36</div>
       </div>
       <div class="g-sum-card">
-        <div class="g-sum-lbl">Среден марж</div>
+        <div class="g-sum-lbl" data-t="gs_margin">Среден марж</div>
         <div class="g-sum-val green" id="gs-margin">—</div>
       </div>
       <div class="g-sum-card">
-        <div class="g-sum-lbl">Най-висок марж</div>
+        <div class="g-sum-lbl" data-t="gs_max">Най-висок марж</div>
         <div class="g-sum-val green" id="gs-max-margin">—</div>
       </div>
       <div class="g-sum-card">
-        <div class="g-sum-lbl">Най-нисък марж</div>
+        <div class="g-sum-lbl" data-t="gs_min">Най-нисък марж</div>
         <div class="g-sum-val" id="gs-min-margin">—</div>
       </div>
     </div>
 
     <!-- Category filters -->
     <div class="gamma-controls">
-      <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;margin-right:4px">Категория:</span>
-      <button class="cat-filter active" onclick="filterCat('all')">Всички</button>
-      <button class="cat-filter" onclick="filterCat('Протеинови барове')">Протеинови барове</button>
-      <button class="cat-filter" onclick="filterCat('RTD протеин')">RTD протеин</button>
-      <button class="cat-filter" onclick="filterCat('Бисквити')">Бисквити</button>
-      <button class="cat-filter" onclick="filterCat('Ядки')">Ядки</button>
-      <button class="cat-filter" onclick="filterCat('Напитки')">Напитки</button>
-      <button class="cat-filter" onclick="filterCat('Млечни')">Млечни</button>
-      <button class="cat-filter" onclick="filterCat('Натурални барове')">Натурални барове</button>
-      <button class="cat-filter" onclick="filterCat('Добавки')">Добавки</button>
-      <button class="cat-filter" onclick="filterCat('Протеинов чипс')">Протеинов чипс</button>
+      <span data-t="cat_lbl" style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;margin-right:4px">Категория:</span>
+      <button class="cat-filter active" data-cat="all" onclick="filterCat('all')"><span data-t="cat_all">Всички</span></button>
+      <button class="cat-filter" data-cat="Протеинови барове" onclick="filterCat('Протеинови барове')">Протеинови барове</button>
+      <button class="cat-filter" data-cat="RTD протеин" onclick="filterCat('RTD протеин')">RTD протеин</button>
+      <button class="cat-filter" data-cat="Бисквити" onclick="filterCat('Бисквити')">Бисквити</button>
+      <button class="cat-filter" data-cat="Ядки" onclick="filterCat('Ядки')">Ядки</button>
+      <button class="cat-filter" data-cat="Напитки" onclick="filterCat('Напитки')">Напитки</button>
+      <button class="cat-filter" data-cat="Млечни" onclick="filterCat('Млечни')">Млечни</button>
+      <button class="cat-filter" data-cat="Натурални барове" onclick="filterCat('Натурални барове')">Натурални барове</button>
+      <button class="cat-filter" data-cat="Добавки" onclick="filterCat('Добавки')">Добавки</button>
+      <button class="cat-filter" data-cat="Протеинов чипс" onclick="filterCat('Протеинов чипс')">Протеинов чипс</button>
     </div>
 
     <!-- Product table -->
@@ -1109,12 +1125,12 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>Категория</th>
-            <th>Продукт</th>
-            <th>Марка</th>
-            <th class="r">Достав. цена</th>
-            <th class="r">Продажна цена</th>
-            <th>Марж %</th>
+            <th data-t="th_cat">Категория</th>
+            <th data-t="th_product">Продукт</th>
+            <th data-t="th_brand">Марка</th>
+            <th class="r" data-t="th_cost">Достав. цена</th>
+            <th class="r" data-t="th_price">Продажна цена</th>
+            <th data-t="th_margin">Марж %</th>
           </tr>
         </thead>
         <tbody id="gamma-tbody"></tbody>
@@ -1134,38 +1150,38 @@
 
     <!-- Scenario selector -->
     <div class="scenario-bar">
-      <span class="scenario-lbl">Сценарий:</span>
-      <button class="scenario-btn pessimist" id="sc-pessimist" onclick="applyScenario('pessimist')">🔴 Песимистичен</button>
-      <button class="scenario-btn realistic" id="sc-realistic"  onclick="applyScenario('realistic')">🟡 Реалистичен</button>
-      <button class="scenario-btn optimist"  id="sc-optimist"  onclick="applyScenario('optimist')">🟢 Оптимистичен</button>
-      <button class="scenario-btn custom active" id="sc-custom" style="display:none">✏ Персонализиран</button>
+      <span class="scenario-lbl" data-t="sc_lbl">Сценарий:</span>
+      <button class="scenario-btn pessimist" id="sc-pessimist" onclick="applyScenario('pessimist')">🔴 <span data-t="sc_pess">Песимистичен</span></button>
+      <button class="scenario-btn realistic" id="sc-realistic"  onclick="applyScenario('realistic')">🟡 <span data-t="sc_real">Реалистичен</span></button>
+      <button class="scenario-btn optimist"  id="sc-optimist"  onclick="applyScenario('optimist')">🟢 <span data-t="sc_opt">Оптимистичен</span></button>
+      <button class="scenario-btn custom active" id="sc-custom" style="display:none">✏ <span data-t="sc_custom">Персонализиран</span></button>
     </div>
 
     <!-- Basket constructor -->
     <div class="panel" style="margin-bottom:16px">
       <div class="panel-header">
-        <span class="panel-title">Примерна кошница</span>
-        <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">→ определя средния касов бон</span>
+        <span class="panel-title" data-t="basket_title">Примерна кошница</span>
+        <span data-t="basket_sub" style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">→ определя средния касов бон</span>
       </div>
       <table class="basket-table" id="basket-table">
         <tbody id="basket-tbody"></tbody>
       </table>
-      <button class="basket-add-btn" onclick="addBasketRow()">＋ Добави продукт</button>
+      <button class="basket-add-btn" data-t="basket_add" onclick="addBasketRow()">＋ Добави продукт</button>
       <div class="basket-summary-bar" id="basket-summary">
         <div class="bsum-card">
-          <div class="bsum-lbl">Стойност кошница</div>
+          <div class="bsum-lbl" data-t="bsum_total">Стойност кошница</div>
           <div class="bsum-val" id="bsum-total" style="color:var(--green)">—</div>
         </div>
         <div class="bsum-card">
-          <div class="bsum-lbl">Марж кошница</div>
+          <div class="bsum-lbl" data-t="bsum_margin">Марж кошница</div>
           <div class="bsum-val" id="bsum-margin" style="color:var(--green)">—</div>
         </div>
         <div class="bsum-card">
-          <div class="bsum-lbl">Печалба / кошница</div>
+          <div class="bsum-lbl" data-t="bsum_profit">Печалба / кошница</div>
           <div class="bsum-val" id="bsum-profit" style="color:var(--amber)">—</div>
         </div>
         <div class="bsum-card">
-          <div class="bsum-lbl">Артикули</div>
+          <div class="bsum-lbl" data-t="bsum_items">Артикули</div>
           <div class="bsum-val" id="bsum-items" style="color:var(--text)">—</div>
         </div>
       </div>
@@ -1174,48 +1190,48 @@
     <!-- Sliders + P&L -->
     <div class="fin-grid">
       <div class="fin-panel">
-        <div class="fin-panel-title">Входни данни</div>
+        <div class="fin-panel-title" data-t="panel_inputs">Входни данни</div>
         <div class="slider-row">
-          <label>Клиенти / ден <span id="lbl-customers">80</span></label>
+          <label><span data-t="sl_customers">Клиенти / ден</span> <span id="lbl-customers">80</span></label>
           <input type="range" class="green-range" id="sl-customers" min="10" max="250" value="80" oninput="markCustom();updateFinancials()">
         </div>
         <div class="slider-row">
-          <label>Наем (€/мес.) <span id="lbl-rent">180</span></label>
+          <label><span data-t="sl_rent">Наем (€/мес.)</span> <span id="lbl-rent">180</span></label>
           <input type="range" class="green-range" id="sl-rent" min="100" max="1100" value="180" step="10" oninput="updateFinancials()">
         </div>
         <div id="pl-daily-bridge" style="margin-top:12px;display:flex;align-items:baseline;justify-content:space-between;padding:8px 12px;background:rgba(0,200,150,0.07);border:1px solid rgba(0,200,150,0.18);border-radius:8px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">
-          <span><span id="pl-daily-customers" style="color:var(--text)">—</span> кл. × <span id="pl-daily-ticket" style="color:var(--text)">—</span></span>
+          <span><span id="pl-daily-customers" style="color:var(--text)">—</span> <span data-t="daily_cust">кл.</span> × <span id="pl-daily-ticket" style="color:var(--text)">—</span></span>
           <span style="font-size:15px;font-weight:700;color:var(--green)" id="pl-daily-rev">—</span>
         </div>
         <div style="margin-top:8px;padding:10px 12px;background:var(--bg-card);border-radius:var(--radius);font-size:11px;color:var(--text-muted);font-family:var(--font-mono);line-height:1.7">
-          <span style="color:var(--text);font-weight:600">Постоянни разходи (без наем): 1 070 лв./мес.</span><br>
-          <span style="opacity:0.7">Счетоводство 150 · Застраховка 80 · Консумативи 100</span><br>
-          <span style="opacity:0.7">Маркетинг 200 · POS такси 80 · Резерв 130</span><br>
-          <span style="color:var(--green)">Ток ~300 · Интернет 30</span><br>
-          EUR/BGN: <span style="color:var(--text)">1.95583</span> · <span style="color:var(--amber)">⚠ Доставни цени са прогнозни</span>
+          <span data-t="fc_title" style="color:var(--text);font-weight:600">Постоянни разходи (без наем): 1 070 лв./мес.</span><br>
+          <span data-t="fc_line1" style="opacity:0.7">Счетоводство 150 · Застраховка 80 · Консумативи 100</span><br>
+          <span data-t="fc_line2" style="opacity:0.7">Маркетинг 200 · POS такси 80 · Резерв 130</span><br>
+          <span data-t="fc_line3" style="color:var(--green)">Ток ~300 · Интернет 30</span><br>
+          EUR/BGN: <span style="color:var(--text)">1.95583</span> · <span data-t="fc_note" style="color:var(--amber)">⚠ Доставни цени са прогнозни</span>
         </div>
       </div>
       <div class="fin-panel">
-        <div class="fin-panel-title">Месечен P&amp;L</div>
-        <div class="pl-row"><span class="pl-label">Приход</span><span class="pl-val" id="pl-rev" style="color:var(--green)">—</span></div>
-        <div class="pl-row"><span class="pl-label">Себестойност на стоките (COGS)</span><span class="pl-val" id="pl-cogs" style="color:var(--red)">—</span></div>
-        <div class="pl-row total"><span class="pl-label">Брутна печалба</span><span class="pl-val" id="pl-gp" style="color:var(--green)">—</span></div>
-        <div class="pl-row"><span class="pl-label">Постоянни разходи</span><span class="pl-val" id="pl-fixed" style="color:var(--amber)">—</span></div>
+        <div class="fin-panel-title" data-t="panel_pl">Месечен P&amp;L</div>
+        <div class="pl-row"><span class="pl-label" data-t="pl_rev">Приход</span><span class="pl-val" id="pl-rev" style="color:var(--green)">—</span></div>
+        <div class="pl-row"><span class="pl-label" data-t="pl_cogs">Себестойност на стоките (COGS)</span><span class="pl-val" id="pl-cogs" style="color:var(--red)">—</span></div>
+        <div class="pl-row total"><span class="pl-label" data-t="pl_gp">Брутна печалба</span><span class="pl-val" id="pl-gp" style="color:var(--green)">—</span></div>
+        <div class="pl-row"><span class="pl-label" data-t="pl_fixed">Постоянни разходи</span><span class="pl-val" id="pl-fixed" style="color:var(--amber)">—</span></div>
         <div class="pl-row ebitda" id="pl-ebitda-row">
-          <span class="pl-label" style="font-weight:600">Оперативна печалба (EBITDA)</span>
+          <span class="pl-label" data-t="pl_ebitda" style="font-weight:600">Оперативна печалба (EBITDA)</span>
           <span class="pl-val" id="pl-ebitda" style="font-size:18px">—</span>
         </div>
         <div class="pl-row" style="font-size:11px;color:var(--text-muted)">
-          <span class="pl-label">Корп. данък 10% (ЕООД)</span>
+          <span class="pl-label" data-t="pl_tax">Корп. данък 10% (ЕООД)</span>
           <span class="pl-val" id="pl-tax" style="color:var(--red)">—</span>
         </div>
         <div class="pl-row" id="pl-net-row" style="border-top:1px solid var(--border-em);margin-top:2px">
-          <span class="pl-label" style="font-weight:700;color:var(--text)">Нетна печалба</span>
+          <span class="pl-label" data-t="pl_net" style="font-weight:700;color:var(--text)">Нетна печалба</span>
           <span class="pl-val" id="pl-net" style="font-size:18px;font-weight:700">—</span>
         </div>
         <div style="margin-top:10px;display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">
-          <span>Праг на рентабилност: <span id="pl-be" style="color:var(--text)">—</span> клиенти/ден</span>
-          <span>Марж: <span id="pl-margin-pct" style="color:var(--green)">—</span></span>
+          <span><span data-t="pl_be_pre">Праг на рентабилност:</span> <span id="pl-be" style="color:var(--text)">—</span> <span data-t="pl_be_post">клиенти/ден</span></span>
+          <span><span data-t="pl_margin_lbl">Марж:</span> <span id="pl-margin-pct" style="color:var(--green)">—</span></span>
         </div>
       </div>
     </div>
@@ -1223,19 +1239,19 @@
     <!-- Equipment & Capex -->
     <div class="panel" style="margin-bottom:16px">
       <div class="panel-header">
-        <span class="panel-title">Оборудване &amp; Капиталови разходи</span>
+        <span class="panel-title" data-t="equip_title">Оборудване &amp; Капиталови разходи</span>
         <div style="display:flex;gap:6px">
-          <button id="equip-btn-new" class="equip-toggle active" onclick="toggleEquip(true)">Ново</button>
-          <button id="equip-btn-used" class="equip-toggle" onclick="toggleEquip(false)">Употребявано</button>
+          <button id="equip-btn-new" class="equip-toggle active" data-t="equip_new" onclick="toggleEquip(true)">Ново</button>
+          <button id="equip-btn-used" class="equip-toggle" data-t="equip_used" onclick="toggleEquip(false)">Употребявано</button>
         </div>
       </div>
       <div style="overflow-x:auto">
         <table class="equip-table">
-          <thead><tr><th>Артикул</th><th class="r">Бр.</th><th class="r">Единична цена</th><th class="r">Общо</th></tr></thead>
+          <thead><tr><th data-t="th_item">Артикул</th><th class="r" data-t="th_qty">Бр.</th><th class="r" data-t="th_unit">Единична цена</th><th class="r" data-t="th_total">Общо</th></tr></thead>
           <tbody id="equip-tbody"></tbody>
           <tfoot>
             <tr style="font-weight:600;background:var(--bg-card)">
-              <td colspan="3" style="padding:10px 12px;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)">Обща начална инвестиция</td>
+              <td colspan="3" data-t="equip_total_lbl" style="padding:10px 12px;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)">Обща начална инвестиция</td>
               <td class="r" id="equip-total" style="padding:10px 12px;color:var(--green);font-family:var(--font-mono);font-size:14px">—</td>
             </tr>
           </tfoot>
@@ -1243,15 +1259,15 @@
       </div>
       <div class="capex-cards">
         <div class="capex-card">
-          <div class="capex-lbl">Обща инвестиция</div>
+          <div class="capex-lbl" data-t="capex_inv">Обща инвестиция</div>
           <div class="capex-val" style="color:var(--amber)" id="equip-amort">—</div>
         </div>
         <div class="capex-card">
-          <div class="capex-lbl">Нетна печалба / мес.</div>
+          <div class="capex-lbl" data-t="capex_net">Нетна печалба / мес.</div>
           <div class="capex-val" id="equip-net-monthly" style="color:var(--green)">—</div>
         </div>
         <div class="capex-card" style="border:1px solid rgba(0,200,150,0.2)">
-          <div class="capex-lbl">Инвестицията се връща за</div>
+          <div class="capex-lbl" data-t="capex_payback">Инвестицията се връща за</div>
           <div class="capex-val" id="equip-payback" style="color:var(--green)">—</div>
         </div>
       </div>
@@ -1260,21 +1276,18 @@
     <!-- Max rent + space comparison -->
     <div class="panel">
       <div class="panel-header">
-        <span class="panel-title">Максимален наем и налични помещения</span>
+        <span class="panel-title" data-t="rent_title">Максимален наем и налични помещения</span>
         <span class="panel-badge" id="max-rent-badge">—</span>
       </div>
-      <div style="margin-bottom:14px;font-size:12px;color:var(--text-muted)">
-        Целева оперативна печалба: <strong style="color:var(--text)">1 500 лв./мес.</strong> — при текущия обем транзакции, максималният наем е
-        <strong style="color:var(--green)" id="max-rent-lv">—</strong> лв./мес. (<strong style="color:var(--green)" id="max-rent-eur">—</strong> €/мес.)
-      </div>
+      <div id="max-rent-desc" style="margin-bottom:14px;font-size:12px;color:var(--text-muted)"></div>
       <table class="rent-table">
         <thead>
           <tr>
-            <th>Помещение</th>
-            <th class="hide-mobile">Площ</th>
-            <th>Наем/мес.</th>
-            <th>Оп. печалба/мес.</th>
-            <th>Статус</th>
+            <th data-t="th_location">Помещение</th>
+            <th class="hide-mobile" data-t="th_area">Площ</th>
+            <th data-t="th_rent">Наем/мес.</th>
+            <th data-t="th_op">Оп. печалба/мес.</th>
+            <th data-t="th_status">Статус</th>
           </tr>
         </thead>
         <tbody id="rent-tbody"></tbody>
@@ -1549,6 +1562,71 @@ function marginColor(m) {
 function fmtLv(n) { return n.toLocaleString('bg-BG', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' лв.'; }
 function fmtN(n)  { return n.toLocaleString('bg-BG', {minimumFractionDigits:2, maximumFractionDigits:2}); }
 
+let lang = 'bg';
+const T = {
+  bg: {
+    tab_gamma:'Продуктова гама', tab_fin:'Финансов калкулатор',
+    gs_skus:'Общо SKU', gs_margin:'Среден марж', gs_max:'Най-висок марж', gs_min:'Най-нисък марж',
+    th_cat:'Категория', th_product:'Продукт', th_brand:'Марка', th_cost:'Достав. цена', th_price:'Продажна цена', th_margin:'Марж %',
+    cat_lbl:'Категория:', cat_all:'Всички',
+    sc_lbl:'Сценарий:', sc_pess:'Песимистичен', sc_real:'Реалистичен', sc_opt:'Оптимистичен', sc_custom:'Персонализиран',
+    basket_title:'Примерна кошница', basket_sub:'→ определя средния касов бон', basket_add:'＋ Добави продукт',
+    bsum_total:'Стойност кошница', bsum_margin:'Марж кошница', bsum_profit:'Печалба / кошница', bsum_items:'Артикули',
+    panel_inputs:'Входни данни', panel_pl:'Месечен P&L',
+    sl_customers:'Клиенти / ден', sl_rent:'Наем (€/мес.)',
+    daily_cust:'кл.', daily_day:'/ ден',
+    fc_title:'Постоянни разходи (без наем): 1 070 лв./мес.', fc_line1:'Счетоводство 150 · Застраховка 80 · Консумативи 100',
+    fc_line2:'Маркетинг 200 · POS такси 80 · Резерв 130', fc_line3:'Ток ~300 · Интернет 30', fc_note:'⚠ Доставни цени са прогнозни',
+    pl_rev:'Приход', pl_cogs:'Себестойност на стоките (COGS)', pl_gp:'Брутна печалба',
+    pl_fixed:'Постоянни разходи', pl_ebitda:'Оперативна печалба (EBITDA)', pl_tax:'Корп. данък 10% (ЕООД)',
+    pl_net:'Нетна печалба', pl_be_pre:'Праг на рентабилност:', pl_be_post:'клиенти/ден', pl_margin_lbl:'Марж:',
+    equip_title:'Оборудване & Капиталови разходи', equip_new:'Ново', equip_used:'Употребявано',
+    th_item:'Артикул', th_qty:'Бр.', th_unit:'Единична цена', th_total:'Общо', equip_total_lbl:'Обща начална инвестиция',
+    capex_inv:'Обща инвестиция', capex_net:'Нетна печалба / мес.', capex_payback:'Инвестицията се връща за',
+    rent_title:'Максимален наем и налични помещения',
+    th_location:'Помещение', th_area:'Площ', th_rent:'Наем/мес.', th_op:'Оп. печалба/мес.', th_status:'Статус',
+    verdict_ok:'✓ ОК', verdict_exp:'✗ Скъп', viewing:'🔍 оглед', max_rent_lbl:'Макс. наем:',
+    rent_desc: (lv, eur) => `Целева оперативна печалба: <strong style="color:var(--text)">1 500 лв./мес.</strong> — при текущия обем транзакции, максималният наем е <strong style="color:var(--green)">${lv}</strong> лв./мес. (<strong style="color:var(--green)">${eur}</strong> €/мес.)`,
+    mo:'/мес.',
+  },
+  en: {
+    tab_gamma:'Product Range', tab_fin:'Financial Calculator',
+    gs_skus:'Total SKUs', gs_margin:'Avg Margin', gs_max:'Best Margin', gs_min:'Worst Margin',
+    th_cat:'Category', th_product:'Product', th_brand:'Brand', th_cost:'Cost price', th_price:'Retail price', th_margin:'Margin %',
+    cat_lbl:'Category:', cat_all:'All',
+    sc_lbl:'Scenario:', sc_pess:'Pessimistic', sc_real:'Realistic', sc_opt:'Optimistic', sc_custom:'Custom',
+    basket_title:'Sample Basket', basket_sub:'→ sets the avg ticket value', basket_add:'＋ Add product',
+    bsum_total:'Basket Value', bsum_margin:'Basket Margin', bsum_profit:'Profit / basket', bsum_items:'Items',
+    panel_inputs:'Inputs', panel_pl:'Monthly P&L',
+    sl_customers:'Customers / day', sl_rent:'Rent (€/mo.)',
+    daily_cust:'cust.', daily_day:'/ day',
+    fc_title:'Fixed costs (excl. rent): 1,070 BGN/mo.', fc_line1:'Accounting 150 · Insurance 80 · Supplies 100',
+    fc_line2:'Marketing 200 · POS fees 80 · Reserve 130', fc_line3:'Electricity ~300 · Internet 30', fc_note:'⚠ Wholesale prices are estimates',
+    pl_rev:'Revenue', pl_cogs:'Cost of Goods (COGS)', pl_gp:'Gross Profit',
+    pl_fixed:'Fixed Costs', pl_ebitda:'Operating Profit (EBITDA)', pl_tax:'Corp. Tax 10% (Ltd.)',
+    pl_net:'Net Profit', pl_be_pre:'Break-even:', pl_be_post:'customers/day', pl_margin_lbl:'Margin:',
+    equip_title:'Equipment & Capex', equip_new:'New', equip_used:'Used',
+    th_item:'Item', th_qty:'Qty', th_unit:'Unit Price', th_total:'Total', equip_total_lbl:'Total Initial Investment',
+    capex_inv:'Total Investment', capex_net:'Net profit / mo.', capex_payback:'Payback period',
+    rent_title:'Max Rent & Available Spaces',
+    th_location:'Location', th_area:'Area', th_rent:'Rent/mo.', th_op:'Op. Profit/mo.', th_status:'Status',
+    verdict_ok:'✓ OK', verdict_exp:'✗ Too exp.', viewing:'🔍 viewing', max_rent_lbl:'Max rent:',
+    rent_desc: (lv, eur) => `Target operating profit: <strong style="color:var(--text)">1,500 BGN/mo.</strong> — at current transaction volume, the maximum rent is <strong style="color:var(--green)">${lv}</strong> BGN/mo. (<strong style="color:var(--green)">${eur}</strong> €/mo.)`,
+    mo:'/mo.',
+  }
+};
+
+function applyLang(l) {
+  lang = l;
+  document.getElementById('lang-bg').classList.toggle('active', l === 'bg');
+  document.getElementById('lang-en').classList.toggle('active', l === 'en');
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const v = T[l][el.dataset.t];
+    if (v !== undefined) el.textContent = v;
+  });
+  renderBasket(); renderEquipment(); renderTable(); updateFinancials();
+}
+
 let dispCur = 'BGN';
 function sym()     { return dispCur === 'EUR' ? '€' : 'лв.'; }
 function cvtB(bgn) { return dispCur === 'EUR' ? bgn / RATE : bgn; }
@@ -1571,7 +1649,7 @@ let activeCat = 'all';
 function filterCat(cat) {
   activeCat = cat;
   document.querySelectorAll('.cat-filter').forEach(b => {
-    b.classList.toggle('active', b.textContent === (cat === 'all' ? 'Всички' : cat));
+    b.classList.toggle('active', b.dataset.cat === cat);
   });
   renderTable();
 }
@@ -1653,7 +1731,7 @@ function updateFinancials() {
 
   document.getElementById('pl-daily-customers').textContent = customersPerDay;
   document.getElementById('pl-daily-ticket').textContent    = fmt(avgTicket);
-  document.getElementById('pl-daily-rev').textContent       = fmt(customersPerDay * avgTicket) + ' / ден';
+  document.getElementById('pl-daily-rev').textContent       = fmt(customersPerDay * avgTicket) + ' ' + T[lang].daily_day;
 
   document.getElementById('pl-rev').textContent    = fmt(monthlyRev);
   document.getElementById('pl-cogs').textContent   = '− ' + fmt(monthlyCOGS);
@@ -1687,9 +1765,9 @@ function updateFinancials() {
   // Max rent
   const maxRentLv  = grossProfit - FIXED_EX_RENT - TARGET_EBITDA;
   const maxRentEur = maxRentLv / RATE;
-  document.getElementById('max-rent-lv').textContent  = fmtN(Math.max(0, maxRentLv));
-  document.getElementById('max-rent-eur').textContent = Math.max(0, maxRentEur).toFixed(0);
-  document.getElementById('max-rent-badge').textContent = 'Макс. наем: ' + fmtE(Math.max(0, maxRentEur));
+  const descEl = document.getElementById('max-rent-desc');
+  if (descEl) descEl.innerHTML = T[lang].rent_desc(fmtN(Math.max(0, maxRentLv)), Math.max(0, maxRentEur).toFixed(0));
+  document.getElementById('max-rent-badge').textContent = T[lang].max_rent_lbl + ' ' + fmtE(Math.max(0, maxRentEur));
 
   // Rent table
   const rtbody = document.getElementById('rent-tbody');
@@ -1698,12 +1776,13 @@ function updateFinancials() {
     const spFixed  = FIXED_EX_RENT + spLv;
     const spEBITDA = grossProfit - spFixed;
     const ok = sp.eur <= maxRentEur;
+    const sqmUnit = lang === 'bg' ? 'кв.м.' : 'sq.m.';
     return `<tr>
       <td style="color:var(--text);font-weight:500">${sp.name}</td>
-      <td class="hide-mobile" style="font-family:var(--font-mono)">${sp.sqm} кв.м.</td>
+      <td class="hide-mobile" style="font-family:var(--font-mono)">${sp.sqm} ${sqmUnit}</td>
       <td style="font-family:var(--font-mono)">${fmtE(sp.eur)}</td>
       <td style="font-family:var(--font-mono);color:${spEBITDA>=0?'var(--green)':'var(--red)'}">${(spEBITDA>=0?'':' −')}${fmt(Math.abs(spEBITDA))}</td>
-      <td><span class="verdict-pill ${ok?'ok':'over'}">${ok?'✓ ОК':'✗ Скъп'}</span>${sp.viewing?' <span style="font-size:9px;font-family:var(--font-mono);color:var(--amber);letter-spacing:0.04em">🔍 оглед</span>':''}</td>
+      <td><span class="verdict-pill ${ok?'ok':'over'}">${ok?T[lang].verdict_ok:T[lang].verdict_exp}</span>${sp.viewing?' <span style="font-size:9px;font-family:var(--font-mono);color:var(--amber);letter-spacing:0.04em">'+T[lang].viewing+'</span>':''}</td>
     </tr>`;
   }).join('');
 }
