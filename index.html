@@ -391,6 +391,143 @@
     .metrics-grid { grid-template-columns: 1fr 1fr; }
     .metric-value { font-size: 22px; }
   }
+
+  /* ── Продуктова гама tab ──────────────────────────── */
+  .gamma-controls {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .cat-filter {
+    padding: 5px 13px; border-radius: 99px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-muted); font-family: var(--font-mono);
+    font-size: 11px; cursor: pointer; transition: all var(--transition);
+    white-space: nowrap;
+  }
+  .cat-filter:hover { border-color: var(--border-em); color: var(--text); }
+  .cat-filter.active { border-color: var(--green); background: rgba(0,200,150,0.1); color: var(--green); }
+
+  .gamma-table-wrap { overflow-x: auto; margin-bottom: 24px; }
+  .gamma-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 12px; min-width: 780px;
+  }
+  .gamma-table thead th {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted);
+    padding: 8px 12px; border-bottom: 1px solid var(--border);
+    text-align: left; white-space: nowrap;
+    background: var(--bg-panel);
+  }
+  .gamma-table thead th.r { text-align: right; }
+  .gamma-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background var(--transition);
+  }
+  .gamma-table tbody tr:hover { background: var(--bg-hover); }
+  .gamma-table tbody td {
+    padding: 9px 12px; color: var(--text-dim); vertical-align: middle;
+  }
+  .gamma-table tbody td.r { text-align: right; font-family: var(--font-mono); }
+  .gamma-table .td-name { color: var(--text); font-weight: 500; }
+  .gamma-table .td-brand { color: var(--text-muted); font-family: var(--font-mono); font-size: 10px; }
+  .cat-dot {
+    display: inline-block; width: 7px; height: 7px;
+    border-radius: 50%; margin-right: 7px; vertical-align: middle;
+  }
+  .margin-bar {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .margin-track {
+    flex: 1; height: 4px; background: rgba(255,255,255,0.06);
+    border-radius: 99px; overflow: hidden; min-width: 60px;
+  }
+  .margin-fill { height: 100%; border-radius: 99px; }
+  .margin-pct {
+    font-family: var(--font-mono); font-size: 11px; min-width: 34px;
+    text-align: right;
+  }
+  .vol-input {
+    width: 52px; background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text); font-family: var(--font-mono);
+    font-size: 11px; padding: 3px 6px; text-align: center;
+    transition: border-color var(--transition);
+  }
+  .vol-input:focus { outline: none; border-color: var(--green); }
+
+  .gamma-summary {
+    display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
+    gap: 12px; margin-bottom: 20px;
+  }
+  .g-sum-card {
+    background: var(--bg-panel); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .g-sum-lbl { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+  .g-sum-val { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+  .g-sum-val.green { color: var(--green); }
+  .g-sum-val.amber { color: var(--amber); }
+
+  .fin-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-bottom: 16px;
+  }
+  .fin-panel {
+    background: var(--bg-panel); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 20px;
+  }
+  .fin-panel-title {
+    font-family: var(--font-display); font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--text-muted); margin-bottom: 16px;
+  }
+  .slider-row { margin-bottom: 16px; }
+  .slider-row label {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--text-dim); margin-bottom: 6px;
+  }
+  .slider-row label span {
+    font-family: var(--font-mono); color: var(--text); font-size: 12px;
+  }
+  input[type=range].green-range {
+    width: 100%; accent-color: var(--green);
+    height: 4px; cursor: pointer;
+  }
+  .pl-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px;
+  }
+  .pl-row:last-child { border-bottom: none; }
+  .pl-row .pl-label { color: var(--text-dim); }
+  .pl-row .pl-val   { font-family: var(--font-mono); font-weight: 500; }
+  .pl-row.total .pl-label { color: var(--text); font-weight: 600; }
+  .pl-row.total .pl-val   { font-size: 15px; }
+  .pl-row.ebitda { background: rgba(0,200,150,0.06); border-radius: var(--radius); padding: 10px 12px; margin-top: 4px; }
+  .pl-row.ebitda.neg { background: rgba(255,77,109,0.08); }
+
+  .rent-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .rent-table th {
+    font-family: var(--font-mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--text-muted);
+    padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left;
+  }
+  .rent-table td {
+    padding: 10px 12px; border-bottom: 1px solid var(--border);
+    color: var(--text-dim); font-size: 12px;
+  }
+  .rent-table tr:last-child td { border-bottom: none; }
+  .verdict-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 99px;
+    font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+  }
+  .verdict-pill.ok  { background: rgba(0,200,150,0.12); color: var(--green); }
+  .verdict-pill.over{ background: rgba(255,77,109,0.12); color: var(--red);   }
+
+  @media (max-width: 760px) {
+    .fin-grid { grid-template-columns: 1fr; }
+    .gamma-summary { grid-template-columns: 1fr 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -416,6 +553,7 @@
     <button class="tab-btn active" onclick="switchTab('sim')" id="tab-sim">🤖 Live Simulation</button>
     <button class="tab-btn" onclick="switchTab('survey')" id="tab-survey">📊 Survey Insights <span style="font-family:var(--font-mono);font-size:10px;background:rgba(0,200,150,0.15);color:var(--green);padding:2px 6px;border-radius:4px;margin-left:4px;">n=163</span></button>
     <button class="tab-btn" onclick="switchTab('improve')" id="tab-improve">🔧 Simulation Improvements</button>
+    <button class="tab-btn" onclick="switchTab('gamma')"  id="tab-gamma">📦 Продуктова гама</button>
   </nav>
 
   <!-- ═══════════════════ TAB: SIMULATION ═══════════════════ -->
@@ -809,12 +947,367 @@
 
   </div><!-- /tab-improve -->
 
+  <!-- ═══════════════════ TAB: ПРОДУКТОВА ГАМА ═══════════════════ -->
+  <div class="tab-content" id="tab-content-gamma">
+
+    <!-- Summary cards -->
+    <div class="gamma-summary">
+      <div class="g-sum-card">
+        <div class="g-sum-lbl">Общо SKU</div>
+        <div class="g-sum-val" id="gs-skus">36</div>
+      </div>
+      <div class="g-sum-card">
+        <div class="g-sum-lbl">Blended марж</div>
+        <div class="g-sum-val green" id="gs-margin">—</div>
+      </div>
+      <div class="g-sum-card">
+        <div class="g-sum-lbl">Транзакции / ден</div>
+        <div class="g-sum-val" id="gs-txn">—</div>
+      </div>
+      <div class="g-sum-card">
+        <div class="g-sum-lbl">Марж / ден</div>
+        <div class="g-sum-val green" id="gs-daily-margin">—</div>
+      </div>
+    </div>
+
+    <!-- Category filters -->
+    <div class="gamma-controls">
+      <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;margin-right:4px">Категория:</span>
+      <button class="cat-filter active" onclick="filterCat('all')">Всички</button>
+      <button class="cat-filter" onclick="filterCat('Протеинови барове')">Протеинови барове</button>
+      <button class="cat-filter" onclick="filterCat('RTD протеин')">RTD протеин</button>
+      <button class="cat-filter" onclick="filterCat('Бисквити')">Бисквити</button>
+      <button class="cat-filter" onclick="filterCat('Ядки')">Ядки</button>
+      <button class="cat-filter" onclick="filterCat('Напитки')">Напитки</button>
+      <button class="cat-filter" onclick="filterCat('Млечни')">Млечни</button>
+      <button class="cat-filter" onclick="filterCat('Натурални барове')">Натурални барове</button>
+      <button class="cat-filter" onclick="filterCat('Добавки')">Добавки</button>
+    </div>
+
+    <!-- Product table -->
+    <div class="gamma-table-wrap panel" style="padding:0">
+      <table class="gamma-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Категория</th>
+            <th>Продукт</th>
+            <th>Марка</th>
+            <th class="r">Достав. цена</th>
+            <th class="r">Продажна цена</th>
+            <th>Марж %</th>
+            <th class="r">Бр./ден</th>
+            <th class="r">Приход/ден</th>
+            <th class="r">Марж/ден</th>
+          </tr>
+        </thead>
+        <tbody id="gamma-tbody"></tbody>
+        <tfoot id="gamma-tfoot"></tfoot>
+      </table>
+    </div>
+
+    <!-- Financial calculator -->
+    <div class="fin-grid">
+      <!-- Sliders -->
+      <div class="fin-panel">
+        <div class="fin-panel-title">Финансов калкулатор</div>
+        <div class="slider-row">
+          <label>Транзакции / ден / машина <span id="lbl-txn">40</span></label>
+          <input type="range" class="green-range" id="sl-txn" min="5" max="100" value="40" oninput="updateFinancials()">
+        </div>
+        <div class="slider-row">
+          <label>Наем (€/мес.) <span id="lbl-rent">180</span></label>
+          <input type="range" class="green-range" id="sl-rent" min="100" max="600" value="180" step="10" oninput="updateFinancials()">
+        </div>
+        <div class="slider-row">
+          <label>Машини <span id="lbl-machines">2</span></label>
+          <input type="range" class="green-range" id="sl-machines" min="1" max="4" value="2" oninput="updateFinancials()">
+        </div>
+        <div style="margin-top:8px;padding:10px 12px;background:var(--bg-card);border-radius:var(--radius);font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">
+          Постоянни разходи (без наем): <span style="color:var(--text)">1 540 лв./мес.</span><br>
+          EUR/BGN: <span style="color:var(--text)">1.95583</span> (официален фиксиран курс)
+        </div>
+      </div>
+      <!-- P&L output -->
+      <div class="fin-panel">
+        <div class="fin-panel-title">Месечен P&amp;L</div>
+        <div class="pl-row"><span class="pl-label">Приход (Revenue)</span><span class="pl-val" id="pl-rev" style="color:var(--green)">—</span></div>
+        <div class="pl-row"><span class="pl-label">COGS (1 − марж%)</span><span class="pl-val" id="pl-cogs" style="color:var(--red)">—</span></div>
+        <div class="pl-row total"><span class="pl-label">Брутна печалба</span><span class="pl-val" id="pl-gp" style="color:var(--green)">—</span></div>
+        <div class="pl-row"><span class="pl-label">Постоянни разходи</span><span class="pl-val" id="pl-fixed" style="color:var(--amber)">—</span></div>
+        <div class="pl-row ebitda" id="pl-ebitda-row">
+          <span class="pl-label" style="font-weight:600">EBITDA</span>
+          <span class="pl-val" id="pl-ebitda" style="font-size:18px">—</span>
+        </div>
+        <div style="margin-top:10px;display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">
+          <span>Break-even: <span id="pl-be" style="color:var(--text)">—</span> txn/ден/маш.</span>
+          <span>Марж: <span id="pl-margin-pct" style="color:var(--green)">—</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Max rent + space comparison -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Максимален наем и налични помещения</span>
+        <span class="panel-badge" id="max-rent-badge">—</span>
+      </div>
+      <div style="margin-bottom:14px;font-size:12px;color:var(--text-muted)">
+        Целева EBITDA: <strong style="color:var(--text)">1 500 лв./мес.</strong> — при текущия обем транзакции, максималният наем е
+        <strong style="color:var(--green)" id="max-rent-lv">—</strong> лв./мес. (<strong style="color:var(--green)" id="max-rent-eur">—</strong> €/мес.)
+      </div>
+      <table class="rent-table">
+        <thead>
+          <tr>
+            <th>Помещение</th>
+            <th>Площ</th>
+            <th>Наем €/мес.</th>
+            <th>Наем лв./мес.</th>
+            <th>EBITDA при наем</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody id="rent-tbody"></tbody>
+      </table>
+    </div>
+
+  </div><!-- /tab-gamma -->
+
 </div><!-- /app -->
+
+<script id="gamma-script">
+// ══════════════════════════════════════════════════════════════
+// ПРОДУКТОВА ГАМА — data & logic
+// ══════════════════════════════════════════════════════════════
+const RATE = 1.95583;
+const FIXED_EX_RENT = 1540; // лв./мес.
+const TARGET_EBITDA = 1500; // лв.
+const DAYS = 30;
+const MACHINES_DEFAULT = 2;
+
+const CAT_COLORS = {
+  'Протеинови барове': '#00C896',
+  'RTD протеин':       '#4D9FFF',
+  'Бисквити':          '#F5A623',
+  'Ядки':              '#B47FFF',
+  'Напитки':           '#38BDF8',
+  'Млечни':            '#FB7185',
+  'Натурални барове':  '#84CC16',
+  'Добавки':           '#94A3B8',
+};
+
+// [cat, name, brand, cost, price, volPerDay]
+const GAMMA = [
+  ['Протеинови барове', 'Протеинов бар 45g',           'Born Winner',     2.20, 3.99, 8],
+  ['Протеинови барове', 'Натурален бар 40g',            "Bett'r",          1.90, 3.49, 7],
+  ['Протеинови барове', 'Суров бар 30g',                'Roobar',          1.60, 2.99, 6],
+  ['Протеинови барове', 'Протеинов бар 60g',            'HITMAX',          2.00, 3.79, 7],
+  ['Протеинови барове', 'Протеинов бар 52g',            'Ostrovit',        1.70, 3.29, 5],
+  ['Протеинови барове', 'Колаген-протеинов бар',        'FitSpo',          2.10, 3.89, 5],
+  ['RTD протеин',       'RTD Протеин шейк 330ml',       'Born Winner',     3.20, 5.99, 6],
+  ['RTD протеин',       'RTD Whey протеин 330ml',       'Ostrovit',        2.90, 5.49, 4],
+  ['RTD протеин',       'RTD Колаген напитка 250ml',    'FitSpo',          2.80, 5.29, 4],
+  ['RTD протеин',       'RTD Протеин кафе 250ml',       'myprotein',       3.00, 5.79, 3],
+  ['Бисквити',          'Колагенови бисквити 50g',      'Rise Up',         2.30, 4.29, 5],
+  ['Бисквити',          'Протеинови бисквити 50g',      'FitSpo',          2.10, 3.99, 4],
+  ['Бисквити',          'Протеинов вафел 40g',          'HITMAX',          1.80, 3.49, 4],
+  ['Бисквити',          'Протеинов мъфин 70g',          'QNT',             2.50, 4.49, 3],
+  ['Ядки',              'Микс ядки 100g',               'Dragon Superfoods',2.00,3.99, 6],
+  ['Ядки',              'Бадеми натурални 100g',        'Dragon Superfoods',2.20,4.29, 5],
+  ['Ядки',              'Кашу натурални 100g',          'Dragon Superfoods',2.80,5.49, 4],
+  ['Ядки',              'Тиквени семки 100g',           'Smart Organic',   1.20, 2.49, 4],
+  ['Ядки',              'Сушени плодове микс 100g',     'Smart Organic',   1.50, 2.99, 4],
+  ['Ядки',              'Goji + chia 80g',              'Dragon Superfoods',2.50,4.99, 3],
+  ['Напитки',           'Натурална вода 0.5л',          'Devin',           0.30, 0.99,15],
+  ['Напитки',           'Газирана вода 0.5л',           'Devin',           0.30, 0.99, 8],
+  ['Напитки',           'Vitamin Water 500ml',          'Vitamin Water',   2.00, 3.79, 6],
+  ['Напитки',           'Кокосова вода 330ml',          'Harmonica',       2.50, 4.99, 5],
+  ['Напитки',           'Студено изцеден сок 330ml',    'Harmonica',       2.80, 5.29, 4],
+  ['Напитки',           'Студен зелен чай 330ml',       'Smart Organic',   1.80, 3.49, 4],
+  ['Млечни',            'Skyr ванилия 200g',            'Arla',            1.80, 3.49, 4],
+  ['Млечни',            'Протеиново кисело мляко 200g', 'Danone Oikos',    1.50, 2.99, 4],
+  ['Натурални барове',  'Натурален десерт 30g',         'Harmonika',       1.00, 1.99, 6],
+  ['Натурални барове',  'Гранола бар 50g',              'Smart Organic',   1.30, 2.49, 5],
+  ['Натурални барове',  'Овесен бар с шоколад 50g',     "Bett'r",          1.40, 2.79, 5],
+  ['Добавки',           'Колаген сашет 10g',            'myprotein',       1.50, 2.99, 4],
+  ['Добавки',           'Витамин C 1000mg',             'Ostrovit',        0.80, 1.99, 4],
+  ['Добавки',           'Магнезий сашет',               'Ostrovit',        0.80, 1.99, 3],
+  ['Добавки',           'Електролити сашет',            'myprotein',       1.20, 2.49, 3],
+  ['Добавки',           'Мелатонин 1mg',                'QNT',             0.50, 1.29, 2],
+];
+
+const SPACES = [
+  { name: 'Младост 2 — 20 кв.м.',   sqm: 20,  eur: 180  },
+  { name: 'Младост 2 — 25 кв.м.',   sqm: 25,  eur: 349  },
+  { name: 'Младост 1 — 50 кв.м.',   sqm: 50,  eur: 300  },
+  { name: 'Младост 4 — 66+ кв.м.',  sqm: 66,  eur: 1055 },
+];
+
+// Editable volumes (can be changed per row)
+let vols = GAMMA.map(p => p[5]);
+
+function marginColor(m) {
+  if (m >= 0.55) return 'var(--green)';
+  if (m >= 0.40) return 'var(--amber)';
+  return 'var(--red)';
+}
+
+function fmtLv(n) { return n.toLocaleString('bg-BG', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' лв.'; }
+function fmtN(n)  { return n.toLocaleString('bg-BG', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+let activeCat = 'all';
+
+function filterCat(cat) {
+  activeCat = cat;
+  document.querySelectorAll('.cat-filter').forEach(b => {
+    b.classList.toggle('active', b.textContent === (cat === 'all' ? 'Всички' : cat));
+  });
+  renderTable();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('gamma-tbody');
+  const tfoot = document.getElementById('gamma-tfoot');
+  let html = '';
+  let idx = 1;
+  let totalRev = 0, totalCost = 0, totalVol = 0;
+
+  GAMMA.forEach((p, i) => {
+    const [cat, name, brand, cost, price] = p;
+    const vol  = vols[i];
+    const margin = (price - cost) / price;
+    const rev    = price * vol;
+    const marg   = (price - cost) * vol;
+    totalRev  += rev;
+    totalCost += cost * vol;
+    totalVol  += vol;
+
+    if (activeCat !== 'all' && !cat.startsWith(activeCat)) return;
+
+    const mColor = marginColor(margin);
+    const mPct   = (margin * 100).toFixed(1);
+    const fillW  = Math.round(margin * 100);
+
+    html += `<tr>
+      <td style="color:var(--text-muted);font-family:var(--font-mono);font-size:10px">${idx++}</td>
+      <td><span class="cat-dot" style="background:${CAT_COLORS[cat]||'#888'}"></span><span style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono)">${cat}</span></td>
+      <td class="td-name">${name}</td>
+      <td class="td-brand">${brand}</td>
+      <td class="r">${fmtN(cost)}</td>
+      <td class="r" style="color:var(--green)">${fmtN(price)}</td>
+      <td>
+        <div class="margin-bar">
+          <div class="margin-track"><div class="margin-fill" style="width:${fillW}%;background:${mColor}"></div></div>
+          <span class="margin-pct" style="color:${mColor}">${mPct}%</span>
+        </div>
+      </td>
+      <td class="r"><input class="vol-input" type="number" min="0" max="200" value="${vol}" data-idx="${i}" oninput="onVolChange(this)"></td>
+      <td class="r" style="color:var(--green)">${fmtN(rev)}</td>
+      <td class="r" style="color:${mColor}">${fmtN(marg)}</td>
+    </tr>`;
+  });
+
+  const blended = totalRev > 0 ? (totalRev - totalCost) / totalRev : 0;
+  const totalMarg = totalRev - totalCost;
+
+  tfoot.innerHTML = `<tr style="background:var(--bg-card);font-weight:600">
+    <td colspan="7" style="padding:10px 12px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em">ОБЩО / BLENDED МАРЖ: <span style="color:var(--green);font-size:12px">${(blended*100).toFixed(2)}%</span></td>
+    <td class="r" style="font-family:var(--font-mono);color:var(--text)">${totalVol}</td>
+    <td class="r" style="color:var(--green);font-family:var(--font-mono)">${fmtN(totalRev)}</td>
+    <td class="r" style="color:var(--green);font-family:var(--font-mono)">${fmtN(totalMarg)}</td>
+  </tr>`;
+
+  tbody.innerHTML = html;
+
+  // Update summary cards
+  document.getElementById('gs-skus').textContent = GAMMA.length;
+  document.getElementById('gs-margin').textContent = (blended*100).toFixed(1) + '%';
+  document.getElementById('gs-txn').textContent = totalVol;
+  document.getElementById('gs-daily-margin').textContent = fmtN(totalMarg) + ' лв.';
+
+  updateFinancials();
+}
+
+function onVolChange(input) {
+  const i = parseInt(input.dataset.idx);
+  vols[i] = parseFloat(input.value) || 0;
+  renderTable();
+}
+
+function updateFinancials() {
+  const txnPerMachine = parseInt(document.getElementById('sl-txn').value);
+  const rentEur       = parseInt(document.getElementById('sl-rent').value);
+  const machines      = parseInt(document.getElementById('sl-machines').value);
+
+  document.getElementById('lbl-txn').textContent      = txnPerMachine;
+  document.getElementById('lbl-rent').textContent     = rentEur;
+  document.getElementById('lbl-machines').textContent = machines;
+
+  // Blended margin from product table
+  const totalRev  = GAMMA.reduce((s,_,i) => s + GAMMA[i][4] * vols[i], 0);
+  const totalCost = GAMMA.reduce((s,_,i) => s + GAMMA[i][3] * vols[i], 0);
+  const blended   = totalRev > 0 ? (totalRev - totalCost) / totalRev : 0.55;
+
+  // Avg ticket from product table weighted average
+  const avgTicket = totalRev > 0 ? totalRev / GAMMA.reduce((s,_,i) => s + vols[i], 0) : 4.20;
+
+  const monthlyRev   = machines * txnPerMachine * avgTicket * DAYS;
+  const monthlyCOGS  = monthlyRev * (1 - blended);
+  const grossProfit  = monthlyRev - monthlyCOGS;
+  const rentLv       = rentEur * RATE;
+  const totalFixed   = FIXED_EX_RENT + rentLv;
+  const ebitda       = grossProfit - totalFixed;
+
+  const beTotal    = Math.ceil(totalFixed / (blended * avgTicket));
+  const beMachine  = Math.ceil(beTotal / machines / DAYS);
+
+  document.getElementById('pl-rev').textContent       = fmtLv(monthlyRev);
+  document.getElementById('pl-cogs').textContent      = '− ' + fmtLv(monthlyCOGS);
+  document.getElementById('pl-gp').textContent        = fmtLv(grossProfit);
+  document.getElementById('pl-fixed').textContent     = '− ' + fmtLv(totalFixed);
+  document.getElementById('pl-ebitda').textContent    = (ebitda >= 0 ? '' : '− ') + fmtLv(Math.abs(ebitda));
+  document.getElementById('pl-ebitda').style.color    = ebitda >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('pl-ebitda-row').className  = 'pl-row ebitda' + (ebitda < 0 ? ' neg' : '');
+  document.getElementById('pl-be').textContent        = beMachine;
+  document.getElementById('pl-margin-pct').textContent = (blended*100).toFixed(1) + '%';
+
+  // Max rent
+  const maxRentLv  = grossProfit - FIXED_EX_RENT - TARGET_EBITDA;
+  const maxRentEur = maxRentLv / RATE;
+  document.getElementById('max-rent-lv').textContent  = fmtN(Math.max(0, maxRentLv));
+  document.getElementById('max-rent-eur').textContent = Math.max(0, maxRentEur).toFixed(0);
+  document.getElementById('max-rent-badge').textContent = 'Макс. наем: €' + Math.max(0, maxRentEur).toFixed(0);
+
+  // Rent table
+  const rtbody = document.getElementById('rent-tbody');
+  rtbody.innerHTML = SPACES.map(sp => {
+    const spLv    = sp.eur * RATE;
+    const spFixed = FIXED_EX_RENT + spLv;
+    const spEBITDA = grossProfit - spFixed;
+    const ok = sp.eur <= maxRentEur;
+    return `<tr>
+      <td style="color:var(--text);font-weight:500">${sp.name}</td>
+      <td style="font-family:var(--font-mono)">${sp.sqm} кв.м.</td>
+      <td style="font-family:var(--font-mono)">€${sp.eur}</td>
+      <td style="font-family:var(--font-mono)">${fmtN(spLv)}</td>
+      <td style="font-family:var(--font-mono);color:${spEBITDA>=0?'var(--green)':'var(--red)'}">${(spEBITDA>=0?'':' −')}${fmtN(Math.abs(spEBITDA))} лв.</td>
+      <td><span class="verdict-pill ${ok?'ok':'over'}">${ok?'✓ ОК':'✗ Скъп'}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// Init on tab open
+document.getElementById('tab-gamma').addEventListener('click', () => {
+  setTimeout(() => { renderTable(); }, 50);
+});
+// Also init immediately in case tab is opened programmatically
+renderTable();
+</script>
 
 <script>
 // ── Tab switching ──────────────────────────────────────────────────────
 function switchTab(id) {
-  ['sim','survey','improve'].forEach(t => {
+  ['sim','survey','improve','gamma'].forEach(t => {
     document.getElementById('tab-content-' + t).classList.toggle('active', t === id);
     document.getElementById('tab-' + t).classList.toggle('active', t === id);
   });
