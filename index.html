@@ -1057,10 +1057,12 @@
           <label>Наем (€/мес.) <span id="lbl-rent">180</span></label>
           <input type="range" class="green-range" id="sl-rent" min="100" max="1100" value="180" step="10" oninput="updateFinancials()">
         </div>
-        <div style="margin-top:8px;padding:10px 12px;background:var(--bg-card);border-radius:var(--radius);font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">
-          Постоянни разходи (без наем): <span style="color:var(--text)">1 540 лв./мес.</span><br>
-          EUR/BGN: <span style="color:var(--text)">1.95583</span> (официален фиксиран курс)<br>
-          <span style="color:var(--amber)">⚠ Доставни цени са прогнозни</span> — актуализирай след преговори с доставчици
+        <div style="margin-top:8px;padding:10px 12px;background:var(--bg-card);border-radius:var(--radius);font-size:11px;color:var(--text-muted);font-family:var(--font-mono);line-height:1.7">
+          <span style="color:var(--text);font-weight:600">Постоянни разходи (без наем): 1 870 лв./мес.</span><br>
+          <span style="opacity:0.7">Счетоводство 150 · Застраховка 80 · Консумативи 100</span><br>
+          <span style="opacity:0.7">Маркетинг 200 · POS такси 80 · Резерв 130</span><br>
+          <span style="opacity:0.7">Заплата/управление 800 · </span><span style="color:var(--green)">Ток ~300 · Интернет 30</span><br>
+          EUR/BGN: <span style="color:var(--text)">1.95583</span> · <span style="color:var(--amber)">⚠ Доставни цени са прогнозни</span>
         </div>
       </div>
       <!-- P&L output -->
@@ -1161,7 +1163,7 @@
 // ПРОДУКТОВА ГАМА — data & logic
 // ══════════════════════════════════════════════════════════════
 const RATE = 1.95583;
-const FIXED_EX_RENT = 1540; // лв./мес.
+const FIXED_EX_RENT = 1870; // лв./мес. — вижте разбивката по-долу
 const TARGET_EBITDA = 1500; // лв.
 const DAYS = 30;
 const MACHINES_DEFAULT = 2;
