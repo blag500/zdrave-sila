@@ -524,6 +524,44 @@
   .verdict-pill.ok  { background: rgba(0,200,150,0.12); color: var(--green); }
   .verdict-pill.over{ background: rgba(255,77,109,0.12); color: var(--red);   }
 
+  .basket-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .basket-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .basket-table tr:last-child td { border-bottom: none; }
+  .basket-select {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-family: var(--font-mono); font-size: 11px;
+    padding: 4px 8px; width: 100%; cursor: pointer; transition: border-color var(--transition);
+  }
+  .basket-select:focus { outline: none; border-color: var(--green); }
+  .basket-qty {
+    width: 48px; background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text); font-family: var(--font-mono);
+    font-size: 12px; padding: 4px 6px; text-align: center;
+    transition: border-color var(--transition);
+  }
+  .basket-qty:focus { outline: none; border-color: var(--green); }
+  .basket-del {
+    width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border);
+    background: none; color: var(--text-muted); font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all var(--transition);
+  }
+  .basket-del:hover { border-color: var(--red); color: var(--red); }
+  .basket-summary-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 10px; margin-top: 12px;
+  }
+  .bsum-card { background: var(--bg-card); border-radius: var(--radius); padding: 10px 12px; }
+  .bsum-lbl { font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 3px; }
+  .bsum-val { font-family: var(--font-display); font-size: 16px; font-weight: 700; }
+  .basket-add-btn {
+    display: flex; align-items: center; gap: 6px; padding: 5px 13px;
+    border-radius: 99px; border: 1px dashed var(--border); background: transparent;
+    color: var(--text-muted); font-family: var(--font-mono); font-size: 11px;
+    cursor: pointer; transition: all var(--transition); margin-top: 10px;
+  }
+  .basket-add-btn:hover { border-color: var(--green); color: var(--green); }
+
   .equip-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 420px; }
   .equip-table thead th {
     font-family: var(--font-mono); font-size: 10px; text-transform: uppercase;
@@ -546,6 +584,7 @@
   .capex-val { font-family: var(--font-display); font-size: 15px; }
 
   @media (max-width: 760px) {
+    .basket-summary-bar { grid-template-columns: 1fr 1fr; }
     .capex-cards { grid-template-columns: 1fr 1fr; }
 
     .fin-grid { grid-template-columns: 1fr; }
@@ -1044,6 +1083,36 @@
       </table>
     </div>
 
+    <!-- Basket constructor -->
+    <div class="panel" style="margin-bottom:16px">
+      <div class="panel-header">
+        <span class="panel-title">Примерна кошница</span>
+        <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">→ определя средния касов бон</span>
+      </div>
+      <table class="basket-table" id="basket-table">
+        <tbody id="basket-tbody"></tbody>
+      </table>
+      <button class="basket-add-btn" onclick="addBasketRow()">＋ Добави продукт</button>
+      <div class="basket-summary-bar" id="basket-summary">
+        <div class="bsum-card">
+          <div class="bsum-lbl">Стойност кошница</div>
+          <div class="bsum-val" id="bsum-total" style="color:var(--green)">—</div>
+        </div>
+        <div class="bsum-card">
+          <div class="bsum-lbl">Марж кошница</div>
+          <div class="bsum-val" id="bsum-margin" style="color:var(--green)">—</div>
+        </div>
+        <div class="bsum-card">
+          <div class="bsum-lbl">Печалба / кошница</div>
+          <div class="bsum-val" id="bsum-profit" style="color:var(--amber)">—</div>
+        </div>
+        <div class="bsum-card">
+          <div class="bsum-lbl">Артикули</div>
+          <div class="bsum-val" id="bsum-items" style="color:var(--text)">—</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Financial calculator -->
     <div class="fin-grid">
       <!-- Sliders -->
@@ -1284,6 +1353,84 @@ function renderEquipment() {
 // Editable volumes (can be changed per row)
 let vols = GAMMA.map(p => p[5]);
 
+// ── Basket ────────────────────────────────────────────────────
+let basket = [
+  { idx: 0,  qty: 1 },  // Born Winner бар
+  { idx: 20, qty: 1 },  // Natурална вода
+];
+
+function buildGammaOptions(selectedIdx) {
+  return GAMMA.map((p, i) =>
+    `<option value="${i}" ${i === selectedIdx ? 'selected' : ''}>${p[0]} — ${p[2]} ${p[1]} (${fmtN(p[4])} лв.)</option>`
+  ).join('');
+}
+
+function renderBasket() {
+  const tbody = document.getElementById('basket-tbody');
+  tbody.innerHTML = basket.map((row, i) => {
+    const p = GAMMA[row.idx];
+    const lineTotal = p[4] * row.qty;
+    const lineCost  = p[3] * row.qty;
+    return `<tr>
+      <td style="width:100%">
+        <select class="basket-select" data-i="${i}" onchange="onBasketSelect(this)">${buildGammaOptions(row.idx)}</select>
+      </td>
+      <td style="white-space:nowrap;padding-left:6px">
+        <input class="basket-qty" type="number" min="1" max="20" value="${row.qty}" data-i="${i}" oninput="onBasketQty(this)">
+      </td>
+      <td style="white-space:nowrap;font-family:var(--font-mono);color:var(--green);text-align:right">${fmtN(lineTotal)} лв.</td>
+      <td><button class="basket-del" onclick="removeBasketRow(${i})">×</button></td>
+    </tr>`;
+  }).join('');
+  updateBasketSummary();
+}
+
+function onBasketSelect(el) {
+  basket[+el.dataset.i].idx = +el.value;
+  updateBasketSummary();
+  updateFinancials();
+}
+
+function onBasketQty(el) {
+  basket[+el.dataset.i].qty = Math.max(1, +el.value || 1);
+  updateBasketSummary();
+  updateFinancials();
+}
+
+function addBasketRow() {
+  basket.push({ idx: 0, qty: 1 });
+  renderBasket();
+  updateFinancials();
+}
+
+function removeBasketRow(i) {
+  if (basket.length <= 1) return;
+  basket.splice(i, 1);
+  renderBasket();
+  updateFinancials();
+}
+
+function getBasketInfo() {
+  let total = 0, cost = 0, items = 0;
+  basket.forEach(row => {
+    const p = GAMMA[row.idx];
+    total += p[4] * row.qty;
+    cost  += p[3] * row.qty;
+    items += row.qty;
+  });
+  const margin = total > 0 ? (total - cost) / total : 0;
+  return { total, cost, margin, profit: total - cost, items };
+}
+
+function updateBasketSummary() {
+  const b = getBasketInfo();
+  document.getElementById('bsum-total').textContent  = fmtN(b.total) + ' лв.';
+  document.getElementById('bsum-margin').textContent = (b.margin * 100).toFixed(1) + '%';
+  document.getElementById('bsum-margin').style.color = b.margin >= 0.5 ? 'var(--green)' : b.margin >= 0.38 ? 'var(--amber)' : 'var(--red)';
+  document.getElementById('bsum-profit').textContent = fmtN(b.profit) + ' лв.';
+  document.getElementById('bsum-items').textContent  = b.items + ' бр.';
+}
+
 function marginColor(m) {
   if (m >= 0.55) return 'var(--green)';
   if (m >= 0.40) return 'var(--amber)';
@@ -1379,12 +1526,10 @@ function updateFinancials() {
   document.getElementById('lbl-customers').textContent = customersPerDay;
   document.getElementById('lbl-rent').textContent      = rentEur;
 
-  // Blended margin + avg ticket from product table
-  const totalRev  = GAMMA.reduce((s,_,i) => s + GAMMA[i][4] * vols[i], 0);
-  const totalCost = GAMMA.reduce((s,_,i) => s + GAMMA[i][3] * vols[i], 0);
-  const totalVol  = GAMMA.reduce((s,_,i) => s + vols[i], 0);
-  const blended   = totalRev > 0 ? (totalRev - totalCost) / totalRev : 0.55;
-  const avgTicket = totalVol > 0 ? totalRev / totalVol : 4.20;
+  // Avg ticket + margin from basket constructor
+  const bi        = getBasketInfo();
+  const avgTicket = bi.total > 0 ? bi.total : 4.20;
+  const blended   = bi.margin > 0 ? bi.margin : 0.50;
 
   const monthlyRev  = customersPerDay * avgTicket * DAYS;
   const monthlyCOGS = monthlyRev * (1 - blended);
@@ -1452,6 +1597,7 @@ document.getElementById('tab-gamma').addEventListener('click', () => {
   setTimeout(() => { renderTable(); }, 50);
 });
 // Also init immediately in case tab is opened programmatically
+renderBasket();
 renderEquipment();
 renderTable();
 </script>
