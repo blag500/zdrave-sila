@@ -527,6 +527,19 @@
   .verdict-pill.ok  { background: rgba(0,200,150,0.12); color: var(--green); }
   .verdict-pill.over{ background: rgba(255,77,109,0.12); color: var(--red);   }
 
+  .cur-toggle {
+    display: inline-flex; align-items: center;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 99px; padding: 3px; gap: 2px; margin-bottom: 20px;
+  }
+  .cur-btn {
+    padding: 5px 16px; border-radius: 99px; border: none; background: transparent;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    color: var(--text-muted); cursor: pointer; transition: all var(--transition);
+    letter-spacing: 0.04em;
+  }
+  .cur-btn.active { background: var(--green); color: #0A0D0F; }
+
   .scenario-bar {
     display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
     margin-bottom: 20px;
@@ -1054,6 +1067,11 @@
   <!-- ═══════════════════ TAB: ПРОДУКТОВА ГАМА ═══════════════════ -->
   <div class="tab-content" id="tab-content-gamma">
 
+    <div class="cur-toggle">
+      <button class="cur-btn active" id="cur-bgn" onclick="toggleCurrency('BGN')">лв.</button>
+      <button class="cur-btn" id="cur-eur" onclick="toggleCurrency('EUR')">€</button>
+    </div>
+
     <!-- Summary cards -->
     <div class="gamma-summary">
       <div class="g-sum-card">
@@ -1246,8 +1264,7 @@
           <tr>
             <th>Помещение</th>
             <th class="hide-mobile">Площ</th>
-            <th>Наем €/мес.</th>
-            <th class="hide-mobile">Наем лв./мес.</th>
+            <th>Наем/мес.</th>
             <th>Оп. печалба/мес.</th>
             <th>Статус</th>
           </tr>
@@ -1373,13 +1390,13 @@ function renderEquipment() {
     return `<tr>
       <td>${e[0]}${onlyNew ? ' <span style="font-size:9px;color:var(--text-muted);font-family:var(--font-mono)">(само ново)</span>' : ''}</td>
       <td class="r">${e[1]}</td>
-      <td class="r">€${unitP}</td>
-      <td class="r" style="color:var(--green)">€${fmtN(total)}</td>
+      <td class="r">${fmtE(unitP)}</td>
+      <td class="r" style="color:var(--green)">${fmtE(total)}</td>
     </tr>`;
   }).join('');
   const capex = getCapex();
-  document.getElementById('equip-total').textContent = '€' + fmtN(capex);
-  document.getElementById('equip-amort').textContent = '€' + fmtN(capex) + ' / ' + fmtN(capex * RATE) + ' лв.';
+  document.getElementById('equip-total').textContent = fmtE(capex);
+  document.getElementById('equip-amort').textContent = fmtE(capex);
 }
 
 
@@ -1442,7 +1459,7 @@ let basket = [
 
 function buildGammaOptions(selectedIdx) {
   return GAMMA.map((p, i) =>
-    `<option value="${i}" ${i === selectedIdx ? 'selected' : ''}>${p[0]} — ${p[2]} ${p[1]} (${fmtN(p[4])} лв.)</option>`
+    `<option value="${i}" ${i === selectedIdx ? 'selected' : ''}>${p[0]} — ${p[2]} ${p[1]} (${fmt(p[4])})</option>`
   ).join('');
 }
 
@@ -1459,7 +1476,7 @@ function renderBasket() {
       <td style="white-space:nowrap;padding-left:6px">
         <input class="basket-qty" type="number" min="1" max="20" value="${row.qty}" data-i="${i}" oninput="onBasketQty(this)">
       </td>
-      <td style="white-space:nowrap;font-family:var(--font-mono);color:var(--green);text-align:right">${fmtN(lineTotal)} лв.</td>
+      <td style="white-space:nowrap;font-family:var(--font-mono);color:var(--green);text-align:right">${fmt(lineTotal)}</td>
       <td><button class="basket-del" onclick="removeBasketRow(${i})">×</button></td>
     </tr>`;
   }).join('');
@@ -1509,10 +1526,10 @@ function getBasketInfo() {
 
 function updateBasketSummary() {
   const b = getBasketInfo();
-  document.getElementById('bsum-total').textContent  = fmtN(b.total) + ' лв.';
+  document.getElementById('bsum-total').textContent  = fmt(b.total);
   document.getElementById('bsum-margin').textContent = (b.margin * 100).toFixed(1) + '%';
   document.getElementById('bsum-margin').style.color = b.margin >= 0.5 ? 'var(--green)' : b.margin >= 0.38 ? 'var(--amber)' : 'var(--red)';
-  document.getElementById('bsum-profit').textContent = fmtN(b.profit) + ' лв.';
+  document.getElementById('bsum-profit').textContent = fmt(b.profit);
   document.getElementById('bsum-items').textContent  = b.items + ' бр.';
 }
 
@@ -1524,6 +1541,23 @@ function marginColor(m) {
 
 function fmtLv(n) { return n.toLocaleString('bg-BG', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' лв.'; }
 function fmtN(n)  { return n.toLocaleString('bg-BG', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+let dispCur = 'BGN';
+function sym()     { return dispCur === 'EUR' ? '€' : 'лв.'; }
+function cvtB(bgn) { return dispCur === 'EUR' ? bgn / RATE : bgn; }
+function cvtE(eur) { return dispCur === 'BGN' ? eur * RATE : eur; }
+function fmt(bgn)  { return fmtN(cvtB(bgn)) + ' ' + sym(); }
+function fmtE(eur) { return fmtN(cvtE(eur)) + ' ' + sym(); }
+
+function toggleCurrency(cur) {
+  dispCur = cur;
+  document.getElementById('cur-bgn').classList.toggle('active', cur === 'BGN');
+  document.getElementById('cur-eur').classList.toggle('active', cur === 'EUR');
+  renderBasket();
+  renderEquipment();
+  renderTable();
+  updateFinancials();
+}
 
 let activeCat = 'all';
 
@@ -1558,8 +1592,8 @@ function renderTable() {
       <td><span class="cat-dot" style="background:${CAT_COLORS[cat]||'#888'}"></span><span style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono)">${cat}</span></td>
       <td class="td-name">${name}</td>
       <td class="td-brand">${brand}</td>
-      <td class="r">${fmtN(cost)}</td>
-      <td class="r" style="color:var(--green)">${fmtN(price)}</td>
+      <td class="r">${fmt(cost)}</td>
+      <td class="r" style="color:var(--green)">${fmt(price)}</td>
       <td>
         <div class="margin-bar">
           <div class="margin-track"><div class="margin-fill" style="width:${fillW}%;background:${mColor}"></div></div>
@@ -1610,18 +1644,18 @@ function updateFinancials() {
   const ebitda      = grossProfit - totalFixed;
   const bePerDay    = Math.ceil(totalFixed / (blended * avgTicket));
 
-  document.getElementById('pl-rev').textContent    = fmtLv(monthlyRev);
-  document.getElementById('pl-cogs').textContent   = '− ' + fmtLv(monthlyCOGS);
-  document.getElementById('pl-gp').textContent     = fmtLv(grossProfit);
-  document.getElementById('pl-fixed').textContent  = '− ' + fmtLv(totalFixed);
-  document.getElementById('pl-ebitda').textContent = (ebitda >= 0 ? '' : '− ') + fmtLv(Math.abs(ebitda));
+  document.getElementById('pl-rev').textContent    = fmt(monthlyRev);
+  document.getElementById('pl-cogs').textContent   = '− ' + fmt(monthlyCOGS);
+  document.getElementById('pl-gp').textContent     = fmt(grossProfit);
+  document.getElementById('pl-fixed').textContent  = '− ' + fmt(totalFixed);
+  document.getElementById('pl-ebitda').textContent = (ebitda >= 0 ? '' : '− ') + fmt(Math.abs(ebitda));
   document.getElementById('pl-ebitda').style.color = ebitda >= 0 ? 'var(--green)' : 'var(--red)';
   document.getElementById('pl-ebitda-row').className = 'pl-row ebitda' + (ebitda < 0 ? ' neg' : '');
 
   const tax    = ebitda > 0 ? ebitda * 0.10 : 0;
   const netPnl = ebitda - tax;
-  document.getElementById('pl-tax').textContent  = ebitda > 0 ? '− ' + fmtLv(tax) : '0.00 лв.';
-  document.getElementById('pl-net').textContent  = (netPnl >= 0 ? '' : '− ') + fmtLv(Math.abs(netPnl));
+  document.getElementById('pl-tax').textContent  = ebitda > 0 ? '− ' + fmt(tax) : '0.00 ' + sym();
+  document.getElementById('pl-net').textContent  = (netPnl >= 0 ? '' : '− ') + fmt(Math.abs(netPnl));
   document.getElementById('pl-net').style.color  = netPnl >= 0 ? 'var(--green)' : 'var(--red)';
   document.getElementById('pl-be').textContent   = bePerDay;
   document.getElementById('pl-margin-pct').textContent = (blended*100).toFixed(1) + '%';
@@ -1637,14 +1671,14 @@ function updateFinancials() {
   }
   // Update net profit display in equipment section
   const npEl = document.getElementById('equip-net-monthly');
-  if (npEl) { npEl.textContent = fmtLv(Math.max(0, netPnl)) + '/мес.'; }
+  if (npEl) { npEl.textContent = fmt(Math.max(0, netPnl)) + '/мес.'; }
 
   // Max rent
   const maxRentLv  = grossProfit - FIXED_EX_RENT - TARGET_EBITDA;
   const maxRentEur = maxRentLv / RATE;
   document.getElementById('max-rent-lv').textContent  = fmtN(Math.max(0, maxRentLv));
   document.getElementById('max-rent-eur').textContent = Math.max(0, maxRentEur).toFixed(0);
-  document.getElementById('max-rent-badge').textContent = 'Макс. наем: €' + Math.max(0, maxRentEur).toFixed(0);
+  document.getElementById('max-rent-badge').textContent = 'Макс. наем: ' + fmtE(Math.max(0, maxRentEur));
 
   // Rent table
   const rtbody = document.getElementById('rent-tbody');
@@ -1656,9 +1690,8 @@ function updateFinancials() {
     return `<tr>
       <td style="color:var(--text);font-weight:500">${sp.name}</td>
       <td class="hide-mobile" style="font-family:var(--font-mono)">${sp.sqm} кв.м.</td>
-      <td style="font-family:var(--font-mono)">€${sp.eur}</td>
-      <td class="hide-mobile" style="font-family:var(--font-mono)">${fmtN(spLv)}</td>
-      <td style="font-family:var(--font-mono);color:${spEBITDA>=0?'var(--green)':'var(--red)'}">${(spEBITDA>=0?'':' −')}${fmtN(Math.abs(spEBITDA))} лв.</td>
+      <td style="font-family:var(--font-mono)">${fmtE(sp.eur)}</td>
+      <td style="font-family:var(--font-mono);color:${spEBITDA>=0?'var(--green)':'var(--red)'}">${(spEBITDA>=0?'':' −')}${fmt(Math.abs(spEBITDA))}</td>
       <td><span class="verdict-pill ${ok?'ok':'over'}">${ok?'✓ ОК':'✗ Скъп'}</span>${sp.viewing?' <span style="font-size:9px;font-family:var(--font-mono);color:var(--amber);letter-spacing:0.04em">🔍 оглед</span>':''}</td>
     </tr>`;
   }).join('');
