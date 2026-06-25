@@ -1033,7 +1033,7 @@
         <div class="g-sum-val" id="gs-skus">36</div>
       </div>
       <div class="g-sum-card">
-        <div class="g-sum-lbl">Blended марж</div>
+        <div class="g-sum-lbl">Среден марж</div>
         <div class="g-sum-val green" id="gs-margin">—</div>
       </div>
       <div class="g-sum-card">
@@ -1137,13 +1137,13 @@
       <!-- P&L output -->
       <div class="fin-panel">
         <div class="fin-panel-title">Месечен P&amp;L</div>
-        <div class="pl-row"><span class="pl-label">Приход (Revenue)</span><span class="pl-val" id="pl-rev" style="color:var(--green)">—</span></div>
-        <div class="pl-row"><span class="pl-label">COGS (1 − марж%)</span><span class="pl-val" id="pl-cogs" style="color:var(--red)">—</span></div>
+        <div class="pl-row"><span class="pl-label">Приход</span><span class="pl-val" id="pl-rev" style="color:var(--green)">—</span></div>
+        <div class="pl-row"><span class="pl-label">Себестойност на стоките (COGS)</span><span class="pl-val" id="pl-cogs" style="color:var(--red)">—</span></div>
         <div class="pl-row total"><span class="pl-label">Брутна печалба</span><span class="pl-val" id="pl-gp" style="color:var(--green)">—</span></div>
         <div class="pl-row"><span class="pl-label">Постоянни разходи</span><span class="pl-val" id="pl-fixed" style="color:var(--amber)">—</span></div>
         <div class="pl-row"><span class="pl-label">Амортизация (24 мес.)</span><span class="pl-val" id="pl-amort" style="color:var(--amber)">—</span></div>
         <div class="pl-row ebitda" id="pl-ebitda-row">
-          <span class="pl-label" style="font-weight:600">EBITDA</span>
+          <span class="pl-label" style="font-weight:600">Оперативна печалба (EBITDA)</span>
           <span class="pl-val" id="pl-ebitda" style="font-size:18px">—</span>
         </div>
         <div class="pl-row" style="font-size:11px;color:var(--text-muted)">
@@ -1155,7 +1155,7 @@
           <span class="pl-val" id="pl-net" style="font-size:18px;font-weight:700">—</span>
         </div>
         <div style="margin-top:10px;display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">
-          <span>Break-even: <span id="pl-be" style="color:var(--text)">—</span> клиенти/ден</span>
+          <span>Праг на рентабилност: <span id="pl-be" style="color:var(--text)">—</span> клиенти/ден</span>
           <span>Марж: <span id="pl-margin-pct" style="color:var(--green)">—</span></span>
         </div>
       </div>
@@ -1176,7 +1176,7 @@
           <tbody id="equip-tbody"></tbody>
           <tfoot>
             <tr style="font-weight:600;background:var(--bg-card)">
-              <td colspan="3" style="padding:10px 12px;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)">Обща инвестиция (Capex)</td>
+              <td colspan="3" style="padding:10px 12px;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)">Обща начална инвестиция</td>
               <td class="r" id="equip-total" style="padding:10px 12px;color:var(--green);font-family:var(--font-mono);font-size:14px">—</td>
             </tr>
           </tfoot>
@@ -1205,7 +1205,7 @@
         <span class="panel-badge" id="max-rent-badge">—</span>
       </div>
       <div style="margin-bottom:14px;font-size:12px;color:var(--text-muted)">
-        Целева EBITDA: <strong style="color:var(--text)">1 500 лв./мес.</strong> — при текущия обем транзакции, максималният наем е
+        Целева оперативна печалба: <strong style="color:var(--text)">1 500 лв./мес.</strong> — при текущия обем транзакции, максималният наем е
         <strong style="color:var(--green)" id="max-rent-lv">—</strong> лв./мес. (<strong style="color:var(--green)" id="max-rent-eur">—</strong> €/мес.)
       </div>
       <table class="rent-table">
@@ -1215,7 +1215,7 @@
             <th class="hide-mobile">Площ</th>
             <th>Наем €/мес.</th>
             <th class="hide-mobile">Наем лв./мес.</th>
-            <th>EBITDA/мес.</th>
+            <th>Оп. печалба/мес.</th>
             <th>Статус</th>
           </tr>
         </thead>
@@ -1496,7 +1496,7 @@ function renderTable() {
   const totalMarg = totalRev - totalCost;
 
   tfoot.innerHTML = `<tr style="background:var(--bg-card);font-weight:600">
-    <td colspan="7" style="padding:10px 12px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em">ОБЩО / BLENDED МАРЖ: <span style="color:var(--green);font-size:12px">${(blended*100).toFixed(2)}%</span></td>
+    <td colspan="7" style="padding:10px 12px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em">ОБЩО / СРЕДЕН МАРЖ: <span style="color:var(--green);font-size:12px">${(blended*100).toFixed(2)}%</span></td>
     <td class="r" style="font-family:var(--font-mono);color:var(--text)">${totalVol}</td>
     <td class="r" style="color:var(--green);font-family:var(--font-mono)">${fmtN(totalRev)}</td>
     <td class="r" style="color:var(--green);font-family:var(--font-mono)">${fmtN(totalMarg)}</td>
