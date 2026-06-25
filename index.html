@@ -671,6 +671,7 @@
     <button class="tab-btn" onclick="switchTab('survey')" id="tab-survey">📊 Survey Insights <span style="font-family:var(--font-mono);font-size:10px;background:rgba(0,200,150,0.15);color:var(--green);padding:2px 6px;border-radius:4px;margin-left:4px;">n=163</span></button>
     <button class="tab-btn" onclick="switchTab('improve')" id="tab-improve">🔧 Simulation Improvements</button>
     <button class="tab-btn" onclick="switchTab('gamma')"  id="tab-gamma">📦 Продуктова гама</button>
+    <button class="tab-btn" onclick="switchTab('fin')"    id="tab-fin">💰 Финансов калкулатор</button>
   </nav>
 
   <!-- ═══════════════════ TAB: SIMULATION ═══════════════════ -->
@@ -1067,11 +1068,6 @@
   <!-- ═══════════════════ TAB: ПРОДУКТОВА ГАМА ═══════════════════ -->
   <div class="tab-content" id="tab-content-gamma">
 
-    <div class="cur-toggle">
-      <button class="cur-btn active" id="cur-bgn" onclick="toggleCurrency('BGN')">лв.</button>
-      <button class="cur-btn" id="cur-eur" onclick="toggleCurrency('EUR')">€</button>
-    </div>
-
     <!-- Summary cards -->
     <div class="gamma-summary">
       <div class="g-sum-card">
@@ -1126,6 +1122,16 @@
       </table>
     </div>
 
+  </div><!-- /tab-gamma -->
+
+  <!-- ═══════════════════ TAB: ФИНАНСОВ КАЛКУЛАТОР ═══════════════════ -->
+  <div class="tab-content" id="tab-content-fin">
+
+    <div class="cur-toggle">
+      <button class="cur-btn active" id="cur-bgn" onclick="toggleCurrency('BGN')">лв.</button>
+      <button class="cur-btn" id="cur-eur" onclick="toggleCurrency('EUR')">€</button>
+    </div>
+
     <!-- Scenario selector -->
     <div class="scenario-bar">
       <span class="scenario-lbl">Сценарий:</span>
@@ -1165,11 +1171,10 @@
       </div>
     </div>
 
-    <!-- Financial calculator -->
+    <!-- Sliders + P&L -->
     <div class="fin-grid">
-      <!-- Sliders -->
       <div class="fin-panel">
-        <div class="fin-panel-title">Финансов калкулатор</div>
+        <div class="fin-panel-title">Входни данни</div>
         <div class="slider-row">
           <label>Клиенти / ден <span id="lbl-customers">80</span></label>
           <input type="range" class="green-range" id="sl-customers" min="10" max="250" value="80" oninput="markCustom();updateFinancials()">
@@ -1186,7 +1191,6 @@
           EUR/BGN: <span style="color:var(--text)">1.95583</span> · <span style="color:var(--amber)">⚠ Доставни цени са прогнозни</span>
         </div>
       </div>
-      <!-- P&L output -->
       <div class="fin-panel">
         <div class="fin-panel-title">Месечен P&amp;L</div>
         <div id="pl-daily-bridge" style="display:flex;align-items:baseline;justify-content:space-between;padding:8px 12px;margin-bottom:10px;background:rgba(0,200,150,0.07);border:1px solid rgba(0,200,150,0.18);border-radius:8px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">
@@ -1277,7 +1281,7 @@
       </table>
     </div>
 
-  </div><!-- /tab-gamma -->
+  </div><!-- /tab-fin -->
 
 </div><!-- /app -->
 
@@ -1709,16 +1713,20 @@ function updateFinancials() {
 document.getElementById('tab-gamma').addEventListener('click', () => {
   setTimeout(() => { renderTable(); }, 50);
 });
-// Also init immediately in case tab is opened programmatically
+document.getElementById('tab-fin').addEventListener('click', () => {
+  setTimeout(() => { renderBasket(); renderEquipment(); updateFinancials(); }, 50);
+});
+// Initial render
 renderBasket();
 renderEquipment();
 renderTable();
+updateFinancials();
 </script>
 
 <script>
 // ── Tab switching ──────────────────────────────────────────────────────
 function switchTab(id) {
-  ['sim','survey','improve','gamma'].forEach(t => {
+  ['sim','survey','improve','gamma','fin'].forEach(t => {
     document.getElementById('tab-content-' + t).classList.toggle('active', t === id);
     document.getElementById('tab-' + t).classList.toggle('active', t === id);
   });
