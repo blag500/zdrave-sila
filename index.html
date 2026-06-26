@@ -656,6 +656,35 @@
     .rent-table { font-size: 11px; }
     .rent-table td, .rent-table th { padding: 8px 8px; }
     .panel { padding: 14px; }
+
+    /* Tab nav — scroll horizontally, no wrap */
+    .tab-nav {
+      overflow-x: auto; overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      flex-wrap: nowrap;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab-btn { font-size: 12px; padding: 6px 12px; white-space: nowrap; flex-shrink: 0; }
+    .lang-toggle { flex-shrink: 0; }
+  }
+
+  @media (max-width: 480px) {
+    .app { padding: 0 12px 40px; }
+    header { padding: 14px 0 12px; gap: 8px; }
+    .logo-text h1 { font-size: 15px; }
+    .logo-text p  { font-size: 9px; }
+    .tab-btn { font-size: 11px; padding: 5px 10px; }
+    .capex-cards { grid-template-columns: 1fr; }
+    .basket-summary-bar { grid-template-columns: 1fr 1fr; }
+    .survey-meta { gap: 8px; }
+    .survey-meta-item .val { font-size: 22px; }
+    .pl-row { font-size: 12px; }
+    .pl-val { font-size: 13px !important; }
+    .pl-row.ebitda .pl-val { font-size: 16px !important; }
+    #pl-net { font-size: 16px !important; }
   }
 </style>
 </head>
@@ -1218,6 +1247,7 @@
         <div class="pl-row"><span class="pl-label" data-t="pl_rev">Приход</span><span class="pl-val" id="pl-rev" style="color:var(--green)">—</span></div>
         <div class="pl-row"><span class="pl-label" data-t="pl_cogs">Себестойност на стоките (COGS)</span><span class="pl-val" id="pl-cogs" style="color:var(--red)">—</span></div>
         <div class="pl-row total"><span class="pl-label" data-t="pl_gp">Брутна печалба</span><span class="pl-val" id="pl-gp" style="color:var(--green)">—</span></div>
+        <div class="pl-row"><span class="pl-label" data-t="pl_pos">POS такси (Borica 0.5%)</span><span class="pl-val" id="pl-pos" style="color:var(--red)">—</span></div>
         <div class="pl-row"><span class="pl-label" data-t="pl_fixed">Постоянни разходи</span><span class="pl-val" id="pl-fixed" style="color:var(--amber)">—</span></div>
         <div class="pl-row ebitda" id="pl-ebitda-row">
           <span class="pl-label" data-t="pl_ebitda" style="font-weight:600">Оперативна печалба (EBITDA)</span>
@@ -1261,7 +1291,11 @@
       </div>
       <div class="capex-cards">
         <div class="capex-card">
-          <div class="capex-lbl" data-t="capex_inv">Обща инвестиция</div>
+          <div class="capex-lbl" data-t="capex_stock">Начален инвентар (3 дни)</div>
+          <div class="capex-val" id="equip-stock" style="color:var(--text)">—</div>
+        </div>
+        <div class="capex-card">
+          <div class="capex-lbl" data-t="capex_inv">Обща инвестиция (оборуд. + инвент.)</div>
           <div class="capex-val" style="color:var(--amber)" id="equip-amort">—</div>
         </div>
         <div class="capex-card">
@@ -1305,7 +1339,9 @@
 // ПРОДУКТОВА ГАМА — data & logic
 // ══════════════════════════════════════════════════════════════
 const RATE = 1.95583;
-const FIXED_EX_RENT = 1070; // лв./мес. — вижте разбивката по-долу
+const FIXED_EX_RENT = 990;  // лв./мес. (без наем и без POS такси — вижте разбивката)
+const POS_RATE   = 0.005;   // Borica blended: ~0.35% дебит / 1% кредит → ~0.5%
+const STOCK_DAYS = 3;       // дни запас при начално зареждане
 const TARGET_EBITDA = 1500; // лв.
 const DAYS = 30;
 const MACHINES_DEFAULT = 2;
@@ -1406,6 +1442,9 @@ let useNew = true;
 function getCapex() {
   return EQUIP.reduce((s, e) => s + e[1] * (useNew ? e[2] : (e[3] ?? e[2])), 0);
 }
+function getInitialStock() {
+  return GAMMA.reduce((s, p) => s + p[3] * p[5] * STOCK_DAYS, 0);
+}
 
 function toggleEquip(isNew) {
   useNew = isNew;
@@ -1428,9 +1467,12 @@ function renderEquipment() {
       <td class="r" style="color:var(--green)">${fmtE(total)}</td>
     </tr>`;
   }).join('');
-  const capex = getCapex();
-  document.getElementById('equip-total').textContent = fmtE(capex);
-  document.getElementById('equip-amort').textContent = fmtE(capex);
+  const capex      = getCapex();
+  const initStock  = getInitialStock();
+  const totalInvLv = capex * RATE + initStock;
+  document.getElementById('equip-total').textContent  = fmtE(capex);
+  document.getElementById('equip-stock').textContent  = fmt(initStock);
+  document.getElementById('equip-amort').textContent  = fmt(totalInvLv);
 }
 
 
@@ -1590,14 +1632,16 @@ const T = {
     panel_inputs:'Входни данни', panel_pl:'Месечен P&L',
     sl_customers:'Клиенти / ден', sl_rent:'Наем (€/мес.)',
     daily_cust:'кл.', daily_day:'/ ден',
-    fc_title:'Постоянни разходи (без наем): 1 070 лв./мес.', fc_line1:'Счетоводство 150 · Застраховка 80 · Консумативи 100',
+    fc_title:'Постоянни разходи (без наем и POS): 990 лв./мес.', fc_line1:'Счетоводство 150 · Застраховка 80 · Консумативи 100',
     fc_line2:'Маркетинг 200 · POS такси 80 · Резерв 130', fc_line3:'Ток ~300 · Интернет 30', fc_note:'⚠ Доставни цени са прогнозни',
     pl_rev:'Приход', pl_cogs:'Себестойност на стоките (COGS)', pl_gp:'Брутна печалба',
+    pl_pos:'POS такси (Borica 0.5%)',
     pl_fixed:'Постоянни разходи', pl_ebitda:'Оперативна печалба (EBITDA)', pl_tax:'Корп. данък 10% (ЕООД)',
     pl_net:'Нетна печалба', pl_be_pre:'Праг на рентабилност:', pl_be_post:'клиенти/ден', pl_margin_lbl:'Марж:',
     equip_title:'Оборудване & Капиталови разходи', equip_new:'Ново', equip_used:'Употребявано',
     th_item:'Артикул', th_qty:'Бр.', th_unit:'Единична цена', th_total:'Общо', equip_total_lbl:'Обща начална инвестиция',
-    capex_inv:'Обща инвестиция', capex_net:'Нетна печалба / мес.', capex_payback:'Инвестицията се връща за',
+    capex_stock:'Начален инвентар (3 дни)',
+    capex_inv:'Обща инвестиция (оборуд. + инвент.)', capex_net:'Нетна печалба / мес.', capex_payback:'Инвестицията се връща за',
     rent_title:'Максимален наем и налични помещения',
     th_location:'Помещение', th_area:'Площ', th_rent:'Наем/мес.', th_op:'Оп. печалба/мес.', th_status:'Статус',
     verdict_ok:'✓ ОК', verdict_exp:'✗ Скъп', viewing:'🔍 оглед', max_rent_lbl:'Макс. наем:',
@@ -1643,14 +1687,16 @@ const T = {
     panel_inputs:'Inputs', panel_pl:'Monthly P&L',
     sl_customers:'Customers / day', sl_rent:'Rent (€/mo.)',
     daily_cust:'cust.', daily_day:'/ day',
-    fc_title:'Fixed costs (excl. rent): 1,070 BGN/mo.', fc_line1:'Accounting 150 · Insurance 80 · Supplies 100',
+    fc_title:'Fixed costs (excl. rent & POS): 990 BGN/mo.', fc_line1:'Accounting 150 · Insurance 80 · Supplies 100',
     fc_line2:'Marketing 200 · POS fees 80 · Reserve 130', fc_line3:'Electricity ~300 · Internet 30', fc_note:'⚠ Wholesale prices are estimates',
     pl_rev:'Revenue', pl_cogs:'Cost of Goods (COGS)', pl_gp:'Gross Profit',
+    pl_pos:'POS fees (Borica 0.5%)',
     pl_fixed:'Fixed Costs', pl_ebitda:'Operating Profit (EBITDA)', pl_tax:'Corp. Tax 10% (Ltd.)',
     pl_net:'Net Profit', pl_be_pre:'Break-even:', pl_be_post:'customers/day', pl_margin_lbl:'Margin:',
     equip_title:'Equipment & Capex', equip_new:'New', equip_used:'Used',
     th_item:'Item', th_qty:'Qty', th_unit:'Unit Price', th_total:'Total', equip_total_lbl:'Total Initial Investment',
-    capex_inv:'Total Investment', capex_net:'Net profit / mo.', capex_payback:'Payback period',
+    capex_stock:'Initial stock (3 days)',
+    capex_inv:'Total investment (equip + stock)', capex_net:'Net profit / mo.', capex_payback:'Payback period',
     rent_title:'Max Rent & Available Spaces',
     th_location:'Location', th_area:'Area', th_rent:'Rent/mo.', th_op:'Op. Profit/mo.', th_status:'Status',
     verdict_ok:'✓ OK', verdict_exp:'✗ Too exp.', viewing:'🔍 viewing', max_rent_lbl:'Max rent:',
@@ -1794,10 +1840,12 @@ function updateFinancials() {
   const monthlyRev  = customersPerDay * avgTicket * DAYS;
   const monthlyCOGS = monthlyRev * (1 - blended);
   const grossProfit = monthlyRev - monthlyCOGS;
+  const posMonthly  = monthlyRev * POS_RATE;
   const rentLv      = rentEur * RATE;
   const totalFixed  = FIXED_EX_RENT + rentLv;
-  const ebitda      = grossProfit - totalFixed;
-  const bePerDay    = Math.ceil(totalFixed / (blended * avgTicket));
+  const ebitda      = grossProfit - posMonthly - totalFixed;
+  const blendedAdj  = blended - POS_RATE;
+  const bePerDay    = Math.ceil(totalFixed / (blendedAdj * avgTicket));
 
   document.getElementById('pl-daily-customers').textContent = customersPerDay;
   document.getElementById('pl-daily-ticket').textContent    = fmt(avgTicket);
@@ -1806,6 +1854,7 @@ function updateFinancials() {
   document.getElementById('pl-rev').textContent    = fmt(monthlyRev);
   document.getElementById('pl-cogs').textContent   = '− ' + fmt(monthlyCOGS);
   document.getElementById('pl-gp').textContent     = fmt(grossProfit);
+  document.getElementById('pl-pos').textContent    = '− ' + fmt(posMonthly);
   document.getElementById('pl-fixed').textContent  = '− ' + fmt(totalFixed);
   document.getElementById('pl-ebitda').textContent = (ebitda >= 0 ? '' : '− ') + fmt(Math.abs(ebitda));
   document.getElementById('pl-ebitda').style.color = ebitda >= 0 ? 'var(--green)' : 'var(--red)';
@@ -1822,7 +1871,7 @@ function updateFinancials() {
   // Payback: нетна печалба/месец → колко месеца да се върне инвестицията
   const paybackEl = document.getElementById('equip-payback');
   if (netPnl > 0) {
-    const pb = Math.ceil(getCapex() * RATE / netPnl);
+    const pb = Math.ceil((getCapex() * RATE + getInitialStock()) / netPnl);
     paybackEl.textContent = pb + ' мес.';
     paybackEl.style.color = pb <= 24 ? 'var(--green)' : pb <= 48 ? 'var(--amber)' : 'var(--red)';
   } else {
