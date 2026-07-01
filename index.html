@@ -640,16 +640,37 @@
   .badge-negotiate { background: rgba(180,127,255,0.15); color: var(--purple); }
   .badge-skip      { background: rgba(255,77,109,0.12);  color: var(--red);    }
 
-  .equip-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 420px; }
+  .equip-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 560px; }
   .equip-table thead th {
     font-family: var(--font-mono); font-size: 10px; text-transform: uppercase;
     letter-spacing: 0.07em; color: var(--text-muted);
     padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left;
   }
   .equip-table thead th.r { text-align: right; }
-  .equip-table tbody td { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--text-dim); }
+  .equip-table tbody td { padding: 6px 8px; border-bottom: 1px solid var(--border); color: var(--text-dim); vertical-align: middle; }
   .equip-table tbody td.r { text-align: right; font-family: var(--font-mono); }
   .equip-table tbody tr:last-child td { border-bottom: none; }
+  .equip-input {
+    background: var(--bg-hover); border: 1px solid transparent; border-radius: 5px;
+    color: var(--text); font-family: var(--font-body); font-size: 12px;
+    padding: 4px 7px; outline: none; transition: border-color var(--transition);
+  }
+  .equip-input:focus { border-color: var(--green); }
+  .equip-input.num { font-family: var(--font-mono); text-align: right; width: 72px; }
+  .equip-input.name { width: 100%; min-width: 160px; }
+  .equip-del {
+    background: transparent; border: none; color: var(--text-muted); font-size: 15px;
+    cursor: pointer; padding: 2px 6px; border-radius: 4px; line-height: 1;
+    transition: color var(--transition), background var(--transition);
+  }
+  .equip-del:hover { color: var(--red); background: rgba(255,77,109,0.1); }
+  .equip-add-row {
+    width: 100%; margin-top: 8px; padding: 8px; border-radius: var(--radius);
+    border: 1px dashed var(--border); background: transparent; color: var(--text-muted);
+    font-family: var(--font-mono); font-size: 11px; cursor: pointer;
+    transition: all var(--transition);
+  }
+  .equip-add-row:hover { border-color: var(--green); color: var(--green); background: rgba(0,200,150,0.05); }
   .equip-toggle {
     padding: 4px 12px; border-radius: 99px; font-family: var(--font-mono);
     font-size: 10px; cursor: pointer; transition: all var(--transition);
@@ -1305,15 +1326,23 @@
       </div>
       <div style="overflow-x:auto">
         <table class="equip-table">
-          <thead><tr><th data-t="th_item">Артикул</th><th class="r" data-t="th_qty">Бр.</th><th class="r" data-t="th_unit">Единична цена</th><th class="r" data-t="th_total">Общо</th></tr></thead>
+          <thead><tr>
+            <th data-t="th_item">Артикул</th>
+            <th class="r" data-t="th_qty">Бр.</th>
+            <th class="r">Ново (€)</th>
+            <th class="r">Употр. (€)</th>
+            <th class="r" data-t="th_total">Общо</th>
+            <th></th>
+          </tr></thead>
           <tbody id="equip-tbody"></tbody>
           <tfoot>
             <tr style="font-weight:600;background:var(--bg-card)">
-              <td colspan="3" data-t="equip_total_lbl" style="padding:10px 12px;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)">Обща начална инвестиция</td>
+              <td colspan="5" data-t="equip_total_lbl" style="padding:10px 12px;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)">Обща начална инвестиция</td>
               <td class="r" id="equip-total" style="padding:10px 12px;color:var(--green);font-family:var(--font-mono);font-size:14px">—</td>
             </tr>
           </tfoot>
         </table>
+        <button class="equip-add-row" onclick="addEquipRow()">+ Добави артикул</button>
       </div>
       <div class="capex-cards">
         <div class="capex-card">
@@ -1651,33 +1680,88 @@ function getInitialStock() {
   return GAMMA.reduce((s, p) => s + p[3] * p[5] * STOCK_DAYS, 0);
 }
 
+function saveEquip() {
+  localStorage.setItem('equip_data', JSON.stringify(EQUIP));
+}
+function loadEquip() {
+  try {
+    const saved = localStorage.getItem('equip_data');
+    if (saved) {
+      const arr = JSON.parse(saved);
+      EQUIP.length = 0;
+      arr.forEach(e => EQUIP.push(e));
+    }
+  } catch(e) {}
+}
+
 function toggleEquip(isNew) {
   useNew = isNew;
   document.getElementById('equip-btn-new').classList.toggle('active', isNew);
   document.getElementById('equip-btn-used').classList.toggle('active', !isNew);
-  renderEquipment();
+  updateEquipTotals();
   updateFinancials();
+}
+
+function updateEquipTotals() {
+  EQUIP.forEach((e, i) => {
+    const unitP = useNew ? e[2] : (e[3] ?? e[2]);
+    const el = document.getElementById('eqr-' + i);
+    if (el) el.textContent = fmtE(e[1] * unitP);
+  });
+  const capex     = getCapex();
+  const initStock = getInitialStock();
+  const totalInv  = capex * RATE + initStock;
+  document.getElementById('equip-total').textContent = fmtE(capex);
+  document.getElementById('equip-stock').textContent = fmt(initStock);
+  document.getElementById('equip-amort').textContent = fmt(totalInv);
 }
 
 function renderEquipment() {
   const tbody = document.getElementById('equip-tbody');
-  tbody.innerHTML = EQUIP.map(e => {
-    const unitP = useNew ? e[2] : (e[3] ?? e[2]);
-    const total = e[1] * unitP;
-    const onlyNew = !useNew && e[3] === null;
-    return `<tr>
-      <td>${e[0]}${onlyNew ? ' <span style="font-size:9px;color:var(--text-muted);font-family:var(--font-mono)">(само ново)</span>' : ''}</td>
-      <td class="r">${e[1]}</td>
-      <td class="r">${fmtE(unitP)}</td>
-      <td class="r" style="color:var(--green)">${fmtE(total)}</td>
-    </tr>`;
-  }).join('');
-  const capex      = getCapex();
-  const initStock  = getInitialStock();
-  const totalInvLv = capex * RATE + initStock;
-  document.getElementById('equip-total').textContent  = fmtE(capex);
-  document.getElementById('equip-stock').textContent  = fmt(initStock);
-  document.getElementById('equip-amort').textContent  = fmt(totalInvLv);
+  tbody.innerHTML = EQUIP.map((e, i) => `<tr>
+    <td><input class="equip-input name" data-i="${i}" data-f="0" value="${e[0].replace(/"/g,'&quot;')}"></td>
+    <td class="r"><input class="equip-input num" data-i="${i}" data-f="1" type="number" min="1" step="1" value="${e[1]}"></td>
+    <td class="r"><input class="equip-input num" data-i="${i}" data-f="2" type="number" min="0" step="10" value="${e[2]}"></td>
+    <td class="r"><input class="equip-input num" data-i="${i}" data-f="3" type="number" min="0" step="10" value="${e[3] ?? ''}" placeholder="—"></td>
+    <td class="r" style="color:var(--green);font-family:var(--font-mono);white-space:nowrap" id="eqr-${i}"></td>
+    <td><button class="equip-del" data-i="${i}">×</button></td>
+  </tr>`).join('');
+
+  tbody.querySelectorAll('.equip-input').forEach(el => {
+    el.addEventListener('input', () => {
+      const i = +el.dataset.i, f = +el.dataset.f;
+      if (f === 0) {
+        EQUIP[i][0] = el.value;
+      } else if (f === 3) {
+        EQUIP[i][3] = el.value.trim() === '' ? null : (+el.value || 0);
+      } else {
+        EQUIP[i][f] = +el.value || 0;
+      }
+      saveEquip();
+      updateEquipTotals();
+      updateFinancials();
+    });
+  });
+
+  tbody.querySelectorAll('.equip-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      EQUIP.splice(+btn.dataset.i, 1);
+      saveEquip();
+      renderEquipment();
+      updateEquipTotals();
+      updateFinancials();
+    });
+  });
+
+  updateEquipTotals();
+}
+
+function addEquipRow() {
+  EQUIP.push(['Нов артикул', 1, 0, null]);
+  saveEquip();
+  renderEquipment();
+  const inputs = document.querySelectorAll('#equip-tbody .equip-input.name');
+  if (inputs.length) { inputs[inputs.length-1].focus(); inputs[inputs.length-1].select(); }
 }
 
 
@@ -2119,6 +2203,7 @@ document.getElementById('tab-fin').addEventListener('click', () => {
   setTimeout(() => { renderBasket(); renderEquipment(); updateFinancials(); }, 50);
 });
 // Initial render
+loadEquip();
 renderBasket();
 renderEquipment();
 renderTable();
