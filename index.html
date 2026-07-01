@@ -615,6 +615,28 @@
   }
   .basket-add-btn:hover { border-color: var(--green); color: var(--green); }
 
+  /* ── Обекти tab ──────────────────────────────────────── */
+  .obekti-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+  .obekti-header h2 { font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+  .obekti-header p { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); }
+  .obekti-table-wrap { overflow-x: auto; }
+  .obekti-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 700px; }
+  .obekti-table thead th { padding: 10px 12px; background: var(--bg-hover); color: var(--text-muted); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; text-align: left; border-bottom: 1px solid var(--border-em); white-space: nowrap; }
+  .obekti-table thead th.r { text-align: right; }
+  .obekti-table tbody td { padding: 12px 12px; border-bottom: 1px solid var(--border); color: var(--text-dim); vertical-align: top; }
+  .obekti-table tbody td.r { text-align: right; font-family: var(--font-mono); }
+  .obekti-table tbody tr:hover { background: var(--bg-hover); }
+  .obekti-table tbody tr:last-child td { border-bottom: none; }
+  .obekti-table .td-addr { color: var(--text); font-weight: 500; }
+  .obekti-table .td-note { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+  .obekti-table a { color: var(--green); text-decoration: none; font-family: var(--font-mono); font-size: 10px; }
+  .obekti-table a:hover { text-decoration: underline; }
+  .badge-status { display: inline-block; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 10px; font-weight: 500; white-space: nowrap; }
+  .badge-watch { background: rgba(245,166,35,0.15); color: var(--amber); }
+  .badge-contact { background: rgba(0,200,150,0.15); color: var(--green); }
+  .badge-skip { background: rgba(255,77,109,0.12); color: var(--red); }
+  .badge-visit { background: rgba(77,159,255,0.15); color: var(--blue); }
+
   .equip-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 420px; }
   .equip-table thead th {
     font-family: var(--font-mono); font-size: 10px; text-transform: uppercase;
@@ -713,6 +735,7 @@
     <button class="tab-btn" onclick="switchTab('improve')" id="tab-improve">🔧 <span data-t="tab_improve">Simulation Improvements</span></button>
     <button class="tab-btn" onclick="switchTab('gamma')"  id="tab-gamma">📦 <span data-t="tab_gamma">Продуктова гама</span></button>
     <button class="tab-btn" onclick="switchTab('fin')"    id="tab-fin">💰 <span data-t="tab_fin">Финансов калкулатор</span></button>
+    <button class="tab-btn" onclick="switchTab('obekti')" id="tab-obekti">📍 Обекти</button>
     <div class="lang-toggle">
       <button class="lang-btn active" id="lang-bg" onclick="applyLang('bg')">БГ</button>
       <button class="lang-btn" id="lang-en" onclick="applyLang('en')">EN</button>
@@ -1332,6 +1355,62 @@
 
   </div><!-- /tab-fin -->
 
+  <!-- ═══════════════════ TAB: ОБЕКТИ ═══════════════════ -->
+  <div class="tab-content" id="tab-content-obekti">
+
+    <div class="obekti-header">
+      <div>
+        <h2>📍 Разглеждани обекти</h2>
+        <p>Кандидати за наем — Здраве и Сила, 2026</p>
+      </div>
+    </div>
+
+    <div class="obekti-table-wrap">
+      <table class="obekti-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Адрес / Квартал</th>
+            <th class="r">Площ кв.м.</th>
+            <th class="r">Наем лв./мес.</th>
+            <th class="r">EUR/кв.м.</th>
+            <th>Тип</th>
+            <th>Бележки</th>
+            <th>Статус</th>
+            <th>Линкове</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-family:var(--font-mono);color:var(--text-muted)">01</td>
+            <td>
+              <div class="td-addr">ул. Цар Симеон</div>
+              <div class="td-note">Център</div>
+            </td>
+            <td class="r">73 <span style="font-size:10px;color:var(--text-muted)">(+51 склад)</span></td>
+            <td class="r">899</td>
+            <td class="r">12.32</td>
+            <td>Ъглов магазин, партер</td>
+            <td><div class="td-note">Ремонт юли 2024. Добра ъглова видимост. Центърски профил — не Младост. Контакт: 0877 530 403 (Радослав Белов, CloudHomes)</div></td>
+            <td><span class="badge-status badge-watch">Разглеждан</span></td>
+            <td>
+              <a href="https://www.imot.bg/obiava-2m177849121382516-dava-pod-naem-magazin-grad-sofiya-tsentar" target="_blank">Обява ↗</a><br>
+              <a href="https://www.google.com/maps/place/ul.+%22Tsar+Simeon%22,+Sofia,+Bulgaria/@42.7037458,23.307226,3a,67.2y,139.43h,88.11t/data=!3m7!1e1!3m5!1siHUcWOQ350BBshsToSoucw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D1.8943807760892355%26panoid%3DiHUcWOQ350BBshsToSoucw%26yaw%3D139.42931771251475!7i16384!8i8192!4m6!3m5!1s0x40aa855b0559964d:0x5fc7d66b0b6d7808!8m2!3d42.7032798!4d23.3100406!16s%2Fg%2F11y0s40xg?entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps ↗</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:16px;padding:12px 16px;background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border);font-size:11px;font-family:var(--font-mono);color:var(--text-muted)">
+      Легенда: <span class="badge-status badge-watch" style="margin:0 6px">Разглеждан</span> разглеждан &nbsp;
+      <span class="badge-status badge-contact" style="margin:0 6px">Контакт</span> изпратено запитване &nbsp;
+      <span class="badge-status badge-visit" style="margin:0 6px">Оглед</span> насрочен оглед &nbsp;
+      <span class="badge-status badge-skip" style="margin:0 6px">Пропуснат</span> неподходящ
+    </div>
+
+  </div><!-- /tab-obekti -->
+
 </div><!-- /app -->
 
 <script id="gamma-script">
@@ -1923,7 +2002,7 @@ updateFinancials();
 <script>
 // ── Tab switching ──────────────────────────────────────────────────────
 function switchTab(id) {
-  ['sim','survey','improve','gamma','fin'].forEach(t => {
+  ['sim','survey','improve','gamma','fin','obekti'].forEach(t => {
     document.getElementById('tab-content-' + t).classList.toggle('active', t === id);
     document.getElementById('tab-' + t).classList.toggle('active', t === id);
   });
@@ -2301,6 +2380,7 @@ function doAction(action) {
 }
 
 // ── Init ───────────────────────────────────────────────────────────────
+document.getElementById('tab-obekti').addEventListener('click', () => {});
 initChart();
 renderInventory();
 renderAlerts();
