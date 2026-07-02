@@ -746,6 +746,68 @@
     .pl-row.ebitda .pl-val { font-size: 16px !important; }
     #pl-net { font-size: 16px !important; }
   }
+
+  /* ── Продуктова гама — mobile card grid ──────────────── */
+  .gamma-card-grid {
+    display: none;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .g-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: border-color var(--transition);
+  }
+  .g-card:hover { border-color: var(--border-em); }
+  .g-card__head {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 8px;
+  }
+  .g-card__meta { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .g-card__cat {
+    display: flex; align-items: center; gap: 5px;
+    font-family: var(--font-mono); font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--text-muted);
+  }
+  .g-card__name {
+    font-size: 13px; font-weight: 600; color: var(--text);
+    line-height: 1.3;
+  }
+  .g-card__brand {
+    font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 6px; padding: 2px 8px;
+    white-space: nowrap; align-self: flex-start; flex-shrink: 0;
+  }
+  .g-card__stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .g-stat {
+    padding: 8px 6px; text-align: center;
+    border-right: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+  .g-stat:last-child { border-right: none; }
+  .g-stat__val {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+    color: var(--text);
+  }
+  .g-stat__lbl {
+    font-family: var(--font-mono); font-size: 9px;
+    text-transform: uppercase; color: var(--text-muted); margin-top: 2px;
+  }
+
+  @media (max-width: 760px) {
+    .gamma-table-wrap { display: none !important; }
+    .gamma-card-grid  { display: grid; }
+  }
 </style>
 </head>
 <body>
@@ -1211,7 +1273,7 @@
       <button class="cat-filter" data-cat="Без глутен" onclick="filterCat('Без глутен')">Без глутен</button>
     </div>
 
-    <!-- Product table -->
+    <!-- Product table (desktop) -->
     <div class="gamma-table-wrap panel" style="padding:0">
       <table class="gamma-table">
         <thead>
@@ -1229,6 +1291,9 @@
         <tfoot id="gamma-tfoot"></tfoot>
       </table>
     </div>
+
+    <!-- Product cards (mobile) -->
+    <div id="gamma-cards" class="gamma-card-grid"></div>
 
   </div><!-- /tab-gamma -->
 
@@ -2135,7 +2200,9 @@ function filterCat(cat) {
 function renderTable() {
   const tbody = document.getElementById('gamma-tbody');
   const tfoot = document.getElementById('gamma-tfoot');
+  const cards = document.getElementById('gamma-cards');
   let html = '';
+  let cardHtml = '';
   let idx = 1;
   let margins = [];
 
@@ -2144,26 +2211,55 @@ function renderTable() {
     const margin = (price - cost) / price;
     margins.push(margin);
 
-    if (activeCat !== 'all' && !cat.startsWith(activeCat)) return;
-
+    const visible = activeCat === 'all' || cat.startsWith(activeCat);
     const mColor = marginColor(margin);
     const mPct   = (margin * 100).toFixed(1);
     const fillW  = Math.round(margin * 100);
+    const dotCol = CAT_COLORS[cat] || '#888';
 
-    html += `<tr>
-      <td style="color:var(--text-muted);font-family:var(--font-mono);font-size:10px">${idx++}</td>
-      <td><span class="cat-dot" style="background:${CAT_COLORS[cat]||'#888'}"></span><span style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono)">${cat}</span></td>
-      <td class="td-name">${name}</td>
-      <td class="td-brand">${brand}</td>
-      <td class="r">${fmt(cost)}</td>
-      <td class="r" style="color:var(--green)">${fmt(price)}</td>
-      <td>
-        <div class="margin-bar">
-          <div class="margin-track"><div class="margin-fill" style="width:${fillW}%;background:${mColor}"></div></div>
-          <span class="margin-pct" style="color:${mColor}">${mPct}%</span>
+    if (visible) {
+      html += `<tr>
+        <td style="color:var(--text-muted);font-family:var(--font-mono);font-size:10px">${idx++}</td>
+        <td><span class="cat-dot" style="background:${dotCol}"></span><span style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono)">${cat}</span></td>
+        <td class="td-name">${name}</td>
+        <td class="td-brand">${brand}</td>
+        <td class="r">${fmt(cost)}</td>
+        <td class="r" style="color:var(--green)">${fmt(price)}</td>
+        <td>
+          <div class="margin-bar">
+            <div class="margin-track"><div class="margin-fill" style="width:${fillW}%;background:${mColor}"></div></div>
+            <span class="margin-pct" style="color:${mColor}">${mPct}%</span>
+          </div>
+        </td>
+      </tr>`;
+
+      cardHtml += `<div class="g-card">
+        <div class="g-card__head">
+          <div class="g-card__meta">
+            <div class="g-card__cat">
+              <span class="cat-dot" style="background:${dotCol};width:6px;height:6px;flex-shrink:0"></span>
+              ${cat}
+            </div>
+            <div class="g-card__name">${name}</div>
+          </div>
+          <span class="g-card__brand">${brand}</span>
         </div>
-      </td>
-    </tr>`;
+        <div class="g-card__stats">
+          <div class="g-stat">
+            <div class="g-stat__val">${fmt(cost)}</div>
+            <div class="g-stat__lbl">Достав.</div>
+          </div>
+          <div class="g-stat">
+            <div class="g-stat__val" style="color:var(--green)">${fmt(price)}</div>
+            <div class="g-stat__lbl">Продажна</div>
+          </div>
+          <div class="g-stat">
+            <div class="g-stat__val" style="color:${mColor}">${mPct}%</div>
+            <div class="g-stat__lbl">Марж</div>
+          </div>
+        </div>
+      </div>`;
+    }
   });
 
   const avgMargin = margins.reduce((s, m) => s + m, 0) / margins.length;
@@ -2178,6 +2274,7 @@ function renderTable() {
   </tr>`;
 
   tbody.innerHTML = html;
+  cards.innerHTML = cardHtml;
 
   document.getElementById('gs-skus').textContent     = GAMMA.length;
   document.getElementById('gs-margin').textContent   = (avgMargin*100).toFixed(1) + '%';
