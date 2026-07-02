@@ -747,6 +747,52 @@
     #pl-net { font-size: 16px !important; }
   }
 
+  /* ── Наеми — mobile card list ────────────────────────── */
+  .rent-card-list {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .rent-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .rent-card__head {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 8px;
+  }
+  .rent-card__name {
+    font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.3;
+  }
+  .rent-card__sqm {
+    font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
+    background: var(--bg-panel); border: 1px solid var(--border);
+    border-radius: 6px; padding: 2px 7px; white-space: nowrap; flex-shrink: 0;
+  }
+  .rent-card__row {
+    display: flex; gap: 8px;
+  }
+  .rent-card__stat {
+    flex: 1; background: var(--bg-panel); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 8px 10px;
+  }
+  .rent-card__stat-val {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--text);
+  }
+  .rent-card__stat-lbl {
+    font-family: var(--font-mono); font-size: 9px; text-transform: uppercase;
+    color: var(--text-muted); margin-top: 2px;
+  }
+
+  @media (max-width: 760px) {
+    .rent-table { display: none !important; }
+    .rent-card-list { display: flex; }
+  }
+
   /* ── Продуктова гама — mobile card grid ──────────────── */
   .gamma-card-grid {
     display: none;
@@ -1462,6 +1508,7 @@
         </thead>
         <tbody id="rent-tbody"></tbody>
       </table>
+      <div id="rent-cards" class="rent-card-list"></div>
     </div>
 
   </div><!-- /tab-fin -->
@@ -1783,14 +1830,14 @@ const GAMMA = [
 ];
 
 const SPACES = [
-  { name: '#01 — ул. Цар Симеон, Център (ъглов)',          sqm: 73,  eur: 460  },
-  { name: '#02 — ул. Апостол Карамитев, Дианабад',         sqm: 40,  eur: 256  },
-  { name: '#03 — ул. Цар Самуил/Екзарх Йосиф, Център',    sqm: 50,  eur: 700  },
-  { name: '#04 — Център (адрес при контакт)',               sqm: 44,  eur: 179  },
-  { name: '#05 — ул. Проф. Иван Странски 20, Студ. град',  sqm: 64,  eur: 614  },
-  { name: '#06 — ул. Кръстьо Раковски, Младост 1А ⭐',     sqm: 66,  eur: 338  },
-  { name: '#07 — Младост 2 ⭐',                             sqm: 44,  eur: 307  },
-  { name: '#08 — бул. Симеоновско шосе 77 (282кв.м.)',     sqm: 282, eur: 1700 },
+  { name: '#01 · ул. Цар Симеон, Център',      sqm: 73,  eur: 460  },
+  { name: '#02 · Апостол Карамитев, Дианабад', sqm: 40,  eur: 256  },
+  { name: '#03 · Цар Самуил, Център',           sqm: 50,  eur: 700  },
+  { name: '#04 · Център (адрес при контакт)',   sqm: 44,  eur: 179  },
+  { name: '#05 · Проф. Странски, Студ. град',   sqm: 64,  eur: 614  },
+  { name: '#06 · Кръстьо Раковски, Младост 1А ⭐', sqm: 66,  eur: 338  },
+  { name: '#07 · Младост 2 ⭐',                 sqm: 44,  eur: 307  },
+  { name: '#08 · Симеоновско шосе 77',          sqm: 282, eur: 1700 },
 ];
 
 // [name, qty, newPrice€, usedPrice€ or null]
@@ -2347,22 +2394,53 @@ function updateFinancials() {
   if (descEl) descEl.innerHTML = T[lang].rent_desc(fmtN(Math.max(0, maxRentLv)), Math.max(0, maxRentEur).toFixed(0));
   document.getElementById('max-rent-badge').textContent = T[lang].max_rent_lbl + ' ' + fmtE(Math.max(0, maxRentEur));
 
-  // Rent table
+  // Rent table + mobile cards
   const rtbody = document.getElementById('rent-tbody');
-  rtbody.innerHTML = SPACES.map(sp => {
+  const rcards = document.getElementById('rent-cards');
+  const sqmUnit = lang === 'bg' ? 'кв.м.' : 'sq.m.';
+  let tableRows = '';
+  let cardItems = '';
+
+  SPACES.forEach(sp => {
     const spLv     = sp.eur * RATE;
     const spFixed  = FIXED_EX_RENT + spLv;
     const spEBITDA = grossProfit - spFixed;
-    const ok = sp.eur <= maxRentEur;
-    const sqmUnit = lang === 'bg' ? 'кв.м.' : 'sq.m.';
-    return `<tr>
+    const ok       = sp.eur <= maxRentEur;
+    const profitColor = spEBITDA >= 0 ? 'var(--green)' : 'var(--red)';
+    const profitText  = (spEBITDA >= 0 ? '' : '−') + fmt(Math.abs(spEBITDA));
+    const pillHtml = `<span class="verdict-pill ${ok?'ok':'over'}">${ok?T[lang].verdict_ok:T[lang].verdict_exp}</span>`;
+
+    tableRows += `<tr>
       <td style="color:var(--text);font-weight:500">${sp.name}</td>
       <td class="hide-mobile" style="font-family:var(--font-mono)">${sp.sqm} ${sqmUnit}</td>
       <td style="font-family:var(--font-mono)">${fmtE(sp.eur)}</td>
-      <td style="font-family:var(--font-mono);color:${spEBITDA>=0?'var(--green)':'var(--red)'}">${(spEBITDA>=0?'':' −')}${fmt(Math.abs(spEBITDA))}</td>
-      <td><span class="verdict-pill ${ok?'ok':'over'}">${ok?T[lang].verdict_ok:T[lang].verdict_exp}</span>${sp.viewing?' <span style="font-size:9px;font-family:var(--font-mono);color:var(--amber);letter-spacing:0.04em">'+T[lang].viewing+'</span>':''}</td>
+      <td style="font-family:var(--font-mono);color:${profitColor}">${profitText}</td>
+      <td>${pillHtml}</td>
     </tr>`;
-  }).join('');
+
+    cardItems += `<div class="rent-card">
+      <div class="rent-card__head">
+        <div class="rent-card__name">${sp.name}</div>
+        <span class="rent-card__sqm">${sp.sqm} ${sqmUnit}</span>
+      </div>
+      <div class="rent-card__row">
+        <div class="rent-card__stat">
+          <div class="rent-card__stat-val">${fmtE(sp.eur)}</div>
+          <div class="rent-card__stat-lbl">Наем/мес.</div>
+        </div>
+        <div class="rent-card__stat">
+          <div class="rent-card__stat-val" style="color:${profitColor}">${profitText}</div>
+          <div class="rent-card__stat-lbl">Оп. печалба</div>
+        </div>
+        <div class="rent-card__stat" style="display:flex;align-items:center;justify-content:center;flex:0 0 auto;padding:8px 12px">
+          ${pillHtml}
+        </div>
+      </div>
+    </div>`;
+  });
+
+  rtbody.innerHTML = tableRows;
+  if (rcards) rcards.innerHTML = cardItems;
 }
 
 // Init on tab open
