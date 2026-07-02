@@ -615,30 +615,44 @@
   }
   .basket-add-btn:hover { border-color: var(--green); color: var(--green); }
 
-  /* ── Обекти tab ──────────────────────────────────────── */
-  .obekti-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-  .obekti-header h2 { font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
-  .obekti-header p { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); }
-  .obekti-table-wrap { overflow-x: auto; }
-  .obekti-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 700px; }
-  .obekti-table thead th { padding: 10px 12px; background: var(--bg-hover); color: var(--text-muted); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; text-align: left; border-bottom: 1px solid var(--border-em); white-space: nowrap; }
-  .obekti-table thead th.r { text-align: right; }
-  .obekti-table tbody td { padding: 12px 12px; border-bottom: 1px solid var(--border); color: var(--text-dim); vertical-align: top; }
-  .obekti-table tbody td.r { text-align: right; font-family: var(--font-mono); }
-  .obekti-table tbody tr:hover { background: var(--bg-hover); }
-  .obekti-table tbody tr:last-child td { border-bottom: none; }
-  .obekti-table .td-addr { color: var(--text); font-weight: 500; }
-  .obekti-table .td-note { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
-  .obekti-table a { color: var(--green); text-decoration: none; font-family: var(--font-mono); font-size: 10px; }
-  .obekti-table a:hover { text-decoration: underline; }
-  .badge-status { display: inline-block; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 10px; font-weight: 500; white-space: nowrap; cursor: pointer; user-select: none; transition: opacity var(--transition); }
+
+  /* ── Обекти tab — cards ──────────────────────────────── */
+  .obekti-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+  .obekti-head h2 { font-family: var(--font-display); font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+  .obekti-head p  { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 4px; }
+  .obekti-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px,1fr)); gap: 14px; }
+  .ob-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; display: flex; flex-direction: column; gap: 14px; transition: border-color var(--transition), box-shadow var(--transition); }
+  .ob-card:hover { border-color: var(--border-em); box-shadow: 0 6px 24px rgba(0,0,0,0.35); }
+  .ob-card--star { border-left: 3px solid var(--green); }
+  .ob-card__top  { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .ob-card__num  { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.05em; }
+  .ob-card__addr { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.3; }
+  .ob-card__zone { font-size: 11px; color: var(--text-muted); margin-top: 3px; font-family: var(--font-mono); }
+  .ob-card__zone--star { color: var(--green); }
+  .ob-card__stats { display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .ob-stat { padding: 10px 8px; text-align: center; border-right: 1px solid var(--border); background: var(--bg-card); }
+  .ob-stat:last-child { border-right: none; }
+  .ob-stat__val { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--text); line-height: 1; margin-bottom: 3px; }
+  .ob-stat__lbl { font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+  .ob-card__type { font-size: 11px; color: var(--text-dim); font-family: var(--font-mono); }
+  .ob-card__notes summary { color: var(--text-muted); cursor: pointer; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; list-style: none; display: flex; align-items: center; gap: 5px; }
+  .ob-card__notes summary::-webkit-details-marker { display: none; }
+  .ob-card__notes summary::before { content: chr(0x22) & chr(0x25B8) & chr(0x22); font-size: 9px; transition: transform 0.15s; display: inline-block; }
+  .ob-card__notes[open] summary::before { transform: rotate(90deg); }
+  .ob-card__notes p { margin-top: 8px; font-size: 11px; color: var(--text-muted); line-height: 1.65; }
+  .ob-card__links { display: flex; gap: 8px; margin-top: auto; padding-top: 10px; border-top: 1px solid var(--border); }
+  .ob-link { display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-muted); font-family: var(--font-mono); font-size: 10px; text-decoration: none; transition: all var(--transition); }
+  .ob-link:hover { border-color: var(--green); color: var(--green); background: rgba(0,200,150,0.08); }
+  .ob-legend { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 20px; padding: 12px 16px; background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); }
+  .badge-status { display: inline-block; padding: 3px 9px; border-radius: 5px; font-family: var(--font-mono); font-size: 10px; font-weight: 500; white-space: nowrap; cursor: pointer; user-select: none; transition: opacity var(--transition); }
   .badge-status:hover { opacity: 0.75; }
-  .badge-status::after { content: ' ▸'; opacity: 0.5; font-size: 9px; }
+  .badge-status::after { content: " ▸"; opacity: 0.45; font-size: 8px; }
   .badge-watch     { background: rgba(245,166,35,0.15);  color: var(--amber);  }
   .badge-contact   { background: rgba(0,200,150,0.15);   color: var(--green);  }
   .badge-visit     { background: rgba(77,159,255,0.15);  color: var(--blue);   }
   .badge-negotiate { background: rgba(180,127,255,0.15); color: var(--purple); }
   .badge-skip      { background: rgba(255,77,109,0.12);  color: var(--red);    }
+  @media (max-width: 640px) { .obekti-grid { grid-template-columns: 1fr; } }
 
   .equip-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 560px; }
   .equip-table thead th {
@@ -1390,176 +1404,224 @@
   <!-- ═══════════════════ TAB: ОБЕКТИ ═══════════════════ -->
   <div class="tab-content" id="tab-content-obekti">
 
-    <div class="obekti-header">
+    <div class="obekti-head">
       <div>
         <h2>📍 Разглеждани обекти</h2>
         <p>Кандидати за наем — Здраве и Сила, 2026</p>
       </div>
     </div>
 
-    <div class="obekti-table-wrap">
-      <table class="obekti-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Адрес / Квартал</th>
-            <th class="r">Площ кв.м.</th>
-            <th class="r">Наем лв./мес.</th>
-            <th class="r">EUR/кв.м.</th>
-            <th>Тип</th>
-            <th>Бележки</th>
-            <th>Статус</th>
-            <th>Линкове</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="font-family:var(--font-mono);color:var(--text-muted)">01</td>
-            <td>
-              <div class="td-addr">ул. Цар Симеон</div>
-              <div class="td-note">Център</div>
-            </td>
-            <td class="r">73 <span style="font-size:10px;color:var(--text-muted)">(+51 склад)</span></td>
-            <td class="r">899</td>
-            <td class="r">12.32</td>
-            <td>Ъглов магазин, партер</td>
-            <td><div class="td-note">Ремонт юли 2024. Добра ъглова видимост. Центърски профил — не Младост. Контакт: 0877 530 403 (Радослав Белов, CloudHomes)</div></td>
-            <td><span class="badge-status obekti-badge" data-id="01">Разглеждан</span></td>
-            <td>
-              <a href="https://www.imot.bg/obiava-2m177849121382516-dava-pod-naem-magazin-grad-sofiya-tsentar" target="_blank">Обява ↗</a><br>
-              <a href="https://www.google.com/maps/place/ul.+%22Tsar+Simeon%22,+Sofia,+Bulgaria/@42.7037458,23.307226,3a,67.2y,139.43h,88.11t/data=!3m7!1e1!3m5!1siHUcWOQ350BBshsToSoucw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D1.8943807760892355%26panoid%3DiHUcWOQ350BBshsToSoucw%26yaw%3D139.42931771251475!7i16384!8i8192!4m6!3m5!1s0x40aa855b0559964d:0x5fc7d66b0b6d7808!8m2!3d42.7032798!4d23.3100406!16s%2Fg%2F11y0s40xg?entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps ↗</a>
-            </td>
-          </tr>
-          <tr>
-            <td style="font-family:var(--font-mono);color:var(--text-muted)">02</td>
-            <td>
-              <div class="td-addr">ул. Апостол Карамитев</div>
-              <div class="td-note">Дианабад (до Младост 1)</div>
-            </td>
-            <td class="r">40</td>
-            <td class="r">500</td>
-            <td class="r">6.39</td>
-            <td>Магазин, партер</td>
-            <td><div class="td-note">Естествено осветление, вентилация, близо до градски транспорт. Добро съотношение цена/кв.м. Контакт: 0888 588 289 (Дилема)</div></td>
-            <td><span class="badge-status obekti-badge" data-id="02">Разглеждан</span></td>
-            <td>
-              <a href="https://www.imot.bg/obiava-2m177676495470682-dava-pod-naem-magazin-grad-sofiya-dianabad-ul-apostol-karamitev" target="_blank">Обява ↗</a><br>
-              <a href="https://www.google.com/maps/place/ul.+%22Tsar+Simeon%22,+Sofia,+Bulgaria/@42.6583495,23.3398668,3a,75y,294.56h,98.51t/data=!3m7!1e1!3m5!1s8FGtVtWVFw3BP1yrdpgjDg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-8.509776144670909%26panoid%3D8FGtVtWVFw3BP1yrdpgjDg%26yaw%3D294.56303218334574!7i16384!8i8192!4m6!3m5!1s0x40aa855b0559964d:0x5fc7d66b0b6d7808!8m2!3d42.7032798!4d23.3100406!16s%2Fg%2F11y0s40xg?entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps ↗</a>
-            </td>
-          </tr>
-          <tr>
-            <td style="font-family:var(--font-mono);color:var(--text-muted)">03</td>
-            <td>
-              <div class="td-addr">ул. Цар Самуил / ул. Екзарх Йосиф</div>
-              <div class="td-note">Център (вход Женски пазар)</div>
-            </td>
-            <td class="r">50 <span style="font-size:10px;color:var(--text-muted)">(25 търг. + 25 мазе)</span></td>
-            <td class="r">1369 <span style="font-size:10px;color:var(--text-muted)">(700€)</span></td>
-            <td class="r">28.00 <span style="font-size:10px;color:var(--text-muted)">*търг.</span></td>
-            <td>Магазин с мазе, партер</td>
-            <td><div class="td-note">Изцяло ремонтиран, голяма витрина, климатик. Висок трафик — масов профил (Женски пазар), не целева аудитория. Частен собственик Емил.</div></td>
-            <td><span class="badge-status obekti-badge" data-id="03">Разглеждан</span></td>
-            <td>
-              <a href="https://bazar.bg/obiava-55093341/ot-sobstvenik-magazin-v-tsentara-na-ul-tsar-samuil-do-ul-ekzarh-yosif" target="_blank">Обява ↗</a><br>
-              <a href="https://www.google.com/maps/place/Sofia+Center,+ul.+%22Ekzarh+Yosif%22,+Sofia,+Bulgaria/@42.7004747,23.3187811,3a,75.1y,102.6h,80.03t/data=!3m7!1e1!3m5!1sRkHKXcdYvU8_7gESlDkagA!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D9.969999999999999%26panoid%3DRkHKXcdYvU8_7gESlDkagA%26yaw%3D102.6!7i16384!8i8192!4m7!3m6!1s0x40aa8565b19d81d1:0x63fad3b303d86df3!8m2!3d42.7003515!4d23.3265276!10e5!16s%2Fg%2F11y1f_hrg?entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps ↗</a>
-            </td>
-          </tr>
-          <tr>
-            <td style="font-family:var(--font-mono);color:var(--text-muted)">04</td>
-            <td>
-              <div class="td-addr">София, Център</div>
-              <div class="td-note">~42.7052, 23.3286</div>
-            </td>
-            <td class="r">44</td>
-            <td class="r">350</td>
-            <td class="r">4.07</td>
-            <td>Магазин, партер</td>
-            <td><div class="td-note">Ремонтиран 2021, готов за нанасяне. Точният адрес — не е посочен в обявата. Контакт: 0875 363 330 (Home2umontevideo)</div></td>
-            <td><span class="badge-status obekti-badge" data-id="04">Разглеждан</span></td>
-            <td>
-              <a href="https://www.imot.bg/obiava-2m178125630076624-dava-pod-naem-magazin-grad-sofiya-tsentar" target="_blank">Обява ↗</a><br>
-              <a href="https://www.google.com/maps?q=42.7051636,23.3286229" target="_blank">Maps ↗</a>
-            </td>
-          </tr>
-          <tr>
-            <td style="font-family:var(--font-mono);color:var(--text-muted)">05</td>
-            <td>
-              <div class="td-addr">ул. Проф. д-р Иван Странски 20</div>
-              <div class="td-note">Студентски град</div>
-            </td>
-            <td class="r">64</td>
-            <td class="r">1200</td>
-            <td class="r">9.58</td>
-            <td>Магазин, партер</td>
-            <td><div class="td-note">Готово състояние. Студентски профил — млада аудитория, подходяща за концепцията. Частен собственик. Контакт: 0888 879 399</div></td>
-            <td><span class="badge-status obekti-badge" data-id="05">Разглеждан</span></td>
-            <td>
-              <a href="https://www.imot.bg/obiava-2m178022173462844-dava-pod-naem-magazin-grad-sofiya-studentski-grad-ul-prof-d-r-iv-stranski" target="_blank">Обява ↗</a><br>
-              <a href="https://www.google.com/maps/place/%D1%83%D0%BB.+%E2%80%9E%D0%9F%D1%80%D0%BE%D1%84.+%D0%B4-%D1%80+%D0%98%D0%B2%D0%B0%D0%BD+%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%E2%80%9C+20/@42.6431353,23.3371984,3a,60.4y,345.62h,79.44t/data=!3m7!1e1!3m5!1snkJ8EF1KQj7xtxf21iKEow!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D10.555843133566071%26panoid%3DnkJ8EF1KQj7xtxf21iKEow%26yaw%3D345.62236616199147!7i16384!8i8192!4m6!3m5!1s0x40aa85d4af620909:0x1d40161cbf8b9e58!8m2!3d42.642851!4d23.3368975!16s%2Fg%2F11t0rvn5hk?entry=ttu&g_ep=EgoyMDI2MDYyOS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps ↗</a>
-            </td>
-          </tr>
-          <tr>
-            <td style="font-family:var(--font-mono);color:var(--text-muted)">06</td>
-            <td>
-              <div class="td-addr">ул. Кръстьо Раковски</div>
-              <div class="td-note" style="color:var(--green)">⭐ Младост 1А — целева зона</div>
-            </td>
-            <td class="r">66</td>
-            <td class="r">660</td>
-            <td class="r">5.11</td>
-            <td>Магазин, партер</td>
-            <td><div class="td-note">Голям пешеходен трафик, близо до търговски център Младост. Добра видимост на улицата. Готов за нанасяне. Контакт: 0897 832 222 (Urban Properties)</div></td>
-            <td><span class="badge-status obekti-badge" data-id="06">Разглеждан</span></td>
-            <td>
-              <a href="https://www.imot.bg/obiava-2m177636308734015-dava-pod-naem-magazin-grad-sofiya-mladost-1a-ul-krastyo-rakovski" target="_blank">Обява ↗</a><br>
-              <a href="https://www.google.com/maps/search/%D1%83%D0%BB.+%D0%9A%D1%80%D1%8A%D1%81%D1%82%D1%8C%D0%BE+%D0%A0%D0%B0%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8,+%D0%9C%D0%BB%D0%B0%D0%B4%D0%BE%D1%81%D1%82+1%D0%90,+%D0%A1%D0%BE%D1%84%D0%B8%D1%8F" target="_blank">Maps ↗</a>
-            </td>
-          </tr>
-          <tr>
-            <td style="font-family:var(--font-mono);color:var(--text-muted)">07</td>
-            <td>
-              <div class="td-addr">Младост 2</div>
-              <div class="td-note" style="color:var(--green)">⭐ Младост 2 — целева зона</div>
-            </td>
-            <td class="r">44 <span style="font-size:10px;color:var(--text-muted)">(34 търг.)</span></td>
-            <td class="r">600</td>
-            <td class="r">6.97</td>
-            <td>Магазин, партер</td>
-            <td><div class="td-note">Ново ремонтиран, готов за нанасяне. Оживена търговска зона, добър трафик. Контакт: 0888 269 969</div></td>
-            <td><span class="badge-status obekti-badge" data-id="07">Разглеждан</span></td>
-            <td>
-              <a href="https://www.imot.bg/obiava-2m173376570833383-dava-pod-naem-magazin-grad-sofiya-mladost-2" target="_blank">Обява ↗</a><br>
-              <a href="https://www.google.com/maps/@42.6472623,23.3677339,3a,40.1y,178.1h,98.73t/data=!3m7!1e1!3m5!1s82pmAdSSk1nzP6MJab-hpQ!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-8.726578952186856%26panoid%3D82pmAdSSk1nzP6MJab-hpQ%26yaw%3D178.09581114719327!7i13312!8i6656?entry=ttu&g_ep=EgoyMDI2MDYyOS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps ↗</a>
-            </td>
-          </tr>
-          <tr>
-            <td style="font-family:var(--font-mono);color:var(--text-muted)">08</td>
-            <td>
-              <div class="td-addr">бул. Симеоновско шосе 77</div>
-              <div class="td-note">Симеоново / Лозенец</div>
-            </td>
-            <td class="r">282 <span style="font-size:10px;color:var(--text-muted)">(100 партер + 182 ет.1)</span></td>
-            <td class="r">3323 <span style="font-size:10px;color:var(--text-muted)">(1700€ б/ДДС)</span></td>
-            <td class="r">6.03 <span style="font-size:10px;color:var(--text-muted)">б/ДДС</span></td>
-            <td>2 нива, самост. вход, партер</td>
-            <td><div class="td-note">Витрини към булеварда. Функционира като сладкарница — обзаведена и оборудвана, бизнесът се продава на преф. цена. При дългосрочен наем — смяна на статут. 282 кв.м. е прекалено голямо за пилота. Контакт: 0899 192 019</div></td>
-            <td><span class="badge-status obekti-badge" data-id="08">Разглеждан</span></td>
-            <td>
-              <a href="https://www.facebook.com/groups/offices.stores.sale.rent/permalink/1930532457583111/" target="_blank">Обява ↗</a><br>
-              <a href="https://www.google.com/maps/@42.6436626,23.3341268,3a,86.3y,79.23h,92.84t/data=!3m7!1e1!3m5!1sLcPQDHG7Oz1a6vXfq3_T-g!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-2.8432008289630772%26panoid%3DLcPQDHG7Oz1a6vXfq3_T-g%26yaw%3D79.23473392860996!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyOS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps ↗</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="obekti-grid">
+
+      <div class="ob-card">
+        <div class="ob-card__top">
+          <div>
+            <div class="ob-card__num">#01</div>
+            <div class="ob-card__addr">ул. Цар Симеон</div>
+            <div class="ob-card__zone">Център</div>
+          </div>
+          <span class="badge-status obekti-badge" data-id="01">Разглеждан</span>
+        </div>
+        <div class="ob-card__stats">
+          <div class="ob-stat"><div class="ob-stat__val">73</div><div class="ob-stat__lbl">кв.м.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">899</div><div class="ob-stat__lbl">лв./мес.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">12.32</div><div class="ob-stat__lbl">EUR/кв.м.</div></div>
+        </div>
+        <div class="ob-card__type">Ъглов магазин, партер · +51 кв.м. склад</div>
+        <details class="ob-card__notes">
+          <summary>Бележки</summary>
+          <p>Ремонт юли 2024. Добра ъглова видимост. Центърски профил — не Младост. Контакт: 0877 530 403 (Радослав Белов, CloudHomes)</p>
+        </details>
+        <div class="ob-card__links">
+          <a class="ob-link" href="https://www.imot.bg/obiava-2m177849121382516-dava-pod-naem-magazin-grad-sofiya-tsentar" target="_blank">Обява ↗</a>
+          <a class="ob-link" href="https://www.google.com/maps/place/ul.+%22Tsar+Simeon%22,+Sofia,+Bulgaria/@42.7037458,23.307226,3a,67.2y,139.43h,88.11t/data=!3m7!1e1!3m5!1siHUcWOQ350BBshsToSoucw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D1.8943807760892355%26panoid%3DiHUcWOQ350BBshsToSoucw%26yaw%3D139.42931771251475!7i16384!8i8192!4m6!3m5!1s0x40aa855b0559964d:0x5fc7d66b0b6d7808!8m2!3d42.7032798!4d23.3100406!16s%2Fg%2F11y0s40xg?entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps ↗</a>
+        </div>
+      </div>
+
+      <div class="ob-card">
+        <div class="ob-card__top">
+          <div>
+            <div class="ob-card__num">#02</div>
+            <div class="ob-card__addr">ул. Апостол Карамитев</div>
+            <div class="ob-card__zone">Дианабад (до Младост 1)</div>
+          </div>
+          <span class="badge-status obekti-badge" data-id="02">Разглеждан</span>
+        </div>
+        <div class="ob-card__stats">
+          <div class="ob-stat"><div class="ob-stat__val">40</div><div class="ob-stat__lbl">кв.м.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">500</div><div class="ob-stat__lbl">лв./мес.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">6.39</div><div class="ob-stat__lbl">EUR/кв.м.</div></div>
+        </div>
+        <div class="ob-card__type">Магазин, партер</div>
+        <details class="ob-card__notes">
+          <summary>Бележки</summary>
+          <p>Естествено осветление, вентилация, близо до градски транспорт. Добро съотношение цена/кв.м. Контакт: 0888 588 289 (Дилема)</p>
+        </details>
+        <div class="ob-card__links">
+          <a class="ob-link" href="https://www.imot.bg/obiava-2m177676495470682-dava-pod-naem-magazin-grad-sofiya-dianabad-ul-apostol-karamitev" target="_blank">Обява ↗</a>
+          <a class="ob-link" href="https://www.google.com/maps/place/ul.+%22Tsar+Simeon%22,+Sofia,+Bulgaria/@42.6583495,23.3398668,3a,75y,294.56h,98.51t/data=!3m7!1e1!3m5!1s8FGtVtWVFw3BP1yrdpgjDg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-8.509776144670909%26panoid%3D8FGtVtWVFw3BP1yrdpgjDg%26yaw%3D294.56303218334574!7i16384!8i8192!4m6!3m5!1s0x40aa855b0559964d:0x5fc7d66b0b6d7808!8m2!3d42.7032798!4d23.3100406!16s%2Fg%2F11y0s40xg?entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps ↗</a>
+        </div>
+      </div>
+
+      <div class="ob-card">
+        <div class="ob-card__top">
+          <div>
+            <div class="ob-card__num">#03</div>
+            <div class="ob-card__addr">ул. Цар Самуил / ул. Екзарх Йосиф</div>
+            <div class="ob-card__zone">Център (вход Женски пазар)</div>
+          </div>
+          <span class="badge-status obekti-badge" data-id="03">Разглеждан</span>
+        </div>
+        <div class="ob-card__stats">
+          <div class="ob-stat"><div class="ob-stat__val">25</div><div class="ob-stat__lbl">кв.м. търг.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">700€</div><div class="ob-stat__lbl">мес.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">28.00</div><div class="ob-stat__lbl">EUR/кв.м.</div></div>
+        </div>
+        <div class="ob-card__type">Магазин с мазе, партер · 50 кв.м. общо</div>
+        <details class="ob-card__notes">
+          <summary>Бележки</summary>
+          <p>Изцяло ремонтиран, голяма витрина, климатик. Висок трафик — масов профил (Женски пазар), не целева аудитория. Частен собственик Емил.</p>
+        </details>
+        <div class="ob-card__links">
+          <a class="ob-link" href="https://bazar.bg/obiava-55093341/ot-sobstvenik-magazin-v-tsentara-na-ul-tsar-samuil-do-ul-ekzarh-yosif" target="_blank">Обява ↗</a>
+          <a class="ob-link" href="https://www.google.com/maps/place/Sofia+Center,+ul.+%22Ekzarh+Yosif%22,+Sofia,+Bulgaria/@42.7004747,23.3187811,3a,75.1y,102.6h,80.03t/data=!3m7!1e1!3m5!1sRkHKXcdYvU8_7gESlDkagA!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D9.969999999999999%26panoid%3DRkHKXcdYvU8_7gESlDkagA%26yaw%3D102.6!7i16384!8i8192!4m7!3m6!1s0x40aa8565b19d81d1:0x63fad3b303d86df3!8m2!3d42.7003515!4d23.3265276!10e5!16s%2Fg%2F11y1f_hrg?entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps ↗</a>
+        </div>
+      </div>
+
+      <div class="ob-card">
+        <div class="ob-card__top">
+          <div>
+            <div class="ob-card__num">#04</div>
+            <div class="ob-card__addr">София, Център</div>
+            <div class="ob-card__zone">Адрес при контакт</div>
+          </div>
+          <span class="badge-status obekti-badge" data-id="04">Разглеждан</span>
+        </div>
+        <div class="ob-card__stats">
+          <div class="ob-stat"><div class="ob-stat__val">44</div><div class="ob-stat__lbl">кв.м.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">350</div><div class="ob-stat__lbl">лв./мес.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">4.07</div><div class="ob-stat__lbl">EUR/кв.м.</div></div>
+        </div>
+        <div class="ob-card__type">Магазин, партер</div>
+        <details class="ob-card__notes">
+          <summary>Бележки</summary>
+          <p>Ремонтиран 2021, готов за нанасяне. Най-ниска цена/кв.м. досега. Контакт: 0875 363 330 (Home2umontevideo)</p>
+        </details>
+        <div class="ob-card__links">
+          <a class="ob-link" href="https://www.imot.bg/obiava-2m178125630076624-dava-pod-naem-magazin-grad-sofiya-tsentar" target="_blank">Обява ↗</a>
+          <a class="ob-link" href="https://www.google.com/maps?q=42.7051636,23.3286229" target="_blank">Maps ↗</a>
+        </div>
+      </div>
+
+      <div class="ob-card">
+        <div class="ob-card__top">
+          <div>
+            <div class="ob-card__num">#05</div>
+            <div class="ob-card__addr">ул. Проф. д-р Иван Странски 20</div>
+            <div class="ob-card__zone">Студентски град</div>
+          </div>
+          <span class="badge-status obekti-badge" data-id="05">Разглеждан</span>
+        </div>
+        <div class="ob-card__stats">
+          <div class="ob-stat"><div class="ob-stat__val">64</div><div class="ob-stat__lbl">кв.м.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">1200</div><div class="ob-stat__lbl">лв./мес.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">9.58</div><div class="ob-stat__lbl">EUR/кв.м.</div></div>
+        </div>
+        <div class="ob-card__type">Магазин, партер</div>
+        <details class="ob-card__notes">
+          <summary>Бележки</summary>
+          <p>Готово състояние. Студентски профил — млада аудитория, подходяща за концепцията. Частен собственик. Контакт: 0888 879 399</p>
+        </details>
+        <div class="ob-card__links">
+          <a class="ob-link" href="https://www.imot.bg/obiava-2m178022173462844-dava-pod-naem-magazin-grad-sofiya-studentski-grad-ul-prof-d-r-iv-stranski" target="_blank">Обява ↗</a>
+          <a class="ob-link" href="https://www.google.com/maps/place/%D1%83%D0%BB.+%E2%80%9E%D0%9F%D1%80%D0%BE%D1%84.+%D0%B4-%D1%80+%D0%98%D0%B2%D0%B0%D0%BD+%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%E2%80%9C+20/@42.6431353,23.3371984,3a,60.4y,345.62h,79.44t/data=!3m7!1e1!3m5!1snkJ8EF1KQj7xtxf21iKEow!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D10.555843133566071%26panoid%3DnkJ8EF1KQj7xtxf21iKEow%26yaw%3D345.62236616199147!7i16384!8i8192!4m6!3m5!1s0x40aa85d4af620909:0x1d40161cbf8b9e58!8m2!3d42.642851!4d23.3368975!16s%2Fg%2F11t0rvn5hk?entry=ttu&g_ep=EgoyMDI2MDYyOS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps ↗</a>
+        </div>
+      </div>
+
+      <div class="ob-card ob-card--star">
+        <div class="ob-card__top">
+          <div>
+            <div class="ob-card__num">#06</div>
+            <div class="ob-card__addr">ул. Кръстьо Раковски</div>
+            <div class="ob-card__zone ob-card__zone--star">⭐ Младост 1А — целева зона</div>
+          </div>
+          <span class="badge-status obekti-badge" data-id="06">Разглеждан</span>
+        </div>
+        <div class="ob-card__stats">
+          <div class="ob-stat"><div class="ob-stat__val">66</div><div class="ob-stat__lbl">кв.м.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">660</div><div class="ob-stat__lbl">лв./мес.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">5.11</div><div class="ob-stat__lbl">EUR/кв.м.</div></div>
+        </div>
+        <div class="ob-card__type">Магазин, партер</div>
+        <details class="ob-card__notes">
+          <summary>Бележки</summary>
+          <p>Голям пешеходен трафик, близо до търговски център Младост. Добра видимост на улицата. Готов за нанасяне. Контакт: 0897 832 222 (Urban Properties)</p>
+        </details>
+        <div class="ob-card__links">
+          <a class="ob-link" href="https://www.imot.bg/obiava-2m177636308734015-dava-pod-naem-magazin-grad-sofiya-mladost-1a-ul-krastyo-rakovski" target="_blank">Обява ↗</a>
+          <a class="ob-link" href="https://www.google.com/maps/search/%D1%83%D0%BB.+%D0%9A%D1%80%D1%8A%D1%81%D1%82%D1%8C%D0%BE+%D0%A0%D0%B0%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8,+%D0%9C%D0%BB%D0%B0%D0%B4%D0%BE%D1%81%D1%82+1%D0%90,+%D0%A1%D0%BE%D1%84%D0%B8%D1%8F" target="_blank">Maps ↗</a>
+        </div>
+      </div>
+
+      <div class="ob-card ob-card--star">
+        <div class="ob-card__top">
+          <div>
+            <div class="ob-card__num">#07</div>
+            <div class="ob-card__addr">Младост 2</div>
+            <div class="ob-card__zone ob-card__zone--star">⭐ Младост 2 — целева зона</div>
+          </div>
+          <span class="badge-status obekti-badge" data-id="07">Разглеждан</span>
+        </div>
+        <div class="ob-card__stats">
+          <div class="ob-stat"><div class="ob-stat__val">44</div><div class="ob-stat__lbl">кв.м.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">600</div><div class="ob-stat__lbl">лв./мес.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">6.97</div><div class="ob-stat__lbl">EUR/кв.м.</div></div>
+        </div>
+        <div class="ob-card__type">Магазин, партер · 34 кв.м. търговска</div>
+        <details class="ob-card__notes">
+          <summary>Бележки</summary>
+          <p>Ново ремонтиран, готов за нанасяне. Оживена търговска зона, добър трафик. Контакт: 0888 269 969</p>
+        </details>
+        <div class="ob-card__links">
+          <a class="ob-link" href="https://www.imot.bg/obiava-2m173376570833383-dava-pod-naem-magazin-grad-sofiya-mladost-2" target="_blank">Обява ↗</a>
+          <a class="ob-link" href="https://www.google.com/maps/@42.6472623,23.3677339,3a,40.1y,178.1h,98.73t/data=!3m7!1e1!3m5!1s82pmAdSSk1nzP6MJab-hpQ!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-8.726578952186856%26panoid%3D82pmAdSSk1nzP6MJab-hpQ%26yaw%3D178.09581114719327!7i13312!8i6656?entry=ttu&g_ep=EgoyMDI2MDYyOS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps ↗</a>
+        </div>
+      </div>
+
+      <div class="ob-card">
+        <div class="ob-card__top">
+          <div>
+            <div class="ob-card__num">#08</div>
+            <div class="ob-card__addr">бул. Симеоновско шосе 77</div>
+            <div class="ob-card__zone">Симеоново / Лозенец</div>
+          </div>
+          <span class="badge-status obekti-badge" data-id="08">Разглеждан</span>
+        </div>
+        <div class="ob-card__stats">
+          <div class="ob-stat"><div class="ob-stat__val">282</div><div class="ob-stat__lbl">кв.м.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">1700€</div><div class="ob-stat__lbl">б/ДДС мес.</div></div>
+          <div class="ob-stat"><div class="ob-stat__val">6.03</div><div class="ob-stat__lbl">EUR/кв.м.</div></div>
+        </div>
+        <div class="ob-card__type">2 нива (100 партер + 182 ет.1), самост. вход</div>
+        <details class="ob-card__notes">
+          <summary>Бележки</summary>
+          <p>Витрини към булеварда. Функционира като сладкарница — обзаведена, бизнесът се продава на преф. цена. При дългосрочен наем — смяна на статут. 282 кв.м. надвишава пилотния размер. Контакт: 0899 192 019</p>
+        </details>
+        <div class="ob-card__links">
+          <a class="ob-link" href="https://www.facebook.com/groups/offices.stores.sale.rent/permalink/1930532457583111/" target="_blank">Обява ↗</a>
+          <a class="ob-link" href="https://www.google.com/maps/@42.6436626,23.3341268,3a,86.3y,79.23h,92.84t/data=!3m7!1e1!3m5!1sLcPQDHG7Oz1a6vXfq3_T-g!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-2.8432008289630772%26panoid%3DLcPQDHG7Oz1a6vXfq3_T-g%26yaw%3D79.23473392860996!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyOS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps ↗</a>
+        </div>
+      </div>
+
     </div>
 
-    <div style="margin-top:16px;padding:12px 16px;background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border);font-size:11px;font-family:var(--font-mono);color:var(--text-muted)">
-      Цъкни на статуса за да го смениш. Запазва се в браузъра. &nbsp;|&nbsp;
-      <span class="badge-status badge-watch"     style="margin:0 4px;cursor:default" >Разглеждан</span>
-      <span class="badge-status badge-contact"   style="margin:0 4px;cursor:default" >Контакт</span>
-      <span class="badge-status badge-visit"     style="margin:0 4px;cursor:default" >Оглед</span>
-      <span class="badge-status badge-negotiate" style="margin:0 4px;cursor:default" >Преговори</span>
-      <span class="badge-status badge-skip"      style="margin:0 4px;cursor:default" >Пропуснат</span>
+    <div class="ob-legend">
+      Цъкни статуса за промяна &nbsp;·&nbsp;
+      <span class="badge-status badge-watch" style="cursor:default">Разглеждан</span>
+      <span class="badge-status badge-contact" style="cursor:default">Контакт</span>
+      <span class="badge-status badge-visit" style="cursor:default">Оглед</span>
+      <span class="badge-status badge-negotiate" style="cursor:default">Преговори</span>
+      <span class="badge-status badge-skip" style="cursor:default">Пропуснат</span>
     </div>
 
   </div><!-- /tab-obekti -->
